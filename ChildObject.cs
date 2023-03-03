@@ -860,7 +860,6 @@ namespace Meter
         {
             Excel.Range r = ((Excel.Range)_head.Cells[1, 1]);
             _name = (string)r.Value;
-            //Marshal.ReleaseComObject(r);
             if (childs != null)
             {
                 List<string> names = childs.Keys.ToList();

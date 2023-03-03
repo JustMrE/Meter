@@ -46,12 +46,6 @@ namespace Meter
             }
             Main.instance.ResumeAll();
 
-            //string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\references\" + oldName + ".json";
-            //if (File.Exists(file))
-            //{
-            //    File.Delete(file);
-            //}
-
             Close();
         }
 
