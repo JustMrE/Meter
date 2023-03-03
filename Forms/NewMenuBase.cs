@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Main = Meter.MyApplicationContext;
 
 namespace Meter.Forms
 {
@@ -30,7 +31,7 @@ namespace Meter.Forms
 
         protected virtual void NewMenuBase_Load(object sender, EventArgs e)
         {
-
+            SetParent(formHwnd, Main.instance.xlAppHwnd);
         }
     }
 }

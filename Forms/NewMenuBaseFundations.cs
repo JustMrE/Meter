@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using Excel = Microsoft.Office.Interop.Excel;
+using Main = Meter.MyApplicationContext;
+using System.Runtime.InteropServices;
 
 namespace Meter.Forms
 {
@@ -24,12 +26,6 @@ namespace Meter.Forms
         private const int GWL_EXSTYLE = -20;
         private const int WS_EX_TOOLWINDOW = 0x80;
         public IntPtr formHwnd;
-
-        //public NewMenuBase()
-        //{
-        //    InitializeComponent();
-        //    SetWindowLong(this.Handle, GWL_EXSTYLE, WS_EX_TOOLWINDOW);
-        //}
 
         public virtual void SetRects(int left, int top, int width, int height)
         {

@@ -26,7 +26,7 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        protected void InitializeComponent()
+        protected override void InitializeComponent()
         {
             //base.InitializeComponent();
             this.components = new System.ComponentModel.Container();
