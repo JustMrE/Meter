@@ -34,7 +34,7 @@ namespace Meter.Forms
             menues = new List<Form>();
             menues.Add(new NewMenu());
             menues.Add(new NewMenuAdmin());
-            menuForm = new NewMenu();
+            menuForm = menues[0] as NewMenuBase;
             menuForm.Show();
         }
 
@@ -72,7 +72,7 @@ namespace Meter.Forms
                 int width = Main.instance.xlAppRect.Right - Main.instance.xlAppRect.Left - (5 + left * 2);
                 int height = (int)(120 * Main.instance.zoom / 100);
 
-                //menuForm.SetRects(left, top, width, height);
+                menuForm.SetRects(left, top, width, height);
 
                 if (Main.instance.xlApp.ActiveWindow.FreezePanes == false)
                 {

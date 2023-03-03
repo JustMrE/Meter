@@ -21,14 +21,23 @@ namespace Meter.Forms
         protected override void button1_Click(object sender, EventArgs e)
         {
             base.button1_Click(sender, e);
-            this.Hide();
             TempForm.instance.menues[1].Show();
+            this.Hide();
         }
 
         protected override void NewMenuBase_Shown(object sender, EventArgs e)
         {
             base.NewMenuBase_Shown(sender, e);
+        }
+
+        protected override void NewMenuBase_Load(object sender, EventArgs e)
+        {
+            base.NewMenuBase_Load(sender, e);
+        }
+        protected override void NewMenuBase_Activated(object sender, EventArgs e)
+        {
             TempForm.instance.menuForm = this;
+            base.NewMenuBase_Activated(sender, e);
         }
     }
 }

@@ -29,11 +29,19 @@
         protected override void InitializeComponent()
         {
             base.InitializeComponent();
-            this.components = new System.ComponentModel.Container();
+            this.SuspendLayout();
+            // 
+            // NewMenu
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.SystemColors.Info;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Name = "NewMenu";
             this.Text = "NewMenu";
-
+            this.Load += new System.EventHandler(this.NewMenuBase_Load);
+            this.Shown += new System.EventHandler(this.NewMenuBase_Shown);
+            this.ResumeLayout(false);
 
         }
 
