@@ -54,20 +54,20 @@ namespace Meter
         }
         protected virtual void Menu_Show(object sender, EventArgs e)
         {
-            if (Main.instance.wb.ReadOnly == true)
-            {
-                if (Main.instance.closed == false)
-                {
-                    Main.instance.closed = true;
-                    DialogResult result = MessageBox.Show("Книга открыта другим пользователем, доступна только для чтения! Открыть книгу для чтения?", "", MessageBoxButtons.YesNo);
-                    if (result == DialogResult.No)
-                    {
-                        Main.instance.wb.Close(false);
-                        Main.instance.excelClosed = true;
-                    }
-                }
-                FormClose();
-            }
+            //if (Main.instance.wb.ReadOnly == true)
+            //{
+            //    if (Main.instance.closed == false)
+            //    {
+            //        Main.instance.closed = true;
+            //        DialogResult result = MessageBox.Show("Книга открыта другим пользователем, доступна только для чтения! Открыть книгу для чтения?", "", MessageBoxButtons.YesNo);
+            //        if (result == DialogResult.No)
+            //        {
+            //            Main.instance.wb.Close(false);
+            //            Main.instance.excelClosed = true;
+            //        }
+            //    }
+            //    FormClose();
+            //}
             SetParent(formHwnd, Main.instance.xlAppHwnd);
             Main.instance.menu = this;
             GlobalMethods.CalculateFormsPositions();
@@ -699,6 +699,20 @@ namespace Meter
             });
             AddButtonToPopUpCommandBar(ref p, "Remove",() => {
                 RangeReferences.activeTable.Remove();
+            });
+            AddButtonToPopUpCommandBar(ref p, "TempForm", () => {
+                Thread t = new Thread(() =>
+                {
+                    TempForm form = new TempForm();
+                    form.FormClosed += (s, args) =>
+                    {
+                        System.Windows.Forms.Application.ExitThread();
+                    };
+                    form.Show();
+                    System.Windows.Forms.Application.Run();
+                });
+                t.SetApartmentState(ApartmentState.STA);
+                t.Start();
             });
         }
         protected void OpenForm()
