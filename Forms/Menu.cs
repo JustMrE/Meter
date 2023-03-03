@@ -7,12 +7,19 @@ using Emcos;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Text;
+using System.Runtime.InteropServices;
 
 
 namespace Meter
 {
     public partial class Menu : MenuBase
     {
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        private const int GWL_EXSTYLE = -20;
+        private const int WS_EX_TOOLWINDOW = 0x80;
+
         bool changed;
 
         public Menu()
@@ -22,6 +29,8 @@ namespace Meter
             this.Shown += new EventHandler(this.Menu_Show);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(Menu_Close);
             Main.instance.menu = this;
+
+            SetWindowLong(this.Handle, GWL_EXSTYLE, WS_EX_TOOLWINDOW);
         }
         protected override void Menu_Show(object sender, EventArgs e)
         {

@@ -3,17 +3,26 @@ using Microsoft.Office.Core;
 using Main = Meter.MyApplicationContext;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Window;
+using System.Runtime.InteropServices;
 
 namespace Meter
 {
     public partial class AdminMenu : MenuBase
     {
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+
+        private const int GWL_EXSTYLE = -20;
+        private const int WS_EX_TOOLWINDOW = 0x80;
+
         public AdminMenu()
         {
             InitializeComponent();
             this.Load += new EventHandler(this.Menu_Load);
             this.Shown += new EventHandler(this.Menu_Show);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(Menu_Close);
+
+            SetWindowLong(this.Handle, GWL_EXSTYLE, WS_EX_TOOLWINDOW);
         }
 
         public override void PreContextMenu()
