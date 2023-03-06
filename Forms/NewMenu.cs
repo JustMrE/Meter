@@ -13,7 +13,7 @@ namespace Meter.Forms
 {
     public partial class NewMenu : Meter.Forms.NewMenuBase
     {
-        public NewMenu() : base()
+        public NewMenu()
         {
             InitializeComponent();
         }

@@ -17,7 +17,6 @@ namespace Meter.Forms
         public NewMenuBase()
         {
             InitializeComponent();
-            
         }
 
         protected virtual void button1_Click(object sender, EventArgs e)

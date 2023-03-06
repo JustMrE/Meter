@@ -26,8 +26,9 @@
         /// Required method for Designer support - do not modify
         /// the contents of this method with the code editor.
         /// </summary>
-        protected override void InitializeComponent()
+        protected void InitializeComponent()
         {
+            base.InitializeComponent();
             base.InitializeComponent();
             this.SuspendLayout();
             // 
@@ -36,7 +37,7 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(1379, 230);
             this.Name = "NewMenuAdmin";
             this.Text = "NewMenuAdmin";
             this.Load += new System.EventHandler(this.NewMenuBase_Load);
