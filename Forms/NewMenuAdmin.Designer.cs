@@ -28,9 +28,11 @@
         /// </summary>
         protected void InitializeComponent()
         {
-            base.InitializeComponent();
-            base.InitializeComponent();
             this.SuspendLayout();
+            //
+            //flowlayoyt1
+            //
+            this.flpButtons.BackColor = Color.LightCyan;
             // 
             // NewMenuAdmin
             // 
@@ -40,10 +42,13 @@
             this.ClientSize = new System.Drawing.Size(1379, 230);
             this.Name = "NewMenuAdmin";
             this.Text = "NewMenuAdmin";
-            this.Load += new System.EventHandler(this.NewMenuBase_Load);
-            this.Shown += new System.EventHandler(this.NewMenuBase_Shown);
             this.ResumeLayout(false);
-
+            //
+            //ColorSettings (button42)
+            //
+            this.button42.Visible = true;
+            this.button42.Text = "Цвета";
+            
         }
 
         #endregion

@@ -8,6 +8,7 @@ using Microsoft.Office.Core;
 using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
+using Meter.Forms;
 
 namespace Meter
 {
@@ -26,7 +27,8 @@ namespace Meter
 
         public static MyApplicationContext instance;
 
-        public static List<Form> forms;
+        // public static List<Form> forms;
+        public static List<Form> menues;
 
         Excel.OLEObject inkPicture; 
         
@@ -36,7 +38,9 @@ namespace Meter
         public bool closed, excelClosed;
         public IntPtr xlAppHwnd;
         public Rect xlAppRect;
-        public MenuBase menu;
+        // public MenuBase menu;
+        public NewMenuBase menu;
+        //public NewMenuBase newMenu; 
         public ColorsData colors;
         public double zoom;
         public RangeReferences references;
@@ -165,17 +169,28 @@ namespace Meter
         }
         private void InitForms()
         {
-            forms = new List<Form>()
-            {
-                new Menu(),
-                new AdminMenu()
-            };
+            // forms = new List<Form>()
+            // {
+            //     new Menu(),
+            //     new AdminMenu()
+            // };
 
-            foreach (var form in forms)
+            // foreach (var form in forms)
+            // {
+            //     form.FormClosed += onFormClosed;
+            // }
+            // forms[0].Show();
+
+            menues = new List<Form>();
+            menues.Add(new NewMenu());
+            menues.Add(new NewMenuAdmin());
+
+            foreach (NewMenuBase form in menues)
             {
                 form.FormClosed += onFormClosed;
             }
-            forms[0].Show();
+            menu = menues[0] as NewMenuBase;
+            menu.Show();
 
             xlApp.Visible = true;
         }
@@ -247,7 +262,11 @@ namespace Meter
             if (!closed)
             {
                 closed = true;
-                foreach (MenuBase form in MyApplicationContext.forms)
+                // foreach (MenuBase form in MyApplicationContext.forms)
+                // {
+                //     form.FormClose();
+                // }
+                foreach (NewMenuBase form in menues)
                 {
                     form.FormClose();
                 }

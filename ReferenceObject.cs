@@ -6,6 +6,7 @@ using Microsoft.Office.Interop.Excel;
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using Meter.Forms;
 
 namespace Meter
 {
@@ -53,7 +54,7 @@ namespace Meter
 
         public int? ActiveDay()
         {
-            return _activeChild._activeChild._activeChild.DayByRange(MenuBase._activeRange);
+            return _activeChild._activeChild._activeChild.DayByRange(NewMenuBase._activeRange);
         }
         public bool HasRange(Excel.Range rng)
         {

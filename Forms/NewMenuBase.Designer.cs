@@ -52,8 +52,8 @@
             this.button20 = new System.Windows.Forms.Button();
             this.button21 = new System.Windows.Forms.Button();
             this.button22 = new System.Windows.Forms.Button();
-            this.button24 = new System.Windows.Forms.Button();
             this.button23 = new System.Windows.Forms.Button();
+            this.button24 = new System.Windows.Forms.Button();
             this.button25 = new System.Windows.Forms.Button();
             this.button26 = new System.Windows.Forms.Button();
             this.button27 = new System.Windows.Forms.Button();
@@ -122,8 +122,8 @@
             this.flpButtons.Controls.Add(this.button20);
             this.flpButtons.Controls.Add(this.button21);
             this.flpButtons.Controls.Add(this.button22);
-            this.flpButtons.Controls.Add(this.button24);
             this.flpButtons.Controls.Add(this.button23);
+            this.flpButtons.Controls.Add(this.button24);
             this.flpButtons.Controls.Add(this.button25);
             this.flpButtons.Controls.Add(this.button26);
             this.flpButtons.Controls.Add(this.button27);
@@ -156,6 +156,7 @@
             this.textBox1.Name = "textBox1";
             this.textBox1.Size = new System.Drawing.Size(120, 23);
             this.textBox1.TabIndex = 6;
+            this.textBox1.KeyPress += new KeyPressEventHandler(this.TextBox1_KeyPress);
             // 
             // RepairMenu
             // 
@@ -166,6 +167,7 @@
             this.RepairMenu.TabIndex = 7;
             this.RepairMenu.Text = "Починить Меню";
             this.RepairMenu.UseVisualStyleBackColor = true;
+            this.RepairMenu.Click += new EventHandler(RepairMenu_Click);
             // 
             // button2
             // 
@@ -176,6 +178,8 @@
             this.button2.TabIndex = 8;
             this.button2.Text = "Button2";
             this.button2.UseVisualStyleBackColor = true;
+            this.button2.Visible = false;
+            this.button2.Click += new EventHandler(Button2_Click);
             // 
             // button3
             // 
@@ -186,6 +190,7 @@
             this.button3.TabIndex = 9;
             this.button3.Text = "Button3";
             this.button3.UseVisualStyleBackColor = true;
+            this.button3.Visible = false;
             // 
             // button4
             // 
@@ -196,6 +201,7 @@
             this.button4.TabIndex = 10;
             this.button4.Text = "Button4";
             this.button4.UseVisualStyleBackColor = true;
+            this.button4.Visible = false;
             // 
             // button5
             // 
@@ -206,6 +212,7 @@
             this.button5.TabIndex = 11;
             this.button5.Text = "Button5";
             this.button5.UseVisualStyleBackColor = true;
+            this.button5.Visible = false;
             // 
             // button6
             // 
@@ -216,6 +223,7 @@
             this.button6.TabIndex = 12;
             this.button6.Text = "Button6";
             this.button6.UseVisualStyleBackColor = true;
+            this.button6.Visible = false;
             // 
             // button7
             // 
@@ -226,6 +234,7 @@
             this.button7.TabIndex = 13;
             this.button7.Text = "Button7";
             this.button7.UseVisualStyleBackColor = true;
+            this.button7.Visible = false;
             // 
             // button8
             // 
@@ -236,6 +245,7 @@
             this.button8.TabIndex = 14;
             this.button8.Text = "Button8";
             this.button8.UseVisualStyleBackColor = true;
+            this.button8.Visible = false;
             // 
             // button9
             // 
@@ -246,6 +256,7 @@
             this.button9.TabIndex = 15;
             this.button9.Text = "Button9";
             this.button9.UseVisualStyleBackColor = true;
+            this.button9.Visible = false;
             // 
             // button10
             // 
@@ -256,6 +267,7 @@
             this.button10.TabIndex = 16;
             this.button10.Text = "Button10";
             this.button10.UseVisualStyleBackColor = true;
+            this.button10.Visible = false;
             // 
             // button11
             // 
@@ -266,6 +278,7 @@
             this.button11.TabIndex = 17;
             this.button11.Text = "Button11";
             this.button11.UseVisualStyleBackColor = true;
+            this.button11.Visible = false;
             // 
             // button12
             // 
@@ -276,6 +289,7 @@
             this.button12.TabIndex = 18;
             this.button12.Text = "Button12";
             this.button12.UseVisualStyleBackColor = true;
+            this.button12.Visible = false;
             // 
             // button13
             // 
@@ -286,6 +300,7 @@
             this.button13.TabIndex = 19;
             this.button13.Text = "Button13";
             this.button13.UseVisualStyleBackColor = true;
+            this.button13.Visible = false;
             // 
             // button14
             // 
@@ -296,6 +311,7 @@
             this.button14.TabIndex = 20;
             this.button14.Text = "Button14";
             this.button14.UseVisualStyleBackColor = true;
+            this.button14.Visible = false;
             // 
             // button15
             // 
@@ -306,6 +322,7 @@
             this.button15.TabIndex = 21;
             this.button15.Text = "Button15";
             this.button15.UseVisualStyleBackColor = true;
+            this.button15.Visible = false;
             // 
             // button16
             // 
@@ -316,6 +333,7 @@
             this.button16.TabIndex = 22;
             this.button16.Text = "Button16";
             this.button16.UseVisualStyleBackColor = true;
+            this.button16.Visible = false;
             // 
             // button17
             // 
@@ -326,6 +344,7 @@
             this.button17.TabIndex = 23;
             this.button17.Text = "Button17";
             this.button17.UseVisualStyleBackColor = true;
+            this.button17.Visible = false;
             // 
             // button18
             // 
@@ -336,6 +355,7 @@
             this.button18.TabIndex = 24;
             this.button18.Text = "Button18";
             this.button18.UseVisualStyleBackColor = true;
+            this.button18.Visible = false;
             // 
             // button19
             // 
@@ -346,6 +366,7 @@
             this.button19.TabIndex = 25;
             this.button19.Text = "Button19";
             this.button19.UseVisualStyleBackColor = true;
+            this.button19.Visible = false;
             // 
             // button20
             // 
@@ -356,6 +377,7 @@
             this.button20.TabIndex = 26;
             this.button20.Text = "Button20";
             this.button20.UseVisualStyleBackColor = true;
+            this.button20.Visible = false;
             // 
             // button21
             // 
@@ -366,6 +388,7 @@
             this.button21.TabIndex = 27;
             this.button21.Text = "Button21";
             this.button21.UseVisualStyleBackColor = true;
+            this.button21.Visible = false;
             // 
             // button22
             // 
@@ -376,16 +399,7 @@
             this.button22.TabIndex = 28;
             this.button22.Text = "Button22";
             this.button22.UseVisualStyleBackColor = true;
-            // 
-            // button24
-            // 
-            this.button24.Location = new System.Drawing.Point(870, 56);
-            this.button24.Margin = new System.Windows.Forms.Padding(2);
-            this.button24.Name = "button24";
-            this.button24.Size = new System.Drawing.Size(120, 23);
-            this.button24.TabIndex = 29;
-            this.button24.Text = "Button23";
-            this.button24.UseVisualStyleBackColor = true;
+            this.button22.Visible = false;
             // 
             // button23
             // 
@@ -394,8 +408,20 @@
             this.button23.Name = "button23";
             this.button23.Size = new System.Drawing.Size(120, 23);
             this.button23.TabIndex = 30;
-            this.button23.Text = "Button24";
+            this.button23.Text = "Button23";
             this.button23.UseVisualStyleBackColor = true;
+            this.button23.Visible = false;
+            // 
+            // button24
+            // 
+            this.button24.Location = new System.Drawing.Point(870, 56);
+            this.button24.Margin = new System.Windows.Forms.Padding(2);
+            this.button24.Name = "button24";
+            this.button24.Size = new System.Drawing.Size(120, 23);
+            this.button24.TabIndex = 29;
+            this.button24.Text = "Button24";
+            this.button24.UseVisualStyleBackColor = true;
+            this.button24.Visible = false;
             // 
             // button25
             // 
@@ -406,6 +432,7 @@
             this.button25.TabIndex = 31;
             this.button25.Text = "Button25";
             this.button25.UseVisualStyleBackColor = true;
+            this.button25.Visible = false;
             // 
             // button26
             // 
@@ -416,6 +443,7 @@
             this.button26.TabIndex = 32;
             this.button26.Text = "Button26";
             this.button26.UseVisualStyleBackColor = true;
+            this.button26.Visible = false;
             // 
             // button27
             // 
@@ -426,6 +454,7 @@
             this.button27.TabIndex = 33;
             this.button27.Text = "Button27";
             this.button27.UseVisualStyleBackColor = true;
+            this.button27.Visible = false;
             // 
             // button28
             // 
@@ -436,6 +465,7 @@
             this.button28.TabIndex = 34;
             this.button28.Text = "Button28";
             this.button28.UseVisualStyleBackColor = true;
+            this.button28.Visible = false;
             // 
             // button29
             // 
@@ -446,6 +476,7 @@
             this.button29.TabIndex = 35;
             this.button29.Text = "Button29";
             this.button29.UseVisualStyleBackColor = true;
+            this.button29.Visible = false;
             // 
             // button30
             // 
@@ -454,8 +485,9 @@
             this.button30.Name = "button30";
             this.button30.Size = new System.Drawing.Size(120, 23);
             this.button30.TabIndex = 37;
-            this.button30.Text = "Button31";
+            this.button30.Text = "Button30";
             this.button30.UseVisualStyleBackColor = true;
+            this.button30.Visible = false;
             // 
             // button31
             // 
@@ -464,8 +496,9 @@
             this.button31.Name = "button31";
             this.button31.Size = new System.Drawing.Size(120, 23);
             this.button31.TabIndex = 36;
-            this.button31.Text = "Button30";
+            this.button31.Text = "Button31";
             this.button31.UseVisualStyleBackColor = true;
+            this.button31.Visible = false;
             // 
             // button32
             // 
@@ -476,6 +509,7 @@
             this.button32.TabIndex = 38;
             this.button32.Text = "Button32";
             this.button32.UseVisualStyleBackColor = true;
+            this.button32.Visible = false;
             // 
             // button33
             // 
@@ -486,6 +520,7 @@
             this.button33.TabIndex = 39;
             this.button33.Text = "Button33";
             this.button33.UseVisualStyleBackColor = true;
+            this.button33.Visible = false;
             // 
             // button34
             // 
@@ -496,6 +531,7 @@
             this.button34.TabIndex = 40;
             this.button34.Text = "Button34";
             this.button34.UseVisualStyleBackColor = true;
+            this.button34.Visible = false;
             // 
             // button35
             // 
@@ -506,6 +542,7 @@
             this.button35.TabIndex = 41;
             this.button35.Text = "Button35";
             this.button35.UseVisualStyleBackColor = true;
+            this.button35.Visible = false;
             // 
             // button36
             // 
@@ -516,6 +553,7 @@
             this.button36.TabIndex = 42;
             this.button36.Text = "Button36";
             this.button36.UseVisualStyleBackColor = true;
+            this.button36.Visible = false;
             // 
             // button37
             // 
@@ -526,6 +564,7 @@
             this.button37.TabIndex = 43;
             this.button37.Text = "Button37";
             this.button37.UseVisualStyleBackColor = true;
+            this.button37.Visible = false;
             // 
             // button38
             // 
@@ -536,6 +575,7 @@
             this.button38.TabIndex = 44;
             this.button38.Text = "Button38";
             this.button38.UseVisualStyleBackColor = true;
+            this.button38.Visible = false;
             // 
             // button39
             // 
@@ -546,6 +586,7 @@
             this.button39.TabIndex = 45;
             this.button39.Text = "Button39";
             this.button39.UseVisualStyleBackColor = true;
+            this.button39.Visible = false;
             // 
             // button40
             // 
@@ -579,6 +620,7 @@
             this.button42.Text = "Button42";
             this.button42.UseVisualStyleBackColor = true;
             this.button42.Visible = false;
+            this.button42.Click += new EventHandler(Button42_Click);
             // 
             // btnAdmin
             // 
@@ -590,6 +632,7 @@
             this.btnAdmin.TabIndex = 49;
             this.btnAdmin.Text = "Admin";
             this.btnAdmin.UseVisualStyleBackColor = true;
+            this.btnAdmin.Click += new EventHandler(this.btnAdmin_Click);
             // 
             // tableLayoutPanel1
             // 
@@ -759,6 +802,10 @@
             this.ShowInTaskbar = false;
             this.Text = "NewMenuBase";
             this.Activated += new System.EventHandler(this.NewMenuBase_Activated);
+            this.Load += new System.EventHandler(this.NewMenuBase_Load);
+            this.Shown += new System.EventHandler(this.NewMenuBase_Shown);
+            this.FormClosing += new FormClosingEventHandler(NewMenuBase_Closing);
+            this.FormClosed += new FormClosedEventHandler(this.MenuBase_FormClosed);
             this.flpButtons.ResumeLayout(false);
             this.flpButtons.PerformLayout();
             this.tableLayoutPanel1.ResumeLayout(false);

@@ -107,9 +107,9 @@ namespace Meter.Forms
                 UpdateCheck();
             }
 
-            if (!MenuBase.editedFormulas.Contains(myID))
+            if (!NewMenuBase.editedFormulas.Contains(myID))
             {
-                MenuBase.editedFormulas.Add(myID);
+                NewMenuBase.editedFormulas.Add(myID);
             }
             else
             {
@@ -655,7 +655,7 @@ namespace Meter.Forms
         }
         private void FormulaEditor_Closing(object sender, EventArgs e)
         {
-            MenuBase.editedFormulas.Remove(myID);
+            NewMenuBase.editedFormulas.Remove(myID);
         }
 
         private void SubjectContextMenu(Control b)

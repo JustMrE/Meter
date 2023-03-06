@@ -33,7 +33,7 @@ namespace Meter.Forms
         {
             menues = new List<Form>();
             menues.Add(new NewMenu());
-            //menues.Add(new NewMenuAdmin());
+            menues.Add(new NewMenuAdmin());
             menuForm = menues[0] as NewMenuBase;
             menuForm.Show();
         }

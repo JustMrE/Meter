@@ -38,11 +38,13 @@
             this.ClientSize = new System.Drawing.Size(1379, 230);
             this.Name = "NewMenu";
             this.Text = "NewMenu";
-            this.Load += new System.EventHandler(this.NewMenuBase_Load);
-            this.Shown += new System.EventHandler(this.NewMenuBase_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
-
+            //
+            //button 2
+            //
+            this.button2.Visible = true;
+            this.button2.Text = "EMCOS";
         }
 
         #endregion
