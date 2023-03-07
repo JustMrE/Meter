@@ -51,51 +51,72 @@ namespace Meter
                 }
             }
         }
-        public ReferenceObject(string name, string nameL1, string address) : this()
+        public ReferenceObject(string name, string nameL1, string address, bool insert = true) : this()
         {
             Main.instance.StopAll();
 
             RangeReferences.idDictionary.Add(ID, this);
             _name = name;
+            childs = new Dictionary<string, ChildObject>();
+
             Excel.Range range;
             string adr, adrPS, adrDB;
-
-            adr = address;
-            range = Main.instance.wsDb.Range[adr];
-            range = range.Offset[-3].Resize[42];
-            adr = range.Offset[3].Resize[39].Address;
-            adrPS = range.Address;
-            range.Insert(Shift:Excel.XlInsertShiftDirection.xlShiftToRight, CopyOrigin:Excel.XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
-            range = Main.instance.wsDb.Range[adr];
-
-            ChildObject ps = new ChildObject(name, Main.instance.wsCh, range);
-            ps.parentID = ID;
-            ps.firstParentID = ID;
 
             adr = Main.instance.wsDb.Range["B2"].Value as string;
             range = Main.instance.wsDb.Range[adr];
             range = range.Offset[-2].Resize[40];
-            adr = range.Address;
-            adrDB = range.Address;
-            range.Insert(Shift:Excel.XlInsertShiftDirection.xlShiftToRight, CopyOrigin:Excel.XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
+            adr = range.Address[false, false];
+            range.Insert(Shift: Excel.XlInsertShiftDirection.xlShiftToRight, CopyOrigin: Excel.XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
             range = Main.instance.wsDb.Range[adr];
-            ChildObject db = new ChildObject(name, Main.instance.wsDb, range);
-            db.parentID = ID;
-            db.firstParentID = ID;
+            ChildObject db = new ChildObject()
+            {
+                _name = name,
+                WS = Main.instance.wsDb,
+                rangeAddress = range.Address[false, false],
+                headAddress = range.Resize[1].Address[false, false],
+                bodyAddress = range.Resize[range.Rows.Count - 1].Offset[1].Address[false, false],
+                _level = Level.level0,
+                parentID = ID,
+                firstParentID = ID,
+                childs = new Dictionary<string, ChildObject>(),
+            };
+            db.Head.Value = name;
+            RangeReferences.idDictionary.Add(db.ID, db);
 
-            childs = new Dictionary<string, ChildObject>();
+            adr = address;
+            range = Main.instance.wsCh.Range[adr];
+            range = range.Offset[-3].Resize[42];
+            adr = range.Offset[3].Resize[39].Address[false, false];
+            if (insert) range.Insert(Shift: Excel.XlInsertShiftDirection.xlShiftToRight, CopyOrigin: Excel.XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
+            range = Main.instance.wsCh.Range[adr];
+
+            ChildObject ps = new ChildObject()
+            {
+                _name = name,
+                WS = Main.instance.wsCh,
+                rangeAddress = range.Address[false, false],
+                headAddress = range.Resize[1].Address[false, false],
+                bodyAddress = range.Resize[range.Rows.Count - 1].Offset[1].Address[false, false],
+                _level = Level.level0,
+                parentID = ID,
+                firstParentID = ID,
+                childs = new Dictionary<string, ChildObject>(),
+            };
+            ps.Head.Value = name;
+            RangeReferences.idDictionary.Add(ps.ID, ps);
+            
             childs.Add("PS", ps);
             childs.Add("DB", db);
 
-            AddNewDBL1StandartOther(nameL1, false);
-            AddNewPS(nameL1, "ручное", false);
-            PS.childs[nameL1].childs["ручное"].ChangeCod();
+            CreateNewDBL1StandartOther(nameL1, false);
+            CreateNewPS(nameL1, "ручное", false);
 
-            Main.instance.wsCh.Range[adrPS].Delete();
-            PS.Head.Value = name;
-            Main.instance.wsDb.Range[adrDB].Delete();
-            DB.Head.Value = name;
             Main.instance.ResumeAll();
+        }
+
+        public void Test()
+        {
+            MessageBox.Show(PS.rangeAddress);
         }
 
         public int? ActiveDay()
@@ -290,6 +311,39 @@ namespace Meter
 
             DB.childs[nameL1].childs["основное"].UpdateFormulas(stopall);
         }
+
+        public void CreateNewPS(string nameL1, string nameL2, bool stopall = true)
+        {
+            PS.CreateNewRange(nameL1, nameL2, stopall);
+            PS.UpdateAllColors();
+        }
+
+        private void CreateNewDBL1Standart(string nameL1, bool stopall = true)
+        {
+            DB.CreateNewRange(nameL1, "код", stopall);
+            DB.AddNewRange(nameL1, "основное", stopall);
+
+            DB.childs[nameL1].childs["код"].UpdateFormulas(stopall);
+            Excel.Range r = ((Excel.Range)DB.childs[nameL1].childs["код"].Body.Cells[1, 1]);
+            r.Value = 1;
+            Marshal.ReleaseComObject(r);
+
+            DB.childs[nameL1].childs["основное"].UpdateFormulas(stopall);
+        }
+        public void CreateNewDBL1StandartOther(string nameL1, bool stopall = true)
+        {
+            CreateNewDBL1Standart(nameL1, stopall);
+            DB.AddNewRange(nameL1, "корректировка факт", stopall);
+            DB.AddNewRange(nameL1, "ручное", stopall);
+
+            DB.childs[nameL1].childs["код"].UpdateFormulas(stopall);
+            Excel.Range r = ((Excel.Range)DB.childs[nameL1].childs["код"].Body.Cells[1, 1]);
+            r.Value = 1;
+            Marshal.ReleaseComObject(r);
+
+            DB.childs[nameL1].childs["основное"].UpdateFormulas(stopall);
+        }
+
         public void AddDBPlansTable(bool stopall = true)
         {
             AddNewDBL1Standart("план", stopall);

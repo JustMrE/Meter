@@ -122,9 +122,9 @@ namespace Meter
         //     return null;
         // }
 
-        public void CreateNew(string name, string nameL1, string psAddress)
+        public void CreateNew(string name, string nameL1, string psAddress, bool insert = true)
         {
-            ReferenceObject ro = new ReferenceObject(name, nameL1, psAddress);
+            ReferenceObject ro = new ReferenceObject(name, nameL1, psAddress, insert);
             references.Add(name, ro);
         }
 

@@ -48,7 +48,15 @@ namespace Meter
                 if (_range is null)
                     return null;
                 else
-                    return _range.Address;
+                    try
+                    {
+                        return _range.Address;
+                    }
+                    catch (Exception)
+                    {
+
+                        return null;
+                    }
             }
             set
             {   if (value is not null)
@@ -62,7 +70,16 @@ namespace Meter
                 if (_head is null)
                     return null;
                 else
-                    return _head.Address;
+                    try
+                    {
+                        return _head.Address;
+                    }
+                    catch (Exception)
+                    {
+
+                        return null;
+                    }
+                    
             }
             set
             {   if (value is not null)
@@ -76,7 +93,16 @@ namespace Meter
                 if (_body is null)
                     return null;
                 else
-                    return _body.Address;
+                    try
+                    {
+                        return _body.Address;
+                    }
+                    catch (Exception)
+                    {
+
+                        return null;
+                    }
+                    
             }
             set
             {   if (value is not null)
@@ -186,20 +212,6 @@ namespace Meter
                     ID = Guid.NewGuid().ToString();
                 }
             }
-        }
-        
-        public ChildObject(string name, Excel.Worksheet ws, Excel.Range range) : this()
-        {
-            RangeReferences.idDictionary.Add(ID, this);
-
-            childs = new Dictionary<string, ChildObject>();
-            this.ws = ws;
-            _name = name;
-            Range = range;
-            Head = range.Resize[1];
-            Body = range.Resize[range.Rows.Count - 1].Offset[1];
-            if (ws.CodeName != "DB") Head.Interior.Color = Main.instance.colors.main["subject"];
-            Head.Value = name;
         }
 
         public T GetParent<T> () where T : ReferencesParent
@@ -405,6 +417,63 @@ namespace Meter
             }
             UpdateAllBorders();
             //Marshal.ReleaseComObject(r);
+            if (stopall) Main.instance.ResumeAll();
+        }
+        public void CreateNewRange(string nameL1, string nameL2, bool stopall = true)
+        {
+            if (stopall) Main.instance.StopAll();
+            int row, column, sizeColumn, sizeRow;
+            string adr;
+
+            sizeRow = _range.Rows.Count + 3;
+            row = _head.Offset[-3].Row;
+
+            ChildObject l1, l2;
+
+            column = LastColumn.Column;
+            Excel.Range r = Body;
+
+            l1 = new ChildObject()
+            {
+                WS = this.WS,
+                _name = nameL1,
+                Range = r,
+                Head = r.Resize[1],
+                Body = r.Resize[r.Rows.Count - 1].Offset[1],
+                parentID = ID,
+                firstParentID = firstParentID,
+                childs = new Dictionary<string, ChildObject>(),
+                _level = Level.level1
+            };
+
+            l1._head.Value = nameL1;
+            childs.Add(nameL1, l1);
+            RangeReferences.idDictionary.Add(l1.ID, l1);
+
+            r = l1.Body;
+
+            l2 = new ChildObject()
+            {
+                WS = this.WS,
+                _name = nameL2,
+                Range = r,
+                Head = r.Resize[1],
+                Body = r.Resize[r.Rows.Count - 1].Offset[1],
+                parentID = childs[nameL1].ID,
+                firstParentID = childs[nameL1].firstParentID,
+                _level = Level.level2
+            };
+            l2._head.Value = nameL2;
+            childs[nameL1].childs.Add(nameL2, l2);
+            RangeReferences.idDictionary.Add(l2.ID, l2);
+
+            if (WS.CodeName != "DB")
+            {
+                childs[nameL1]._head.Interior.Color = Main.instance.colors.main[nameL1];
+                l2.UpdateColors();
+                l2.UpdateFormulas(stopall);
+            }
+            UpdateAllBorders();
             if (stopall) Main.instance.ResumeAll();
         }
         public void RemoveRange(string nameL1, string nameL2)
@@ -848,7 +917,7 @@ namespace Meter
                 Main.instance.formulas.formulas.Remove(ID);
             }
             List<ForTags> temp = new List<ForTags>();
-            temp = Main.instance.formulas.formulas.Where(kv => kv.Value.Any(n => n.ID == ID)).SelectMany(kv => kv.Value).Where(c => c.ID == ID).ToList();
+            temp = Main.instance.formulas.formulas.Where(kv => (kv.Value != null && (kv.Value.Any(n => (n != null && n.ID != null && n.ID == ID))))).SelectMany(kv => kv.Value).Where(c => (c != null && c.ID != null && c.ID == ID)).ToList();
             if (temp.Count != 0)
             {
                 foreach (ForTags f in temp)

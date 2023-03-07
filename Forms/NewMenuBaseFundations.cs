@@ -357,7 +357,7 @@ namespace Meter.Forms
         }
         public virtual void SlectionChanged(Excel.Range range)
         {
-            _activeRange= range;
+            _activeRange = range;
             Main.instance.references.ActivateTable(range);
             if (range.Formula is string)
             {
@@ -683,28 +683,28 @@ namespace Meter.Forms
                     }
                 });
                 if (selectedButtons.Contains("Добавить план")) AddButtonToCommandBar("Добавить план", () => 
+                {
+                    using (AddPlan form = new AddPlan(RangeReferences.activeTable))
                     {
-                        using (AddPlan form = new AddPlan(RangeReferences.activeTable))
-                        {
-                            form.ShowDialog();
-                        }
-                    });
+                        form.ShowDialog();
+                    }
+                });
                 if (selectedButtons.Contains("Изменить код плана")) AddButtonToCommandBar("Изменить код плана", () => 
+                {
+                    using (AddPlan form = new AddPlan(RangeReferences.activeTable))
                     {
-                        using (AddPlan form = new AddPlan(RangeReferences.activeTable))
-                        {
-                            form.ShowDialog();
-                        }
-                    });
+                        form.ShowDialog();
+                    }
+                });
                 if (selectedButtons.Contains("Удалить план")) AddButtonToCommandBar("Удалить план", () => 
-                    {
-                        RangeReferences.activeTable.codPlan = null; 
-                        RangeReferences.activeTable.RemovePlan();
-                    });
+                {
+                    RangeReferences.activeTable.codPlan = null; 
+                    RangeReferences.activeTable.RemovePlan();
+                });
                 if (selectedButtons.Contains("Изменить формулу")) AddButtonToCommandBar("Изменить формулу", () =>
-                    {
-                        OpenForm();
-                    });
+                {
+                    OpenForm();
+                });
                 if (selectedButtons.Contains("Добавить по показаниям счетчика")) AddButtonToCommandBar("Добавить по показаниям счетчика",() => {
                     RangeReferences.activeTable.AddMeter(RangeReferences.ActiveL1);
                     });

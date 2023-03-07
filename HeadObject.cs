@@ -1,6 +1,10 @@
 using Excel = Microsoft.Office.Interop.Excel;
 using Main = Meter.MyApplicationContext;
 using Newtonsoft.Json;
+using System.Data.Common;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
+using Microsoft.Office.Interop.Excel;
+using System.Runtime.InteropServices;
 
 namespace Meter
 {
@@ -51,16 +55,26 @@ namespace Meter
         }
 
         public Level _level;
+
         [JsonIgnore]
         public Excel.Range Range 
         {
             get
             {
-                if (_range == null && rangeAddress != null)
+                try
                 {
-                    _range = WS.Range[rangeAddress];
+                    if (_range == null && rangeAddress != null)
+                    {
+                        _range = WS.Range[rangeAddress];
+                    }
+                    return _range;
                 }
-                return _range;
+                catch (Exception)
+                {
+
+                    return null;
+                }
+                
             } 
             set
             {
@@ -98,6 +112,14 @@ namespace Meter
             get
             {
                 return (Excel.Range)_range.Columns[_range.Columns.Count];
+            }
+        }
+        [JsonIgnore]
+        public Excel.Range LastCell
+        {
+            get
+            {
+                return (Excel.Range)_range.Cells[1, _range.Columns.Count];
             }
         }
         public Dictionary<string, HeadObject> childs { get; set; }
@@ -151,6 +173,41 @@ namespace Meter
                     c.CreateChilds();
                 }
             }
+        }
+
+        public void Resize(int column, bool newColumn = true, bool stopall = true)
+        {
+            if (newColumn)
+            {
+                Range = Range.Resize[Range.Rows.Count, column];
+            }
+            else
+            {
+                Range = Range.Resize[Range.Rows.Count, Range.Columns.Count + column];
+            }
+
+            if (stopall) Main.instance.xlApp.DisplayAlerts = false;
+            Range.Merge();
+            if (stopall) Main.instance.xlApp.DisplayAlerts = true;
+        }
+        public void UpdateColors()
+        {
+            if (_level == Level.level0)
+            {
+                Range.Interior.Color = Main.instance.colors.subColors["colorUp1"];
+            }
+            else if (_level == Level.level1)
+            {
+                Range.Interior.Color = Main.instance.colors.subColors["colorUp2"];
+            }
+            else if (_level == Level.level2)
+            {
+                Range.Interior.Color = Main.instance.colors.subColors["colorUp3"];
+            }
+        }
+        public void UpdateBorders()
+        {
+            Range.BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
         }
     }
 }
