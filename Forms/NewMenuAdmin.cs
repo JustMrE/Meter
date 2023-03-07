@@ -57,6 +57,37 @@ namespace Meter.Forms
             GlobalMethods.CalculateFormsPositions();
         }
 
+        protected override void Button41_Click(object sender, EventArgs e)
+        {
+            Thread t = new Thread(() =>
+            {
+                AddSubject form = new AddSubject();
+                form.FormClosed += (s, args) => 
+                { 
+                    System.Windows.Forms.Application.ExitThread(); 
+                };
+                form.Show();
+                System.Windows.Forms.Application.Run();
+            });
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+
+            // Excel.Range rng = Main.instance.xlApp.Selection as Excel.Range;
+            // string name = ((Excel.Range)rng.Cells[1,1]).Value as string;
+            // HeadObject ho = new HeadObject()
+            // {
+            //     _name = name,
+            //     WS = Main.instance.wsCh,
+            //     Range = rng,
+            // };
+            // Main.instance.heads.heads.Add(name, ho);
+            // ho.CreateChilds();
+            // MessageBox.Show("Done!");
+
+            // string name = textBox1.Text;
+            // Main.instance.references.CreateNew(name);
+        }
+
         protected override void Button42_Click(object sender, EventArgs e)
         {
             using (ColorSettings colorSettings = new ColorSettings())

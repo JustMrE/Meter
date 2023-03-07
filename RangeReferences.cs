@@ -42,6 +42,9 @@ namespace Meter
         public static Dictionary<string, ReferencesParent> idDictionary = new Dictionary<string, ReferencesParent>();
 
         [JsonIgnore]
+        public static Dictionary<string, HeadObject> headDictionary = new Dictionary<string, HeadObject>(); 
+
+        [JsonIgnore]
         public ReferenceObject this[string name]
         {
             get
@@ -88,6 +91,41 @@ namespace Meter
                 activeTable.ActivateTable(rng);
             }
             //Marshal.ReleaseComObject(rng);
+        }
+
+        // public HeadObject GetHeadL0(Excel.Range rng)
+        // {
+        //     return heads.Values.AsParallel().FirstOrDefault(n => n.HasRange(rng));
+        // }
+        // public HeadObject GetHeadL1(Excel.Range rng)
+        // {
+        //     HeadObject h0, h1;
+        //     h0 = GetHeadL0(rng.Offset[-2]);
+        //     if (h0 != null)
+        //     {
+        //         return heads[h0._name].childs.Values.AsParallel().FirstOrDefault(n => n.HasRange(rng));
+        //     }
+        //     return null;
+        // }
+        // public HeadObject GetHeadL2(Excel.Range rng)
+        // {
+        //     HeadObject h0, h1;
+        //     h0 = GetHeadL0(rng.Offset[-2]);
+        //     if (h0 != null)
+        //     {
+        //         h1 = GetHeadL1(rng.Offset[-1]);
+        //         if (h1 != null)
+        //         {
+        //             return heads[h0._name].childs[h1._name].childs.Values.AsParallel().FirstOrDefault(n => n.HasRange(rng));
+        //         }
+        //     }
+        //     return null;
+        // }
+
+        public void CreateNew(string name, string nameL1, string psAddress)
+        {
+            ReferenceObject ro = new ReferenceObject(name, nameL1, psAddress);
+            references.Add(name, ro);
         }
 
         public bool Contains(string name)

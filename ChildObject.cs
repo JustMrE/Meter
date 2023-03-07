@@ -188,6 +188,20 @@ namespace Meter
             }
         }
         
+        public ChildObject(string name, Excel.Worksheet ws, Excel.Range range) : this()
+        {
+            RangeReferences.idDictionary.Add(ID, this);
+
+            childs = new Dictionary<string, ChildObject>();
+            this.ws = ws;
+            _name = name;
+            Range = range;
+            Head = range.Resize[1];
+            Body = range.Resize[range.Rows.Count - 1].Offset[1];
+            if (ws.CodeName != "DB") Head.Interior.Color = Main.instance.colors.main["subject"];
+            Head.Value = name;
+        }
+
         public T GetParent<T> () where T : ReferencesParent
         {
             return (T)RangeReferences.idDictionary[parentID];
@@ -294,9 +308,9 @@ namespace Meter
             }
             return null;
         }
-        public void AddNewRange(string nameL1, string nameL2)
+        public void AddNewRange(string nameL1, string nameL2, bool stopall = true)
         {
-            Main.instance.StopAll();
+            if (stopall) Main.instance.StopAll();
             int row, column, sizeColumn, sizeRow;
             string adr;
 
@@ -340,11 +354,11 @@ namespace Meter
 
             if (level0 != null)
             {
-                level0.Resize(1, false);
+                level0.Resize(1, false, stopall);
             }
             if (level1 != null)
             {
-                level1.Resize(1,false);
+                level1.Resize(1,false, stopall);
             }
             else
             {
@@ -387,11 +401,11 @@ namespace Meter
             {
                 childs[nameL1]._head.Interior.Color = Main.instance.colors.main[nameL1];
                 l2.UpdateColors();
-                l2.UpdateFormulas();
+                l2.UpdateFormulas(stopall);
             }
             UpdateAllBorders();
             //Marshal.ReleaseComObject(r);
-            Main.instance.ResumeAll();
+            if (stopall) Main.instance.ResumeAll();
         }
         public void RemoveRange(string nameL1, string nameL2)
         {
@@ -609,12 +623,12 @@ namespace Meter
                 }
             }
         }
-        public void UpdateFormulas()
+        public void UpdateFormulas(bool stopall = true)
         {
             if (childs == null && WS.CodeName != "DB")
             {
                 //Main.instance.stopped = true;
-                Main.instance.StopAll();
+                if (stopall) Main.instance.StopAll();
                 if (Main.instance.colors.mainTitle.ContainsKey(_name))
                 {
                     Body.Formula = "=" + GetFirstParent.DB.WS.Name + "!" + ((Excel.Range)GetFirstParent.DB.childs[GetParent<ChildObject>()._name].childs["основное"]._body.Cells[2, 1]).Address[false, false];
@@ -629,7 +643,7 @@ namespace Meter
                 ((Excel.Range)Body.Rows[35]).FormulaR1C1 = "=SUM(R[-11]C:R[-1]C)";
                 ((Excel.Range)Body.Rows[36]).FormulaR1C1 = "=R[-13]C+R[-1]C";
                 //Main.instance.stopped = false;
-                Main.instance.ResumeAll();
+                if (stopall) Main.instance.ResumeAll();
             }
             else if (childs == null && WS.CodeName == "DB")
             {
@@ -774,7 +788,7 @@ namespace Meter
             {
                 foreach (ChildObject item in childs.Values)
                 {
-                    item.UpdateFormulas();
+                    item.UpdateFormulas(stopall);
                 }
             }
         }
@@ -799,7 +813,7 @@ namespace Meter
                 }
             }
         }
-        public void Resize(int column, bool newColumn = true)
+        public void Resize(int column, bool newColumn = true, bool stopall = true)
         {
             if (newColumn)
             {
@@ -814,9 +828,9 @@ namespace Meter
                 Body = Body.Resize[Body.Rows.Count ,Body.Columns.Count + column];
             }
 
-            Main.instance.xlApp.DisplayAlerts = false;
+            if (stopall) Main.instance.xlApp.DisplayAlerts = false;
             Head.Merge();
-            Main.instance.xlApp.DisplayAlerts = true;
+            if (stopall) Main.instance.xlApp.DisplayAlerts = true;
         }
         public void ClearDatas()
         {

@@ -56,10 +56,6 @@ namespace Meter.Forms
         {
 
         }
-        protected virtual void Button42_Click(object sender, EventArgs e)
-        {
-
-        }
         protected virtual void RepairMenu_Click(object sender, EventArgs e)
         {
             GlobalMethods.CalculateFormsPositions();
@@ -79,11 +75,172 @@ namespace Meter.Forms
                 SetForegroundWindow(Main.instance.xlAppHwnd);
             }
         }
+        protected virtual void TextBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+
+        }
+
         protected virtual void Button2_Click(object sender, EventArgs e)
         {
 
         }
-        protected virtual void TextBox1_KeyPress(object sender, KeyPressEventArgs e)
+        protected virtual void Button3_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button4_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button5_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button6_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button7_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button8_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button9_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button10_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button11_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button12_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button13_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button14_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button15_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button16_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button17_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button18_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button19_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button20_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button21_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button22_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button23_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button24_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button25_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button26_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button27_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button28_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button29_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button30_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button31_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button32_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button33_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button34_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button35_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button36_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button37_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button38_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button39_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button40_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button41_Click(object sender, EventArgs e)
+        {
+
+        }
+        protected virtual void Button42_Click(object sender, EventArgs e)
         {
 
         }

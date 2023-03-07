@@ -17,24 +17,28 @@ namespace Meter
         {
             SaveReferences();
             SaveColors();
+            SaveHeads();
         }
 
         public static void SaveAsync()
         {
             SaveReferencesNew();
             SaveColors();
+            SaveHeads();
         }
 
         public async static void Load()
         {
             LoadReferences();
             LoadColors();
+            LoadHeads();
         }
 
         public async static void LoadAsync()
         {
             LoadReferencesNew();
             LoadColors();
+            LoadHeads();
         }
 
         static void SaveReferences()
@@ -178,6 +182,23 @@ namespace Meter
             var stringJson = File.ReadAllText(file);
             //var root = JsonConvert.DeserializeObject(stringJson).ToString();
             Main.instance.colors = JsonConvert.DeserializeObject<ColorsData>(stringJson);
+        }
+
+        static void SaveHeads()
+        {
+            string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\heads.json";
+            using (StreamWriter writer = File.CreateText(file))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                var jsonString = JsonConvert.SerializeObject(Main.instance.heads);
+                writer.Write(jsonString);
+            }
+        }
+        static void LoadHeads()
+        {
+            string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\heads.json";
+            var stringJson = File.ReadAllText(file);
+            Main.instance.heads = JsonConvert.DeserializeObject<HeadReferences>(stringJson);
         }
 
         public static void LoadStandartColors()

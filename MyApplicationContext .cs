@@ -44,6 +44,7 @@ namespace Meter
         public ColorsData colors;
         public double zoom;
         public RangeReferences references;
+        public HeadReferences heads;
         public Formula formulas;
         public static bool save;
         public static string dir;
@@ -149,6 +150,7 @@ namespace Meter
             xlApp.WindowState = Excel.XlWindowState.xlMinimized;
 
             references = new RangeReferences();
+            heads = new HeadReferences();
             formulas = new Formula();
             colors = new ColorsData();
             xlApp.Visible = false;
@@ -247,7 +249,7 @@ namespace Meter
             // var watch = Stopwatch.StartNew();
             // if (MenuBase.test == "async")
             // {
-                    SaveLoader.SaveAsync();
+            SaveLoader.SaveAsync();
             // }
             // else if (MenuBase.test == "sync")
             // {

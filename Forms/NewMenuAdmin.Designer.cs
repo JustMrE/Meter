@@ -44,6 +44,11 @@
             this.Text = "NewMenuAdmin";
             this.ResumeLayout(false);
             //
+            //ColorSettings (button41)
+            //
+            this.button41.Visible = true;
+            this.button41.Text = "Добавить субъект";
+            //
             //ColorSettings (button42)
             //
             this.button42.Visible = true;

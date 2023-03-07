@@ -52,14 +52,17 @@ namespace Meter.Forms
                 ResetContextMenu();
                 Main.instance.xlApp.EnableEvents = false;
             }
-            else if(textBox1.Text == "save")
+            else
+            {
+                Main.instance.xlApp.EnableEvents = true;
+            }
+            if(textBox1.Text == "save")
             {
                 Main.save = true;
             }
             else
             {
                 Main.save = false;
-                Main.instance.xlApp.EnableEvents = true;
             }
         }
         private void RegexSearch()
@@ -253,6 +256,7 @@ namespace Meter.Forms
             b.Caption = caption;
             b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
         }
+        
         public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, Action<bool> action, bool b1, int type = 1)
         {
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
@@ -278,6 +282,16 @@ namespace Meter.Forms
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
                 action.Invoke(s1, s2);
+            };
+            CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
+            b.Caption = caption;
+            b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
+        }
+        public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, Action<string, string, bool> action, string s1, string s2, bool b1 = true, int type = 1)
+        {
+            CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
+            {
+                action.Invoke(s1, s2, b1);
             };
             CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
             b.Caption = caption;

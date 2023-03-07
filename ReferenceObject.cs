@@ -51,6 +51,52 @@ namespace Meter
                 }
             }
         }
+        public ReferenceObject(string name, string nameL1, string address) : this()
+        {
+            Main.instance.StopAll();
+
+            RangeReferences.idDictionary.Add(ID, this);
+            _name = name;
+            Excel.Range range;
+            string adr, adrPS, adrDB;
+
+            adr = address;
+            range = Main.instance.wsDb.Range[adr];
+            range = range.Offset[-3].Resize[42];
+            adr = range.Offset[3].Resize[39].Address;
+            adrPS = range.Address;
+            range.Insert(Shift:Excel.XlInsertShiftDirection.xlShiftToRight, CopyOrigin:Excel.XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
+            range = Main.instance.wsDb.Range[adr];
+
+            ChildObject ps = new ChildObject(name, Main.instance.wsCh, range);
+            ps.parentID = ID;
+            ps.firstParentID = ID;
+
+            adr = Main.instance.wsDb.Range["B2"].Value as string;
+            range = Main.instance.wsDb.Range[adr];
+            range = range.Offset[-2].Resize[40];
+            adr = range.Address;
+            adrDB = range.Address;
+            range.Insert(Shift:Excel.XlInsertShiftDirection.xlShiftToRight, CopyOrigin:Excel.XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
+            range = Main.instance.wsDb.Range[adr];
+            ChildObject db = new ChildObject(name, Main.instance.wsDb, range);
+            db.parentID = ID;
+            db.firstParentID = ID;
+
+            childs = new Dictionary<string, ChildObject>();
+            childs.Add("PS", ps);
+            childs.Add("DB", db);
+
+            AddNewDBL1StandartOther(nameL1, false);
+            AddNewPS(nameL1, "ручное", false);
+            PS.childs[nameL1].childs["ручное"].ChangeCod();
+
+            Main.instance.wsCh.Range[adrPS].Delete();
+            PS.Head.Value = name;
+            Main.instance.wsDb.Range[adrDB].Delete();
+            DB.Head.Value = name;
+            Main.instance.ResumeAll();
+        }
 
         public int? ActiveDay()
         {
@@ -151,7 +197,9 @@ namespace Meter
         public void UpdateAllColors()
         {
             if (PS != null)
+            {
                 PS.UpdateAllColors();
+            }
         }
         public void UpdateBorders()
         {
@@ -212,84 +260,74 @@ namespace Meter
                 item.UpdateLevels();
             }
         }
-        public void AddNewPS(string nameL1, string nameL2)
+        public void AddNewPS(string nameL1, string nameL2, bool stopall = true)
         {
-            PS.AddNewRange(nameL1, nameL2);
+            PS.AddNewRange(nameL1, nameL2, stopall);
         }
 
-        private void AddNewDBL1Standart(string nameL1)
+        private void AddNewDBL1Standart(string nameL1, bool stopall = true)
         {
-            DB.AddNewRange(nameL1, "код");
-            DB.AddNewRange(nameL1, "основное");
+            DB.AddNewRange(nameL1, "код", stopall);
+            DB.AddNewRange(nameL1, "основное", stopall);
 
-            DB.childs[nameL1].childs["код"].UpdateFormulas();
-            // DB.childs[nameL1].childs["код"].Body.Value = "=" + ((Excel.Range)DB.childs[nameL1].childs["код"].Body.Cells[1, 1]).Address;
-            // DB.childs[nameL1].childs["код"].Body.Replace("$", "", LookAt: XlLookAt.xlPart);
+            DB.childs[nameL1].childs["код"].UpdateFormulas(stopall);
             Excel.Range r = ((Excel.Range)DB.childs[nameL1].childs["код"].Body.Cells[1, 1]);
             r.Value = 1;
             Marshal.ReleaseComObject(r);
 
-            DB.childs[nameL1].childs["основное"].UpdateFormulas();
-            //DB.childs[nameL1].childs["основное"].Body.FormulaR1C1 = "=@INDIRECT(ADDRESS(ROW(RC),COLUMN(RC) + RC[-1],4,1),TRUE)";
-            //((Excel.Range)DB.childs[nameL1].childs["основное"].Body.Cells[1, 1]).Value = "";
+            DB.childs[nameL1].childs["основное"].UpdateFormulas(stopall);
         }
-        public void AddNewDBL1StandartOther(string nameL1)
+        public void AddNewDBL1StandartOther(string nameL1, bool stopall = true)
         {
-            AddNewDBL1Standart(nameL1);
-            // DB.AddNewRange(nameL1, "код");
-            // DB.AddNewRange(nameL1, "основное");
-            DB.AddNewRange(nameL1, "корректировка факт");
-            DB.AddNewRange(nameL1, "ручное");
+            AddNewDBL1Standart(nameL1, stopall);
+            DB.AddNewRange(nameL1, "корректировка факт", stopall);
+            DB.AddNewRange(nameL1, "ручное", stopall);
 
-            // DB.childs[nameL1].childs["код"].Body.Value = "=" + ((Excel.Range)DB.childs[nameL1].childs["код"].Body.Cells[1, 1]).Address;
-            // DB.childs[nameL1].childs["код"].Body.Replace("$", "", LookAt: XlLookAt.xlPart);
-            DB.childs[nameL1].childs["код"].UpdateFormulas();
+            DB.childs[nameL1].childs["код"].UpdateFormulas(stopall);
             Excel.Range r = ((Excel.Range)DB.childs[nameL1].childs["код"].Body.Cells[1, 1]);
             r.Value = 1;
             Marshal.ReleaseComObject(r);
 
-            DB.childs[nameL1].childs["основное"].UpdateFormulas();
-            // DB.childs[nameL1].childs["основное"].Body.FormulaR1C1 = "=@INDIRECT(ADDRESS(ROW(RC),COLUMN(RC) + RC[-1],4,1),TRUE) + RC[1]";
-            // ((Excel.Range)DB.childs[nameL1].childs["основное"].Body.Cells[1, 1]).Value = "";
+            DB.childs[nameL1].childs["основное"].UpdateFormulas(stopall);
         }
-        public void AddDBPlansTable()
+        public void AddDBPlansTable(bool stopall = true)
         {
-            AddNewDBL1Standart("план");
-            DB.AddNewRange("план", "заявка");
-            DB.AddNewRange("план", "утвержденный");
-            DB.AddNewRange("план", "корректировка");
+            AddNewDBL1Standart("план", stopall);
+            DB.AddNewRange("план", "заявка", stopall);
+            DB.AddNewRange("план", "утвержденный", stopall);
+            DB.AddNewRange("план", "корректировка", stopall);
 
             foreach (string n in DB.childs.Keys)
             {
                 if (n != "план")
                 {
-                    DB.AddNewRange(n, "по плану");
-                    DB.childs[n].childs["по плану"].UpdateFormulas();
+                    DB.AddNewRange(n, "по плану", stopall);
+                    DB.childs[n].childs["по плану"].UpdateFormulas(stopall);
                     // DB.childs[n].childs["по плану"].Body.Formula = "=" + ((Excel.Range)DB.childs["план"].childs["основное"].Body.Cells[1,1]).Address[false, false];
                 }
             }
-            DB.childs["план"].childs["заявка"].UpdateFormulas();
-            DB.childs["план"].childs["код"].UpdateFormulas();
+            DB.childs["план"].childs["заявка"].UpdateFormulas(stopall);
+            DB.childs["план"].childs["код"].UpdateFormulas(stopall);
             // DB.childs["план"].childs["заявка"].Body.FormulaR1C1 = "=SUM(RC[1],RC[2])";
         }
-        public void AddDBL2(string nameL1, string nameL2)
+        public void AddDBL2(string nameL1, string nameL2, bool stopall = true)
         {
-            if (!DB.HasItem(nameL1)) AddNewDBL1StandartOther(nameL1);
-            DB.AddNewRange(nameL1, nameL2);
+            if (!DB.HasItem(nameL1)) AddNewDBL1StandartOther(nameL1, stopall);
+            DB.AddNewRange(nameL1, nameL2, stopall);
         }
 
-        public void AddPlans()
+        public void AddPlans(bool stopall = true)
         {
-            AddDBPlansTable();
-            PS.AddNewRange("план", "заявка");
+            AddDBPlansTable(stopall);
+            PS.AddNewRange("план", "заявка", stopall);
         }
-        public void AddMeter(string nameL1)
+        public void AddMeter(string nameL1, bool stopall = true)
         {
-            DB.AddNewRange(nameL1, "счетчик");
-            DB.AddNewRange(nameL1, "по счетчику");
+            DB.AddNewRange(nameL1, "счетчик", stopall);
+            DB.AddNewRange(nameL1, "по счетчику", stopall);
 
-            DB.childs[nameL1].childs["счетчик"].UpdateFormulas();
-            DB.childs[nameL1].childs["по счетчику"].UpdateFormulas();
+            DB.childs[nameL1].childs["счетчик"].UpdateFormulas(stopall);
+            DB.childs[nameL1].childs["по счетчику"].UpdateFormulas(stopall);
 
             UpdateMeterCoef();
         }
