@@ -28,7 +28,6 @@
         /// </summary>
         protected void InitializeComponent()
         {
-            //base.InitializeComponent();
             // 
             // NewMenu
             // 
