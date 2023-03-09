@@ -99,22 +99,22 @@ namespace Meter.Forms
             string name = TextBox15.Text;
             if (string.IsNullOrEmpty(nameL0) || string.IsNullOrEmpty(nameL1) || string.IsNullOrEmpty(nameL2))
             {
-                MessageBox.Show("Введите расположение в таблице!");
+                MessageBox.Show("Р’РІРµРґРёС‚Рµ СЂР°СЃРїРѕР»РѕР¶РµРЅРёРµ СЃСѓР±СЉРµРєС‚Р° РІ С‚Р°Р±Р»РёСѓРµ!");
                 return;
             }
             if (string.IsNullOrEmpty(name))
             {
-                MessageBox.Show("Введите название субекта!");
+                MessageBox.Show("Р’РІРµРґРёС‚Рµ РЅР°Р·РІР°РЅРёРµ СЃСѓР±СЉРµРєС‚Р°!");
                 return;
             }
             else if (Main.instance.references.references.ContainsKey(name)) 
             {
-                MessageBox.Show("Субъект с таким именем уже существует!");
+                MessageBox.Show("РЎСѓР±СЉРµРєС‚ СЃ С‚Р°РєРёРј РЅР°Р·РІР°РЅРёРµ СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚!");
                 return;
             }
             if (types.Count == 0)
             {
-                MessageBox.Show("Выберите хотябы один вариант! (прием/отдача/сальдо)");
+                MessageBox.Show("Р’С‹Р±РµСЂРёС‚Рµ С…РѕС‚СЏР±С‹ РѕРґРёРЅ РІР°СЂРёР°РЅС‚! (РїСЂРёРµРј/РѕС‚РґР°С‡Р°/СЃР°Р»СЊРґРѕ)");
                 return;
             }
 
@@ -209,8 +209,8 @@ namespace Meter.Forms
                 foreach (string t in types)
                 {
                     Main.instance.references.references[name].AddNewDBL1StandartOther(t);
-                    Main.instance.references.references[name].AddNewPS(t, "ручное");
-                    Main.instance.references.references[name].PS.childs[t].childs["ручное"].ChangeCod();
+                    Main.instance.references.references[name].AddNewPS(t, "СЂСѓС‡РЅРѕРµ");
+                    Main.instance.references.references[name].PS.childs[t].childs["СЂСѓС‡РЅРѕРµ"].ChangeCod();
                 }
             }
         }
@@ -220,15 +220,15 @@ namespace Meter.Forms
 
             if (Main.instance.heads.heads[nameL0].LastCell.Column < Main.instance.wsCh.Range[adr].Column)
             {
-                Main.instance.heads.heads[nameL0].Resize(1, false);
+                Main.instance.heads.heads[nameL0].Increase();
             }
             if (Main.instance.heads.heads[nameL0].childs[nameL1].LastCell.Column < Main.instance.wsCh.Range[adr].Column)
             {
-                Main.instance.heads.heads[nameL0].childs[nameL1].Resize(1, false);
+                Main.instance.heads.heads[nameL0].childs[nameL1].Increase();
             }
             if (Main.instance.heads.heads[nameL0].childs[nameL1].childs[nameL2].LastCell.Column < Main.instance.wsCh.Range[adr].Column)
             {
-                Main.instance.heads.heads[nameL0].childs[nameL1].childs[nameL2].Resize(1, false);
+                Main.instance.heads.heads[nameL0].childs[nameL1].childs[nameL2].Increase();
             }
             
             Main.instance.heads.heads[nameL0].UpdateColors();

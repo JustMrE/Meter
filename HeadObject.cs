@@ -175,7 +175,7 @@ namespace Meter
             }
         }
 
-        public void Resize(int column, bool newColumn = true, bool stopall = true)
+        private void Resize(int column, bool newColumn = true, bool stopall = true)
         {
             if (newColumn)
             {
@@ -208,6 +208,16 @@ namespace Meter
         public void UpdateBorders()
         {
             Range.BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
+        }
+    
+        public void Increase(bool stopall = true)
+        {
+            Resize(1, false, stopall);
+        }
+
+        public void Decrese(bool stopall = true)
+        {
+            Resize(-1, false, stopall);
         }
     }
 }
