@@ -109,12 +109,14 @@ namespace Meter
 
         public void Start()
         {
-            dir = Process.GetCurrentProcess().MainModule.FileName;
-            file = System.IO.Path.GetDirectoryName(dir) + @"\Счетчики.xlsm";
+            dir = Process.GetCurrentProcess().MainModule.FileName ;
+            dir = System.IO.Path.GetDirectoryName(dir) + @"\DB"; 
+            file = dir + @"\current\Счетчики.xlsm";
             if (!File.Exists(file))
             {
                 dir = System.Reflection.Assembly.GetExecutingAssembly().Location;
-                file = System.IO.Path.GetDirectoryName(dir) + @"\Счетчики.xlsm";
+                dir = System.IO.Path.GetDirectoryName(dir) + @"\DB"; 
+                file = dir + @"\current\Счетчики.xlsm";
             }
 
             InitExcel();
@@ -246,17 +248,7 @@ namespace Meter
         }
         private void Wb_BeforeSave(bool SaveAsUI, ref bool Cancel)
         {
-            // var watch = Stopwatch.StartNew();
-            // if (MenuBase.test == "async")
-            // {
             SaveLoader.SaveAsync();
-            // }
-            // else if (MenuBase.test == "sync")
-            // {
-            //     SaveLoader.Save();
-            // }
-            // watch.Stop();
-            // MessageBox.Show((watch.ElapsedMilliseconds / 1000) + "sec");
         }
 
         public void Application_BeforeClose(ref bool cancel)

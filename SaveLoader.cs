@@ -13,12 +13,12 @@ namespace Meter
 {
     public static class SaveLoader
     {
-        public static void Save()
-        {
-            SaveReferences();
-            SaveColors();
-            SaveHeads();
-        }
+        // public static void Save()
+        // {
+        //     SaveReferences();
+        //     SaveColors();
+        //     SaveHeads();
+        // }
 
         public static void SaveAsync()
         {
@@ -27,12 +27,12 @@ namespace Meter
             SaveHeads();
         }
 
-        public async static void Load()
-        {
-            LoadReferences();
-            LoadColors();
-            LoadHeads();
-        }
+        // public async static void Load()
+        // {
+        //     LoadReferences();
+        //     LoadColors();
+        //     LoadHeads();
+        // }
 
         public async static void LoadAsync()
         {
@@ -40,27 +40,26 @@ namespace Meter
             LoadColors();
             LoadHeads();
         }
+        // static void SaveReferences()
+        // {
+        //     string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\referencesDictionary.json";
+        //     using (StreamWriter writer = File.CreateText(file))
+        //     {
+        //         JsonSerializer serializer = new JsonSerializer();
+        //         var jsonString = JsonConvert.SerializeObject(Main.instance.references);
+        //         writer.Write(jsonString);
+        //         //serializer.Serialize(writer, jsonString);
+        //     }
 
-        static void SaveReferences()
-        {
-            string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\referencesDictionary.json";
-            using (StreamWriter writer = File.CreateText(file))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                var jsonString = JsonConvert.SerializeObject(Main.instance.references);
-                writer.Write(jsonString);
-                //serializer.Serialize(writer, jsonString);
-            }
-
-            file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\formulasDictionary.json";
-            using (StreamWriter writer = File.CreateText(file))
-            {
-                JsonSerializer serializer = new JsonSerializer();
-                var jsonString = JsonConvert.SerializeObject(Main.instance.formulas);
-                writer.Write(jsonString);
-                //serializer.Serialize(writer, jsonString);
-            }
-        }
+        //     file = System.IO.Path.GetDirectoryName(Main.dir) + @"\formulasDictionary.json";
+        //     using (StreamWriter writer = File.CreateText(file))
+        //     {
+        //         JsonSerializer serializer = new JsonSerializer();
+        //         var jsonString = JsonConvert.SerializeObject(Main.instance.formulas);
+        //         writer.Write(jsonString);
+        //         //serializer.Serialize(writer, jsonString);
+        //     }
+        // }
         static async void SaveReferencesNew()
         {
             var tasks = new List<Task>();
@@ -69,7 +68,7 @@ namespace Meter
                 var task = Task.Run(() => 
                 {
                     string name = Main.instance.references.references[n].ID;
-                    string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\references\" + name + ".json";
+                    string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\current\references\" + name + ".json";
                     using (StreamWriter writer = File.CreateText(file))
                     {
                         JsonSerializer serializer = new JsonSerializer();
@@ -85,7 +84,7 @@ namespace Meter
                 var task = Task.Run(() => 
                 {
                     string name = id;
-                    string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\formulas\" + name + ".json";
+                    string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\current\formulas\" + name + ".json";
                     using (StreamWriter writer = File.CreateText(file))
                     {
                         JsonSerializer serializer = new JsonSerializer();
@@ -99,28 +98,28 @@ namespace Meter
             Task.WaitAll(tasks.ToArray());
             //await Task.WhenAll(tasks);
         }
-        static void LoadReferences()
-        {
-            string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\referencesDictionary.json";
-            var stringJson = File.ReadAllText(file);
-            //var root = JsonConvert.DeserializeObject(stringJson).ToString();
-            Main.instance.references = JsonConvert.DeserializeObject<RangeReferences>(stringJson);
+        // static void LoadReferences()
+        // {
+        //     string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\referencesDictionary.json";
+        //     var stringJson = File.ReadAllText(file);
+        //     //var root = JsonConvert.DeserializeObject(stringJson).ToString();
+        //     Main.instance.references = JsonConvert.DeserializeObject<RangeReferences>(stringJson);
 
-            Main.instance.references.UpdateAllLevels();
-            Main.instance.references.UpdateAllParents();
+        //     Main.instance.references.UpdateAllLevels();
+        //     Main.instance.references.UpdateAllParents();
 
-            file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\formulasDictionary.json";
-            if (File.Exists(file))
-            {
-                stringJson = File.ReadAllText(file);
-                //root = JsonConvert.DeserializeObject(stringJson).ToString();
-                Main.instance.formulas = JsonConvert.DeserializeObject<Formula>(stringJson);
-            }
-        }
+        //     file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\formulasDictionary.json";
+        //     if (File.Exists(file))
+        //     {
+        //         stringJson = File.ReadAllText(file);
+        //         //root = JsonConvert.DeserializeObject(stringJson).ToString();
+        //         Main.instance.formulas = JsonConvert.DeserializeObject<Formula>(stringJson);
+        //     }
+        // }
         static void LoadReferencesNew()
         {
             var tasks = new List<Task>();
-            string path1 = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\references";
+            string path1 = Main.dir + @"\current\references";
             List<string> filePaths1 = Directory.GetFiles(path1, "*.json").ToList();
             ConcurrentDictionary<string, ReferenceObject> concurentDictionary1 = new ConcurrentDictionary<string, ReferenceObject>();
             foreach (var file in filePaths1)
@@ -138,7 +137,7 @@ namespace Meter
                 tasks.Add(task);
             }
 
-            string path2 = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\formulas";
+            string path2 = Main.dir + @"\current\formulas";
             List<string> filePaths2 = Directory.GetFiles(path2, "*.json").ToList();
             ConcurrentDictionary<string, List<ForTags>> concurentDictionary2 = new ConcurrentDictionary<string, List<ForTags>>();
             foreach (var file in filePaths2)
@@ -167,7 +166,7 @@ namespace Meter
 
         static void SaveColors()
         {
-            string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\colors.json";
+            string file = Main.dir + @"\current\colors.json";
             using (StreamWriter writer = File.CreateText(file))
             {
                 JsonSerializer serializer = new JsonSerializer();
@@ -178,7 +177,7 @@ namespace Meter
         }
         static void LoadColors()
         {
-            string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\colors.json";
+            string file = Main.dir + @"\current\colors.json";
             var stringJson = File.ReadAllText(file);
             //var root = JsonConvert.DeserializeObject(stringJson).ToString();
             Main.instance.colors = JsonConvert.DeserializeObject<ColorsData>(stringJson);
@@ -186,7 +185,7 @@ namespace Meter
 
         static void SaveHeads()
         {
-            string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\heads.json";
+            string file = Main.dir + @"\current\heads.json";
             using (StreamWriter writer = File.CreateText(file))
             {
                 JsonSerializer serializer = new JsonSerializer();
@@ -196,14 +195,14 @@ namespace Meter
         }
         static void LoadHeads()
         {
-            string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\heads.json";
+            string file = Main.dir + @"\current\heads.json";
             var stringJson = File.ReadAllText(file);
             Main.instance.heads = JsonConvert.DeserializeObject<HeadReferences>(stringJson);
         }
 
         public static void LoadStandartColors()
         {
-            string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\colors.json";
+            string file = Main.dir + @"\standartColors.json";
             var stringJson = File.ReadAllText(file);
             //var root = JsonConvert.DeserializeObject(stringJson).ToString();
             Main.instance.colors = JsonConvert.DeserializeObject<ColorsData>(stringJson);

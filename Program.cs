@@ -11,14 +11,14 @@ namespace Meter
         static void Main()
         {
             string dir = Process.GetCurrentProcess().MainModule.FileName;
-            string file = System.IO.Path.GetDirectoryName(dir) + @"\Счетчики.xlsm";
-            if (!File.Exists(file))
+            string db = System.IO.Path.GetDirectoryName(dir) + @"\DB";
+            if (!File.Exists(db))
             {
                 dir = System.Reflection.Assembly.GetExecutingAssembly().Location;
-                file = System.IO.Path.GetDirectoryName(dir) + @"\Счетчики.xlsm";
+                db = System.IO.Path.GetDirectoryName(dir) + @"\DB";
             }
             
-            string file1 = System.IO.Path.GetDirectoryName(dir) + @"\DB\opened.txt";
+            string file1 = db + @"\opened.txt";
             string username = Environment.UserName;
             if (File.Exists(file1))
             {
