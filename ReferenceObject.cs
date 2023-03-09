@@ -16,6 +16,56 @@ namespace Meter
         public string? meterCoef { get; set; }
 
         [JsonIgnore]
+        public HeadObject HeadL0
+        {
+            get
+            {
+                string nameL0 = ((Excel.Range)((Excel.Range)PS.Head.Cells[1, 1]).Offset[-3].MergeArea.Cells[1,1]).Value as string;
+                if (Main.instance.heads.heads.ContainsKey(nameL0))
+                {
+                    return Main.instance.heads.heads[nameL0];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+        [JsonIgnore]
+        public HeadObject HeadL1
+        {
+            get
+            {
+                string nameL1 = ((Excel.Range)((Excel.Range)PS.Head.Cells[1, 1]).Offset[-2].MergeArea.Cells[1,1]).Value as string;
+                HeadObject ho = HeadL0;
+                if (ho != null && ho.childs.ContainsKey(nameL1))
+                {
+                    return ho.childs[nameL1];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+        [JsonIgnore]
+        public HeadObject HeadL2
+        {
+            get
+            {
+                string nameL2 = ((Excel.Range)((Excel.Range)PS.Head.Cells[1, 1]).Offset[-1].MergeArea.Cells[1,1]).Value as string;
+                HeadObject ho = HeadL1;
+                if (ho != null && ho.childs.ContainsKey(nameL2))
+                {
+                    return ho.childs[nameL2];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+        [JsonIgnore]
         public ChildObject DB
         {
             get
@@ -456,13 +506,82 @@ namespace Meter
             }
         }
 
-        public void Remove()
+        public void RemoveSubject()
         {
+            string u0, u1, u2;
+            u0 = ((Excel.Range)PS.Head.Offset[-3].MergeArea.Cells[1,1]).Value as string;
+            u1 = ((Excel.Range)PS.Head.Offset[-2].MergeArea.Cells[1,1]).Value as string;
+            u2 = ((Excel.Range)PS.Head.Offset[-1].MergeArea.Cells[1,1]).Value as string;
+
+            if (Main.instance.heads.heads.ContainsKey(u0))
+            {
+                if (Main.instance.heads.heads[u0].childs.ContainsKey(u1))
+                {
+                    if (Main.instance.heads.heads[u0].childs[u1].childs.ContainsKey(u2))
+                    {
+                        if (Main.instance.heads.heads[u0].childs[u1].childs[u2].Range.Columns.Count == PS.Head.Columns.Count)
+                        {
+                            Main.instance.heads.heads[u0].childs[u1].childs.Remove(u2);
+                        }
+                    }
+                    if (Main.instance.heads.heads[u0].childs[u1].Range.Columns.Count == PS.Head.Columns.Count)
+                    {
+                        Main.instance.heads.heads[u0].childs.Remove(u1);
+                    }
+                }
+                if (Main.instance.heads.heads[u0].Range.Columns.Count == PS.Head.Columns.Count)
+                {
+                    Main.instance.heads.heads.Remove(u0);
+                }
+            }
+
             DB.Remove();
             PS.Remove();
             RangeReferences.idDictionary.Remove(ID);
             Main.instance.references.references.Remove(_name);
             ID = null;
+
+            if (Main.instance.heads.heads.ContainsKey(u0))
+            {
+                if (Main.instance.heads.heads[u0].childs.ContainsKey(u1))
+                {
+                    if (Main.instance.heads.heads[u0].childs[u1].childs.ContainsKey(u2))
+                    {
+                        Main.instance.heads.heads[u0].childs[u1].childs[u2].UpdateBorders();
+                    }
+                    Main.instance.heads.heads[u0].childs[u1].UpdateBorders();
+                }
+                Main.instance.heads.heads[u0].UpdateBorders();
+            }
+        }
+    
+        public void UpdateHeads(bool stopall = true)
+        {
+            HeadObject h0 = HeadL0, h1 = HeadL1, h2 = HeadL2;
+
+            if (h0.LastColumn.Column < PS.LastColumn.Column)
+            {
+                int resizeValue = PS.LastColumn.Column - h0.LastColumn.Column;
+                h0.Resize(resizeValue, false, stopall);
+                h0.UpdateColors();
+                h0.UpdateBorders();
+            }
+            
+            if (h1.LastColumn.Column < PS.LastColumn.Column)
+            {
+                int resizeValue = PS.LastColumn.Column - h1.LastColumn.Column;
+                h1.Resize(resizeValue, false, stopall);
+                h1.UpdateColors();
+                h1.UpdateBorders();
+            }
+
+            if (h2.LastColumn.Column < PS.LastColumn.Column)
+            {
+                int resizeValue = PS.LastColumn.Column - h2.LastColumn.Column;
+                h2.Resize(resizeValue, false, stopall);
+                h2.UpdateColors();
+                h2.UpdateBorders();
+            }
         }
     }
 }

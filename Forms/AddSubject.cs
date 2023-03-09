@@ -7,6 +7,7 @@ namespace Meter.Forms
     partial class AddSubject : Form
     {
         string? nameL0, nameL1, nameL2;
+        string name;
         public string adr;
         List<string> types = new List<string>();
         public AddSubject()
@@ -56,7 +57,7 @@ namespace Meter.Forms
             if (!string.IsNullOrEmpty(nameL1))
             {
                 ComboBox13.Visible = true;
-                if (Main.instance.heads.heads[nameL0].childs.ContainsKey(nameL1))
+                if (Main.instance.heads.heads.ContainsKey(nameL0) && Main.instance.heads.heads[nameL0].childs.ContainsKey(nameL1))
                 {
                     ComboBox13.DataSource = Main.instance.heads.heads[nameL0].childs[nameL1].childs.Keys.ToList();
                     ComboBox13.Text = string.Empty;
@@ -96,7 +97,7 @@ namespace Meter.Forms
 
         public void btnOk_Click(object sender, EventArgs e)
         {
-            string name = TextBox15.Text;
+            name = TextBox15.Text + " " + ComboBox13.Text;
             if (string.IsNullOrEmpty(nameL0) || string.IsNullOrEmpty(nameL1) || string.IsNullOrEmpty(nameL2))
             {
                 MessageBox.Show("Введите расположение субъекта в таблиуе!");
@@ -194,14 +195,56 @@ namespace Meter.Forms
             }
             else
             {
-                
+                int row = Main.instance.heads.heads.Values.Select(n => n.Range.Row).Max();
+                row = row + 43;
+                Main.instance.StopAll();
+                Excel.Range r = (Excel.Range)Main.instance.wsCh.Cells[row, 2];
+                r.Value = nameL0;
+
+                Main.instance.heads.heads.Add(nameL0, new HeadObject()
+                {
+                    WS = Main.instance.wsCh,
+                    _name = nameL0,
+                    Range = r,
+                    _level = Level.level0,
+                    childs = new Dictionary<string, HeadObject>(),
+                });
+
+                r = r.Offset[1];
+                r.Value = nameL1;
+
+                Main.instance.heads.heads[nameL0].childs.Add(nameL1, new HeadObject()
+                {
+                    WS = Main.instance.wsCh,
+                    _name = nameL1,
+                    Range = r,
+                    _level = Level.level1,
+                    childs = new Dictionary<string, HeadObject>(),
+                });
+
+                r = r.Offset[1];
+                r.Value = nameL2;
+
+                Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, new HeadObject()
+                {
+                    WS = Main.instance.wsCh,
+                    _name = nameL2,
+                    Range = r,
+                    _level = Level.level2,
+                });
+
+                Main.instance.ResumeAll();
+
+                adr = r.Offset[1].Address[false, false];
+                CreateNew(false);
+
+                UpdateUps();
+                Close();
             }
         }
 
         private void CreateNew(bool insert = true)
-        {
-            string name = TextBox15.Text;
-            
+        {            
             Main.instance.references.CreateNew(name, types[0], adr, insert);
             types.RemoveAt(0);
             if (types.Count > 0)

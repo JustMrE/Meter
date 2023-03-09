@@ -618,9 +618,6 @@ namespace Meter.Forms
                 t.SetApartmentState(ApartmentState.STA);
                 t.Start();
             });
-            AddButtonToPopUpCommandBar(ref p, "Remove",() => {
-                RangeReferences.activeTable.Remove();
-            });
         }
         protected void OpenForm()
         {
@@ -729,6 +726,8 @@ namespace Meter.Forms
                     RangeReferences.activeTable.Reset(RangeReferences.ActiveL1, RangeReferences.activeL2);
                 });
                 if (selectedButtons.Contains("Special")) SpecialMenuMain();
+                if (selectedButtons.Contains("Удалить субъект"))AddButtonToCommandBar("Удалить субъект", RangeReferences.activeTable.RemoveSubject);
+                if (selectedButtons.Contains("Удалить тип"))AddButtonToCommandBar("Удалить тип", RangeReferences.activeTable._activeChild.Remove);
             }
         }
         public void ClearContextMenu()

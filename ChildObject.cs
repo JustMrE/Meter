@@ -416,6 +416,9 @@ namespace Meter
                 l2.UpdateFormulas(stopall);
             }
             UpdateAllBorders();
+            
+            GetFirstParent.UpdateHeads(false);
+
             //Marshal.ReleaseComObject(r);
             if (stopall) Main.instance.ResumeAll();
         }

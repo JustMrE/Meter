@@ -29,11 +29,16 @@ namespace Meter.Forms
                 selectedButtons.Add("GoTo DB");
                 selectedButtons.Add("Переименовать");
                 selectedButtons.Add("Добавить новый L1");
+                selectedButtons.Add("Удалить субъект");
             }
             if (activeColor == Main.instance.colors.main["прием"] || activeColor == Main.instance.colors.main["отдача"] || activeColor == Main.instance.colors.main["сальдо"])
             {
                 selectedButtons.Add("Добавить новый L2");
                 selectedButtons.Add("Удалить");
+                if (RangeReferences.activeTable.childs.Count > 1)
+                {
+                    selectedButtons.Add("Удалить тип");
+                }
             }
             if (Main.instance.colors.mainTitle.ContainsValue(activeColor) && RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].HasItem("аскуэ")) 
             {
@@ -58,26 +63,8 @@ namespace Meter.Forms
             this.Hide();
             GlobalMethods.CalculateFormsPositions();
         }
-
-        protected override void Button40_Click(object sender, EventArgs e)
-        {
-            Main.instance.references.references["test"].Test();
-        }
         protected override void Button41_Click(object sender, EventArgs e)
         {
-            
-            //Thread t = new Thread(() =>
-            //{
-            //    AddSubject form = new AddSubject();
-            //    form.FormClosed += (s, args) => 
-            //    { 
-            //        System.Windows.Forms.Application.ExitThread(); 
-            //    };
-            //    form.Show();
-            //    System.Windows.Forms.Application.Run();
-            //});
-            //t.SetApartmentState(ApartmentState.STA);
-            //t.Start();
             using (AddSubject form = new AddSubject())
             {
                 form.ShowDialog();

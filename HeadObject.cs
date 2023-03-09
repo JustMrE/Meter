@@ -175,7 +175,7 @@ namespace Meter
             }
         }
 
-        private void Resize(int column, bool newColumn = true, bool stopall = true)
+        public void Resize(int column, bool newColumn = true, bool stopall = true)
         {
             if (newColumn)
             {
