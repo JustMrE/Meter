@@ -10,6 +10,8 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Main = Meter.MyApplicationContext;
 using Excel = Microsoft.Office.Interop.Excel;
+using System.IO.Compression;
+using System.Globalization;
 
 namespace Meter.Forms
 {
@@ -243,6 +245,39 @@ namespace Meter.Forms
         protected virtual void Button42_Click(object sender, EventArgs e)
         {
 
+        }
+    
+        protected virtual void btnToArhive_Click(object sender, EventArgs e)
+        {
+            string sourceFolder = Main.dir + @"\current";
+            string tempDirectory = Path.Combine(Path.GetTempPath(), DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU")));
+            Directory.CreateDirectory(tempDirectory);
+            foreach (string dirPath in Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories))
+            {
+                Directory.CreateDirectory(dirPath.Replace(sourceFolder, tempDirectory));
+            }
+            foreach (string filePath in Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories))
+            {
+                File.Copy(filePath, filePath.Replace(sourceFolder, tempDirectory), true);
+            }
+            string archPath = Main.dir + @"\arch";
+            if (!Directory.Exists(archPath))
+            {
+                Directory.CreateDirectory(archPath);
+            }
+            archPath = archPath + @"\" + this.lblYear.Text;
+            if (!Directory.Exists(archPath))
+            {
+                Directory.CreateDirectory(archPath);
+            }
+            string arhiveName = archPath + @"\" + this.lblMonth.Text + @".zip";
+            if (File.Exists(arhiveName))
+            {
+                File.Delete(arhiveName);
+            }
+            ZipFile.CreateFromDirectory(tempDirectory, arhiveName);
+            Directory.Delete(tempDirectory, true);
+            MessageBox.Show("Done!");
         }
     }
 }

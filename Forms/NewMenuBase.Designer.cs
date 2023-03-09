@@ -83,6 +83,8 @@
             this.tableLayoutPanel2 = new System.Windows.Forms.TableLayoutPanel();
             this.btnToArhive = new System.Windows.Forms.Button();
             this.btnFromArhive = new System.Windows.Forms.Button();
+            this.lblMonth = new System.Windows.Forms.Label();
+            this.lblYear = new System.Windows.Forms.Label();
             this.button46 = new System.Windows.Forms.Button();
             this.button47 = new System.Windows.Forms.Button();
             this.flpButtons.SuspendLayout();
@@ -771,8 +773,8 @@
             this.tableLayoutPanel2.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 100F));
             this.tableLayoutPanel2.Controls.Add(this.btnToArhive, 0, 0);
             this.tableLayoutPanel2.Controls.Add(this.btnFromArhive, 0, 1);
-            this.tableLayoutPanel2.Controls.Add(this.button46, 0, 3);
-            this.tableLayoutPanel2.Controls.Add(this.button47, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.lblMonth, 0, 2);
+            this.tableLayoutPanel2.Controls.Add(this.lblYear, 0, 3);
             this.tableLayoutPanel2.Location = new System.Drawing.Point(0, 0);
             this.tableLayoutPanel2.Margin = new System.Windows.Forms.Padding(0);
             this.tableLayoutPanel2.Name = "tableLayoutPanel2";
@@ -794,6 +796,7 @@
             this.btnToArhive.TabIndex = 50;
             this.btnToArhive.Text = "Архивировать";
             this.btnToArhive.UseVisualStyleBackColor = true;
+            this.btnToArhive.Click += new EventHandler(btnToArhive_Click);
             // 
             // btnFromArhive
             // 
@@ -805,6 +808,18 @@
             this.btnFromArhive.TabIndex = 51;
             this.btnFromArhive.Text = "Открыть месяц";
             this.btnFromArhive.UseVisualStyleBackColor = true;
+            //
+            //lblMonth
+            //
+            this.lblMonth.AutoSize = true;
+            this.lblMonth.Text = "март";
+            this.lblMonth.Font = new Font(this.lblMonth.Font, FontStyle.Bold);
+            //
+            //lblYear
+            //
+            this.lblYear.AutoSize = true;
+            this.lblYear.Text = "2023";
+            this.lblYear.Font = new Font(this.lblYear.Font, FontStyle.Bold);
             // 
             // button46
             // 
@@ -920,5 +935,8 @@
         protected TableLayoutPanel tableLayoutPanel4;
         protected TableLayoutPanel tableLayoutPanel3;
         protected TableLayoutPanel tableLayoutPanel2;
+
+        protected Label lblMonth;
+        protected Label lblYear;
     }
 }
