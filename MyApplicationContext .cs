@@ -109,8 +109,14 @@ namespace Meter
 
         public void Start()
         {
-            dir = Process.GetCurrentProcess().MainModule.FileName ;
-            dir = System.IO.Path.GetDirectoryName(dir) + @"\DB"; 
+            string file1 = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\db.txt";
+            if (File.Exists(file1))
+            {
+                dir = File.ReadAllText(file1);
+            }
+
+            // dir = Process.GetCurrentProcess().MainModule.FileName ;
+            // dir = System.IO.Path.GetDirectoryName(dir) + @"\DB"; 
             file = dir + @"\current\Счетчики.xlsm";
             if (!File.Exists(file))
             {
@@ -118,7 +124,7 @@ namespace Meter
                 dir = System.IO.Path.GetDirectoryName(dir) + @"\DB"; 
                 file = dir + @"\current\Счетчики.xlsm";
             }
-
+            
             InitExcel();
             InitForms();
             InitExcelEvents();
