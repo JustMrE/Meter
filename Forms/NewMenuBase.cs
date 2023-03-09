@@ -249,6 +249,11 @@ namespace Meter.Forms
     
         protected virtual void btnToArhive_Click(object sender, EventArgs e)
         {
+            if (MessageBox.Show("Внимание!\nЕсли архив уже существует, он будет перезаписан! Вы хотите продолжить?", caption: "Предупреждение!", MessageBoxButtons.OKCancel ,icon: MessageBoxIcon.Exclamation) == DialogResult.Cancel)
+            {
+                return;
+            }
+
             string sourceFolder = Main.dir + @"\current";
             string tempDirectory = Path.Combine(Path.GetTempPath(), DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU")));
             Directory.CreateDirectory(tempDirectory);
@@ -277,7 +282,7 @@ namespace Meter.Forms
             }
             ZipFile.CreateFromDirectory(tempDirectory, arhiveName);
             Directory.Delete(tempDirectory, true);
-            MessageBox.Show("Done!");
+            MessageBox.Show("Готово!");
         }
     }
 }
