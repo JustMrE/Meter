@@ -14,6 +14,8 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using Excel = Microsoft.Office.Interop.Excel;
 using Main = Meter.MyApplicationContext;
+using System.Collections.Concurrent;
+using System.Globalization;
 
 namespace Meter.Forms
 {
@@ -33,14 +35,23 @@ namespace Meter.Forms
         }
         protected override void Button2_Click(object sender, EventArgs e)
         {
+            CultureInfo provider = CultureInfo.InvariantCulture;
             ReferenceObject[] ranges = Main.instance.references.references.Values.Where(n => n.HasEmcosID == true).ToArray();
             Login();
+            string format = "dd MMMM yyyy";
             string data = "2023-02-" + this.textBox1.Text;
+            data = this.textBox1.Text + " " + this.lblMonth.Text + " " + this.lblYear.Text;
+            DateTime result;
+            DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
+            data = result.ToString("yyyy-MM-dd");
             if (string.IsNullOrEmpty(this.textBox1.Text) ||  (Int32.Parse(this.textBox1.Text) <= 0 && Int32.Parse(this.textBox1.Text) > 31))
             {
                 MessageBox.Show("Не введена дата записи!");
                 return;
             }
+            
+            ConcurrentDictionary<string, string> emcosValues = new ConcurrentDictionary<string, string>();
+            //foreach (ReferenceObject item in ranges)
             Parallel.ForEach(ranges, item => 
             {
                 foreach (var v in item.DB.childs.Values)
@@ -60,10 +71,19 @@ namespace Meter.Forms
                         {
                             val = "0";
                         }
-                        item.WriteToDB( v._name, "аскуэ", int.Parse(this.textBox1.Text), val);
+                        emcosValues.TryAdd(item.DB.childs[v._name].childs["аскуэ"].ID, val);
+                        //item.WriteToDB(v._name, "аскуэ", int.Parse(this.textBox1.Text), val);
                     }
                 }
             });
+
+            Main.instance.StopAll();
+            foreach (string id in emcosValues.Keys)
+            {
+                
+                ((ChildObject)RangeReferences.idDictionary[id]).RangeByDay(int.Parse(this.textBox1.Text)).Value = emcosValues[id];
+            }
+            Main.instance.ResumeAll();
             MessageBox.Show("Done!");
         }
 
