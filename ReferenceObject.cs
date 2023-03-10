@@ -194,7 +194,7 @@ namespace Meter
             }
             Excel.Range r = DB.childs[nameL1].childs[nameL2.ToLower()].RangeByDay(day);
             r.Value = val;
-            Marshal.ReleaseComObject(r);
+            //Marshal.ReleaseComObject(r);
         }
         public void AddNewRange(string psdb, string nameL1, string nameL2 = "ручное")
         {
