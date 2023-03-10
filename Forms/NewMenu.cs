@@ -35,7 +35,7 @@ namespace Meter.Forms
         }
         protected override void Button2_Click(object sender, EventArgs e)
         {
-            CultureInfo provider = CultureInfo.InvariantCulture;
+            CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");
             ReferenceObject[] ranges = Main.instance.references.references.Values.Where(n => n.HasEmcosID == true).ToArray();
             Login();
             string format = "dd MMMM yyyy";
