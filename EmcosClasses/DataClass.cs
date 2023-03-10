@@ -9,8 +9,8 @@ namespace Emcos
         public int? ID { get; set; }
         public string? BT { get; set; }
         public string? ET { get; set; }
-        public int? VAL { get; set; }
-        public int? DR { get; set; }
+        public float? VAL { get; set; }
+        public float? DR { get; set; }
         public object DF { get; set; }
         public string? READ_TIME { get; set; }
         public int? HSS { get; set; }
