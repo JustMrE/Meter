@@ -27,6 +27,7 @@ namespace Meter
                 dir = File.ReadAllText(f);
                 if (Directory.Exists(dir))
                 {
+                    db = dir;
                     pathExists = true;
                 }
             }

@@ -68,7 +68,7 @@ namespace Meter
                 var task = Task.Run(() => 
                 {
                     string name = Main.instance.references.references[n].ID;
-                    string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\current\references\" + name + ".json";
+                    string file = Main.dir + @"\current\references\" + name + ".json";
                     using (StreamWriter writer = File.CreateText(file))
                     {
                         JsonSerializer serializer = new JsonSerializer();
@@ -84,7 +84,7 @@ namespace Meter
                 var task = Task.Run(() => 
                 {
                     string name = id;
-                    string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\current\formulas\" + name + ".json";
+                    string file = Main.dir + @"\current\formulas\" + name + ".json";
                     using (StreamWriter writer = File.CreateText(file))
                     {
                         JsonSerializer serializer = new JsonSerializer();

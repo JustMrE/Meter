@@ -31,7 +31,7 @@ namespace Meter.Forms
             base.NewMenuBase_Shown(sender, e);
             textBox1.Text = DateTime.Today.AddDays(-1).ToString("dd");
         }
-        protected void Button2_Click(object sender, EventArgs e)
+        protected override void Button2_Click(object sender, EventArgs e)
         {
             ReferenceObject[] ranges = Main.instance.references.references.Values.Where(n => n.HasEmcosID == true).ToArray();
             Login();
@@ -131,62 +131,68 @@ namespace Meter.Forms
         }
         static void Login()
         {
-            string uri = @"http://10.0.144.11:8080/ec3api/v1/user/login";
-            string host = @"10.0.144.11:8080";
-            string jsonRequest = "{\"username\":\"a_bagdatova\",\"password\":\"z123456\"}";
-            HttpRequestMessage message = new HttpRequestMessage()
+            using (HttpClient client = new HttpClient())
             {
-                RequestUri = new Uri(uri),
-                Method = HttpMethod.Post,
-                Headers = 
+                string uri = @"http://10.0.144.11:8080/ec3api/v1/user/login";
+                string host = @"10.0.144.11:8080";
+                string jsonRequest = "{\"username\":\"a_bagdatova\",\"password\":\"z123456\"}";
+                HttpRequestMessage message = new HttpRequestMessage()
                 {
-                    {HttpRequestHeader.Host.ToString(), host},
-                    {HttpRequestHeader.Connection.ToString(), "keep-alive"},
-                    {HttpRequestHeader.ContentLength.ToString(), jsonRequest.Length.ToString()},
-                    {HttpRequestHeader.Accept.ToString(),"appplication/json, text/plain, */*"},
-                    {"st-token", "undefined"},
-                    {HttpRequestHeader.ContentType.ToString(), "application/json;charset=UTF-8"},
-                    {HttpRequestHeader.AcceptEncoding.ToString(), "gzip, deflate"}
-                },
-                Content = new StringContent(jsonRequest, Encoding.UTF8, "application/json")
-            };
-            using (var responce = client.SendAsync(message).Result)
-            {
-                var jsonResoponse = responce.Content.ReadAsStringAsync().Result;
-                var data = (JObject)JsonConvert.DeserializeObject(jsonResoponse);
+                    RequestUri = new Uri(uri),
+                    Method = HttpMethod.Post,
+                    Headers = 
+                    {
+                        {HttpRequestHeader.Host.ToString(), host},
+                        {HttpRequestHeader.Connection.ToString(), "keep-alive"},
+                        {HttpRequestHeader.ContentLength.ToString(), jsonRequest.Length.ToString()},
+                        {HttpRequestHeader.Accept.ToString(),"appplication/json, text/plain, */*"},
+                        {"st-token", "undefined"},
+                        {HttpRequestHeader.ContentType.ToString(), "application/json;charset=UTF-8"},
+                        {HttpRequestHeader.AcceptEncoding.ToString(), "gzip, deflate"}
+                    },
+                    Content = new StringContent(jsonRequest, Encoding.UTF8, "application/json")
+                };
+                using (var responce = client.SendAsync(message).Result)
+                {
+                    var jsonResoponse = responce.Content.ReadAsStringAsync().Result;
+                    var data = (JObject)JsonConvert.DeserializeObject(jsonResoponse);
 
-                LoginRoot loginResponce = JsonConvert.DeserializeObject<LoginRoot>(jsonResoponse);
-                token = loginResponce.data.token;
+                    LoginRoot loginResponce = JsonConvert.DeserializeObject<LoginRoot>(jsonResoponse);
+                    token = loginResponce.data.token;
+                }
             }
         }
         static DataRoot GetValue(string dataFrom, string dataTo, string ID)
         {
-            string uri = @"http://10.0.144.11:8080/ec3api/v1/archives/point";
-            string host = @"10.0.144.11:8080";
-            string jsonRequest = "{\"FROM\":\"" + dataFrom +"\",\"TO\":\""+ dataTo + "\",\"POINT_ID\":" + ID + ",\"ML_ID\":[385,386],\"MD_ID\":5,\"AGGS_ID\":5,\"WO_BYP\":0,\"WO_ACTS\":0,\"BILLING_HOUR\":0,\"SHOW_MAP_DATA\":0,\"FREEZED\":1}";
-            HttpRequestMessage message = new HttpRequestMessage()
+            using (HttpClient client = new HttpClient())
             {
-                RequestUri = new Uri(uri),
-                Method = HttpMethod.Post,
-                Headers = 
+                string uri = @"http://10.0.144.11:8080/ec3api/v1/archives/point";
+                string host = @"10.0.144.11:8080";
+                string jsonRequest = "{\"FROM\":\"" + dataFrom +"\",\"TO\":\""+ dataTo + "\",\"POINT_ID\":" + ID + ",\"ML_ID\":[385,386],\"MD_ID\":5,\"AGGS_ID\":5,\"WO_BYP\":0,\"WO_ACTS\":0,\"BILLING_HOUR\":0,\"SHOW_MAP_DATA\":0,\"FREEZED\":1}";
+                HttpRequestMessage message = new HttpRequestMessage()
                 {
-                    {HttpRequestHeader.Host.ToString(), host},
-                    {HttpRequestHeader.Connection.ToString(), "keep-alive"},
-                    {HttpRequestHeader.ContentLength.ToString(), jsonRequest.Length.ToString()},
-                    {HttpRequestHeader.Accept.ToString(),"appplication/json, text/plain, */*"},
-                    {"st-token", token},
-                    {HttpRequestHeader.ContentType.ToString(), "application/json;charset=UTF-8"},
-                    {HttpRequestHeader.AcceptEncoding.ToString(), "gzip, deflate"}
-                },
-                Content = new StringContent(jsonRequest, Encoding.UTF8, "application/json")
-            };
-            DataRoot vals;
-            using (var responce = client.SendAsync(message).Result)
-            {
-                var jsonResoponse = responce.Content.ReadAsStringAsync().Result;
-                vals = JsonConvert.DeserializeObject<DataRoot>(jsonResoponse);
+                    RequestUri = new Uri(uri),
+                    Method = HttpMethod.Post,
+                    Headers = 
+                    {
+                        {HttpRequestHeader.Host.ToString(), host},
+                        {HttpRequestHeader.Connection.ToString(), "keep-alive"},
+                        {HttpRequestHeader.ContentLength.ToString(), jsonRequest.Length.ToString()},
+                        {HttpRequestHeader.Accept.ToString(),"appplication/json, text/plain, */*"},
+                        {"st-token", token},
+                        {HttpRequestHeader.ContentType.ToString(), "application/json;charset=UTF-8"},
+                        {HttpRequestHeader.AcceptEncoding.ToString(), "gzip, deflate"}
+                    },
+                    Content = new StringContent(jsonRequest, Encoding.UTF8, "application/json")
+                };
+                DataRoot vals;
+                using (var responce = client.SendAsync(message).Result)
+                {
+                    var jsonResoponse = responce.Content.ReadAsStringAsync().Result;
+                    vals = JsonConvert.DeserializeObject<DataRoot>(jsonResoponse);
+                }
+                return vals;
             }
-            return vals;
         }
     }
 }

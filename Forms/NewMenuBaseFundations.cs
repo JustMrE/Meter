@@ -32,7 +32,7 @@ namespace Meter.Forms
         protected delegate void CommandBarButtonClick(CommandBarButton commandBarButton, ref bool cancel);
         private static object[,] oldValsArray;
         private static string oldVal;
-        public static HttpClient client = new HttpClient();
+        //public static HttpClient client = new HttpClient();
         protected static string token = "";
         protected CommandBar cb;
         protected Color activeColor;
