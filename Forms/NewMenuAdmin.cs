@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -92,6 +93,29 @@ namespace Meter.Forms
         public override void DeactivateSheet()
         {
             base.DeactivateSheet();
+        }
+
+        protected override void lblMonth_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            using (MonthSelect form = new MonthSelect())
+            {
+                form.ShowDialog();
+                this.lblMonth.Text = form.selectedMonth;
+                month = form.selectedMonth;
+            }
+        }
+
+        protected override void lblYear_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            using (YearSelect form = new YearSelect(this.lblYear.Text))
+            {
+                form.ShowDialog();
+                if (!string.IsNullOrEmpty(form.year))
+                {
+                    this.lblYear.Text = form.year;
+                    year = form.year;
+                }
+            }
         }
     }
 }

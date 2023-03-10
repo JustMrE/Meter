@@ -9,6 +9,8 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Windows.Forms;
 using Meter.Forms;
+using System.Globalization;
+using System.IO.Compression;
 
 namespace Meter
 {
@@ -49,6 +51,7 @@ namespace Meter
         public static bool save;
         public static string dir;
         public static List<int> menuIndexes = new List<int>();
+        public static bool restart;
 
         string file;
 
@@ -107,6 +110,12 @@ namespace Meter
             Start();
         }
 
+        public static void Exit()
+        {
+            Thread.Sleep(2000);
+            instance.ExitThread();
+        }
+
         public void Start()
         {
             string file1 = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\db.txt";
@@ -132,7 +141,12 @@ namespace Meter
 
             // InitMyContextMenu();
         }
-        
+
+        public void Restart()
+        {
+            System.Windows.Forms.Application.Restart();
+        }
+
         private void InitExcel()
         {
             excelClosed = false;
@@ -328,6 +342,38 @@ namespace Meter
             base.OnMainFormClosed(sender, e);
 
             MessageBox.Show("Closed");
+        }
+
+        public void Arhivate(string year, string month)
+        {
+            string sourceFolder = dir + @"\current";
+            string tempDirectory = Path.Combine(Path.GetTempPath(), DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU")));
+            Directory.CreateDirectory(tempDirectory);
+            foreach (string dirPath in Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories))
+            {
+                Directory.CreateDirectory(dirPath.Replace(sourceFolder, tempDirectory));
+            }
+            foreach (string filePath in Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories))
+            {
+                File.Copy(filePath, filePath.Replace(sourceFolder, tempDirectory), true);
+            }
+            string archPath = dir + @"\arch";
+            if (!Directory.Exists(archPath))
+            {
+                Directory.CreateDirectory(archPath);
+            }
+            archPath = archPath + @"\" + year;
+            if (!Directory.Exists(archPath))
+            {
+                Directory.CreateDirectory(archPath);
+            }
+            string arhiveName = archPath + @"\" + month + @".zip";
+            if (File.Exists(arhiveName))
+            {
+                File.Delete(arhiveName);
+            }
+            ZipFile.CreateFromDirectory(tempDirectory, arhiveName);
+            Directory.Delete(tempDirectory, true);
         }
     }
 }

@@ -783,7 +783,7 @@
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.tableLayoutPanel2.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tableLayoutPanel2.Size = new System.Drawing.Size(105, 124);
+            this.tableLayoutPanel2.Size = new System.Drawing.Size(105, 92);
             this.tableLayoutPanel2.TabIndex = 59;
             // 
             // btnToArhive
@@ -796,7 +796,7 @@
             this.btnToArhive.TabIndex = 50;
             this.btnToArhive.Text = "Архивировать";
             this.btnToArhive.UseVisualStyleBackColor = true;
-            this.btnToArhive.Click += new EventHandler(btnToArhive_Click);
+            this.btnToArhive.Click += new System.EventHandler(this.btnToArhive_Click);
             // 
             // btnFromArhive
             // 
@@ -808,18 +808,29 @@
             this.btnFromArhive.TabIndex = 51;
             this.btnFromArhive.Text = "Открыть месяц";
             this.btnFromArhive.UseVisualStyleBackColor = true;
-            //
-            //lblMonth
-            //
+            this.btnFromArhive.Click += new System.EventHandler(this.btnFromArhive_Click);
+            // 
+            // lblMonth
+            // 
             this.lblMonth.AutoSize = true;
+            this.lblMonth.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblMonth.Location = new System.Drawing.Point(3, 62);
+            this.lblMonth.Name = "lblMonth";
+            this.lblMonth.Size = new System.Drawing.Size(34, 15);
+            this.lblMonth.TabIndex = 52;
             this.lblMonth.Text = "март";
-            this.lblMonth.Font = new Font(this.lblMonth.Font, FontStyle.Bold);
-            //
-            //lblYear
-            //
+            this.lblMonth.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lblMonth_MouseDoubleClick);
+            // 
+            // lblYear
+            // 
             this.lblYear.AutoSize = true;
+            this.lblYear.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.lblYear.Location = new System.Drawing.Point(3, 77);
+            this.lblYear.Name = "lblYear";
+            this.lblYear.Size = new System.Drawing.Size(35, 15);
+            this.lblYear.TabIndex = 53;
             this.lblYear.Text = "2023";
-            this.lblYear.Font = new Font(this.lblYear.Font, FontStyle.Bold);
+            this.lblYear.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lblYear_MouseDoubleClick);
             // 
             // button46
             // 

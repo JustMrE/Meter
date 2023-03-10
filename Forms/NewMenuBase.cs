@@ -17,7 +17,7 @@ namespace Meter.Forms
 {
     public partial class NewMenuBase : Form
     {
-        
+        public static string? month = null, year = null;
 
         public NewMenuBase()
         {
@@ -46,6 +46,8 @@ namespace Meter.Forms
         }
         protected virtual void NewMenuBase_Activated(object sender, EventArgs e)
         {
+            if (!string.IsNullOrEmpty(month)) this.lblMonth.Text = month;
+            if (!string.IsNullOrEmpty(year)) this.lblYear.Text = year;
             GlobalMethods.CalculateFormsPositions();
         }
         private void MenuBase_FormClosed(object sender, FormClosedEventArgs e)
@@ -254,35 +256,35 @@ namespace Meter.Forms
                 return;
             }
 
-            string sourceFolder = Main.dir + @"\current";
-            string tempDirectory = Path.Combine(Path.GetTempPath(), DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU")));
-            Directory.CreateDirectory(tempDirectory);
-            foreach (string dirPath in Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories))
-            {
-                Directory.CreateDirectory(dirPath.Replace(sourceFolder, tempDirectory));
-            }
-            foreach (string filePath in Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories))
-            {
-                File.Copy(filePath, filePath.Replace(sourceFolder, tempDirectory), true);
-            }
-            string archPath = Main.dir + @"\arch";
-            if (!Directory.Exists(archPath))
-            {
-                Directory.CreateDirectory(archPath);
-            }
-            archPath = archPath + @"\" + this.lblYear.Text;
-            if (!Directory.Exists(archPath))
-            {
-                Directory.CreateDirectory(archPath);
-            }
-            string arhiveName = archPath + @"\" + this.lblMonth.Text + @".zip";
-            if (File.Exists(arhiveName))
-            {
-                File.Delete(arhiveName);
-            }
-            ZipFile.CreateFromDirectory(tempDirectory, arhiveName);
-            Directory.Delete(tempDirectory, true);
+            Main.instance.Arhivate(this.lblYear.Text, this.lblMonth.Text);
+
             MessageBox.Show("Готово!");
+        }
+
+        protected virtual void btnFromArhive_Click(object sender, EventArgs e)
+        {
+            Thread t = new Thread(() =>
+            {
+                OpenArchive form = new OpenArchive(this.lblYear.Text, this.lblMonth.Text);
+                form.FormClosed += (s, args) =>
+                {
+                    System.Windows.Forms.Application.ExitThread();
+                };
+                form.Show();
+                System.Windows.Forms.Application.Run();
+            });
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+        }
+
+        protected virtual void lblMonth_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+            
+        }
+
+        protected virtual void lblYear_MouseDoubleClick(object sender, MouseEventArgs e)
+        {
+
         }
     }
 }
