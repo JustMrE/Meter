@@ -61,5 +61,29 @@ namespace Meter
                 return null;
             }
         }
+
+        public static ForTags? SpecialTag(this Button control)
+        {
+            if ((ForTags)control.Tag != null)
+            {
+                return (ForTags)control.Tag;
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        public static ForTags? SpecialTag(this ListViewItem control)
+        {
+            if ((ForTags)control.Tag != null)
+            {
+                return (ForTags)control.Tag;
+            }
+            else
+            {
+                return null;
+            }
+        }
     }
 }

@@ -53,7 +53,7 @@
             this.flowLayoutPanel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 12);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(788, 100);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(788, 287);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
             // listView1
@@ -61,7 +61,7 @@
             this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.columnHeader1});
             this.listView1.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            this.listView1.Location = new System.Drawing.Point(12, 161);
+            this.listView1.Location = new System.Drawing.Point(12, 334);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
             this.listView1.Size = new System.Drawing.Size(252, 97);
@@ -74,7 +74,7 @@
             // 
             // tbSearch
             // 
-            this.tbSearch.Location = new System.Drawing.Point(12, 132);
+            this.tbSearch.Location = new System.Drawing.Point(12, 305);
             this.tbSearch.Name = "tbSearch";
             this.tbSearch.PlaceholderText = "Поиск...";
             this.tbSearch.Size = new System.Drawing.Size(345, 23);
@@ -84,7 +84,7 @@
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(270, 161);
+            this.checkBox1.Location = new System.Drawing.Point(270, 334);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(87, 34);
             this.checkBox1.TabIndex = 5;
@@ -93,7 +93,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(390, 132);
+            this.button1.Location = new System.Drawing.Point(390, 305);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(37, 23);
             this.button1.TabIndex = 6;
@@ -103,7 +103,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(390, 161);
+            this.button2.Location = new System.Drawing.Point(390, 334);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(37, 23);
             this.button2.TabIndex = 7;
@@ -113,7 +113,7 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(433, 132);
+            this.button3.Location = new System.Drawing.Point(433, 305);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(37, 23);
             this.button3.TabIndex = 8;
@@ -123,7 +123,7 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(433, 161);
+            this.button4.Location = new System.Drawing.Point(433, 334);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(37, 23);
             this.button4.TabIndex = 9;
@@ -134,7 +134,7 @@
             // button5
             // 
             this.button5.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button5.Location = new System.Drawing.Point(390, 190);
+            this.button5.Location = new System.Drawing.Point(390, 363);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(37, 23);
             this.button5.TabIndex = 10;
@@ -144,7 +144,7 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(433, 190);
+            this.button6.Location = new System.Drawing.Point(433, 363);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(37, 23);
             this.button6.TabIndex = 11;
@@ -157,7 +157,7 @@
             this.trash.AllowDrop = true;
             this.trash.BackgroundImage = global::Meter.Properties.Resources.trash;
             this.trash.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.trash.Location = new System.Drawing.Point(9, 82);
+            this.trash.Location = new System.Drawing.Point(5, 259);
             this.trash.Name = "trash";
             this.trash.Size = new System.Drawing.Size(35, 40);
             this.trash.TabIndex = 13;
@@ -167,7 +167,7 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(314, 284);
+            this.btnOk.Location = new System.Drawing.Point(314, 457);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 14;
@@ -177,7 +177,7 @@
             // 
             // btnClear
             // 
-            this.btnClear.Location = new System.Drawing.Point(390, 248);
+            this.btnClear.Location = new System.Drawing.Point(390, 421);
             this.btnClear.Name = "btnClear";
             this.btnClear.Size = new System.Drawing.Size(80, 23);
             this.btnClear.TabIndex = 17;
@@ -187,7 +187,7 @@
             // 
             // btnConst
             // 
-            this.btnConst.Location = new System.Drawing.Point(390, 220);
+            this.btnConst.Location = new System.Drawing.Point(390, 393);
             this.btnConst.Name = "btnConst";
             this.btnConst.Size = new System.Drawing.Size(80, 23);
             this.btnConst.TabIndex = 16;
@@ -197,7 +197,7 @@
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(405, 284);
+            this.btnCancel.Location = new System.Drawing.Point(405, 457);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 15;
@@ -209,7 +209,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(810, 319);
+            this.ClientSize = new System.Drawing.Size(810, 498);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.trash);
@@ -230,6 +230,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FormulaEditor";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FormulaEditor_Closing);
+            this.Load += new System.EventHandler(this.FormulaEditor_Load);
             this.Shown += new System.EventHandler(this.FormulaEditor_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();

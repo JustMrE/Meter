@@ -27,7 +27,8 @@ namespace Meter.Forms
         List<Control> open = new List<Control>();
         HashSet<Control> active = new HashSet<Control>();
 
-        ButtonsType? lastType = null;
+        ForTags lastControl = null;
+        //ButtonsType? lastType = null;
 
         public FormulaEditor(ref ReferenceObject referenceObject, string nameL1)
         {
@@ -35,6 +36,11 @@ namespace Meter.Forms
             this.nameL1 = nameL1;
             myID = referenceObject.DB.childs[nameL1].ID;
             InitializeComponent();
+        }
+
+        private void FormulaEditor_Load(object sender, EventArgs e)
+        {
+
         }
 
         private void FormulaEditor_Shown(object sender, EventArgs e)
@@ -145,7 +151,7 @@ namespace Meter.Forms
                 Point newPosition = flowLayoutPanel1.PointToClient(MousePosition);
 
                 int index = flowLayoutPanel1.Controls.Count;
-                int newIndex = GetNewIndex(null, newPosition);
+                int newIndex = GetNewIndex(b, newPosition);
 
                 flowLayoutPanel1.Controls.Add(b);
                 if (newIndex != index)
@@ -216,7 +222,7 @@ namespace Meter.Forms
                     Point newPosition = flowLayoutPanel1.PointToClient(MousePosition);
 
                     int index = flowLayoutPanel1.Controls.Count;
-                    int newIndex = GetNewIndex(null, newPosition);
+                    int newIndex = GetNewIndex(b, newPosition);
 
                     flowLayoutPanel1.Controls.Add(b);
                     if (newIndex != index)
@@ -228,6 +234,7 @@ namespace Meter.Forms
                     {
                         b.Width = btn.Width;
                         b.Height = btn.Height;
+                        b.AutoSize = true;
                         b.SpecialTag().text = b.Text;
                         b.SpecialTag().type = ButtonsType.scobki;
                         b.MouseDown += ShowPara;
@@ -236,6 +243,7 @@ namespace Meter.Forms
                     {
                         b.Width = btn.Width;
                         b.Height = btn.Height;
+                        b.AutoSize = true;
                         b.SpecialTag().text = b.Text;
                         b.SpecialTag().type = ButtonsType.znaki;
                     }
@@ -286,9 +294,15 @@ namespace Meter.Forms
             }
             else
             {
-                index = flowLayoutPanel1.Controls.GetChildIndex(control);
+                if (flowLayoutPanel1.Controls.Contains(control))
+                {
+                    index = flowLayoutPanel1.Controls.GetChildIndex(control);
+                }
+                else
+                {
+                    index = flowLayoutPanel1.Controls.Count;
+                }
             }
-            int centerY = newPosition.Y;
             int controlsCount = flowLayoutPanel1.Controls.Count;
 
             for (int i = 0; i < controlsCount; i++)
@@ -316,7 +330,14 @@ namespace Meter.Forms
                 }
                 else if (i == controlsCount - 1 && otherTop <= newPosition.Y && otherDown >= newPosition.Y && newPosition.X > otherCenter)
                 {
-                    return i;
+                    if (flowLayoutPanel1.Controls.Contains(control))
+                    {
+                        return i;
+                    }
+                    else
+                    {
+                        return i + 1;
+                    }
                 }
             }
             return index;
@@ -369,7 +390,8 @@ namespace Meter.Forms
         private void UpdateCheck()
         {
             int myIndex;
-            lastType = null;
+            lastControl = null;
+            //lastType = null;
             open.Clear();
             foreach (Control item in flowLayoutPanel1.Controls)
             {
@@ -377,7 +399,7 @@ namespace Meter.Forms
                 switch (item.SpecialTag().type)
                 {
                     case ButtonsType.subject:
-                        if ((item.SpecialTag().text == "#ссылка" || item.SpecialTag().ID == null) || (lastType != null && lastType != ButtonsType.znaki))
+                        if ((item.SpecialTag().text == "#ссылка" || item.SpecialTag().ID == null) || (lastControl != null && lastControl.type != ButtonsType.znaki))
                         {
                             item.BackColor = Color.Red;
                         }
@@ -386,14 +408,16 @@ namespace Meter.Forms
                             item.BackColor = SystemColors.ButtonFace;
                         }
 
-                        lastType = ButtonsType.subject;
+                        lastControl = item.SpecialTag();
+                        //lastType = ButtonsType.subject;
                         break;
                     case ButtonsType.scobki:
+
                         UpdateScobki(item);
 
                         break;
                     case ButtonsType.znaki:
-                        if ((lastType != null && lastType != ButtonsType.constant && lastType != ButtonsType.subject) || myIndex == flowLayoutPanel1.Controls.Count - 1)
+                        if ((lastControl != null && lastControl.type != ButtonsType.constant && lastControl.type != ButtonsType.subject) || myIndex == flowLayoutPanel1.Controls.Count - 1)
                         {
                             item.BackColor = Color.Red;
                         }
@@ -402,10 +426,11 @@ namespace Meter.Forms
                             item.BackColor = SystemColors.ButtonFace;
                         }
 
-                        lastType= ButtonsType.znaki;
+                        lastControl = item.SpecialTag();
+                        //lastType= ButtonsType.znaki;
                         break;
                     case ButtonsType.constant:
-                        if (lastType != null && lastType != ButtonsType.znaki)
+                        if (lastControl != null && lastControl.type != ButtonsType.znaki)
                         {
                             item.BackColor = Color.Red;
                         }
@@ -414,7 +439,8 @@ namespace Meter.Forms
                             item.BackColor = SystemColors.ButtonFace;
                         }
 
-                        lastType = ButtonsType.constant;
+                        lastControl = item.SpecialTag();
+                        //lastType = ButtonsType.constant;
                         break;
                     default:
                         break;
@@ -447,10 +473,10 @@ namespace Meter.Forms
                     Color randomColor;
 
                     randomColor = GetRandomColor();
-                        
+
                     open[open.Count - 1].ForeColor = randomColor;
                     open[open.Count - 1].BackColor = SystemColors.ButtonFace;
-                        
+
                     item.ForeColor = randomColor;
                     item.BackColor = SystemColors.ButtonFace;
 
@@ -603,13 +629,11 @@ namespace Meter.Forms
                         adr = "#ссылка";
                     }
                     
-                    //formula.Add(adr);
                     formula += adr;
                     if (r != null) Marshal.ReleaseComObject(r);
                 }
                 else
                 {
-                    //formula.Add(item.Text);
                     formula += item.Text;
                 }
             }
@@ -630,8 +654,8 @@ namespace Meter.Forms
             }
 
             referenceObject.DB.childs[nameL1].WriteFormula(formula);
-            Close();
             //MessageBox.Show(formula + "; Корректность:" + Main.instance.xlApp.WorksheetFunction.IsError(formula) + "; результат:" + Main.instance.xlApp.Evaluate(formula));
+            Close();
         }
 
         private void btnClear_Click(object sender, EventArgs e)
@@ -660,20 +684,31 @@ namespace Meter.Forms
 
         private void SubjectContextMenu(Control b)
         {
+            ToolStripItem tsi = null;
+
             ContextMenuStrip menu = new ContextMenuStrip();
-            menu.Items.Add("Показать формулу");
-            menu.Items.Add("Показать в счетчиках");
-            menu.Items[0].Click += (object sender, EventArgs e) =>
-            {
-                OpenFormula(b);
-            };
-            menu.Items[1].Click += (object sender, EventArgs e) =>
+            tsi = menu.Items.Add("Показать в счетчиках");
+
+            tsi.Click += (object sender, EventArgs e) =>
             {
                 string newID = b.SpecialTag().ID;
                 ChildObject co = (ChildObject)RangeReferences.idDictionary[newID];
                 ReferenceObject ro = co.GetFirstParent;
                 ro.PS.Range.Select();
             };
+
+            string id = b.SpecialTag().ID;
+            if (RangeReferences.idDictionary.ContainsKey(id))
+            {
+                if (((ChildObject)RangeReferences.idDictionary[id]).GetParent<ChildObject>().HasItem("формула"))
+                {
+                    tsi = menu.Items.Add("Показать формулу");
+                    tsi.Click += (object sender, EventArgs e) =>
+                    {
+                        OpenFormula(b);
+                    };
+                }
+            }
             b.ContextMenuStrip = menu;
         }
     }
