@@ -35,49 +35,12 @@ namespace Meter.Forms
             }
             NewMenuBase.month = c.Text;
             NewMenuBase.year = textBox1.Text;
-            // Main.instance.Arhivate(thisYear, thisMonth);
-            // string sourceFolder = Main.dir + @"\current";
-            // Directory.Delete(sourceFolder + @"\references", true);
-            // Directory.Delete(sourceFolder + @"\formulas", true);
-            // System.IO.Compression.ZipFile.ExtractToDirectory(archMap[c.Text], sourceFolder, true);
-            // Main.instance.xlApp.DisplayAlerts = false;
-            // Main.instance.xlApp.EnableEvents = false;
-            // Main.instance.xlApp.Calculation = Excel.XlCalculation.xlCalculationManual;
-            // Main.instance.wsCh.Delete();
-            // Main.instance.wsDb.Delete();
-            // Main.instance.xlApp.DisplayAlerts = true;
-            // Main.instance.xlApp.EnableEvents = true;
-            // Main.instance.xlApp.Calculation = Excel.XlCalculation.xlCalculationAutomatic;
-            // Excel.Application xlApp;
-            // Excel.Workbook wb;
 
-            // xlApp = new Excel.ApplicationClass();
-            // xlApp.Visible = false;
-            // wb = xlApp.Workbooks.Open(sourceFolder + @"\" + c.Text + ".xlsm");
-            // wb.Activate();
-            // xlApp.Visible = false;
-            
-            // foreach (Excel.Worksheet ws in wb.Sheets)
-            // {
-            //     if (ws.CodeName == "PS" || ws.CodeName == "DB")
-            //     {
-            //         ws.Move(Before: Main.instance.wb.Worksheets[1]);
-            //     }
-            // }
+            Main.instance.Arhivate(thisYear, thisMonth);
+            string sourceFolder = Main.dir + @"\current";
+            Directory.Delete(sourceFolder, true);
+            System.IO.Compression.ZipFile.ExtractToDirectory(archMap[c.Text], sourceFolder, true);
 
-            // foreach (Excel.Worksheet ws in Main.instance.wb.Worksheets)
-            // {
-            //     if (ws.CodeName == "PS")
-            //     {
-            //         Main.instance.wsCh = ws;
-            //     }
-            //     if (ws.CodeName == "DB")
-            //     {
-            //         Main.instance.wsDb = ws;
-            //     }
-            // }
-            // SaveLoader.LoadAsync();
-            // Dispose();
             Close();
         }
 
