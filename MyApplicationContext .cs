@@ -51,8 +51,6 @@ namespace Meter
         public static bool save;
         public static string dir;
         public static List<int> menuIndexes = new List<int>();
-        public static bool restart;
-
         string file;
 
         public Excel.WorkbookEvents_BeforeCloseEventHandler Event_BeforeClose;
@@ -86,13 +84,16 @@ namespace Meter
                 Marshal.ReleaseComObject(wb);
                 Marshal.ReleaseComObject(wsCh);
                 Marshal.ReleaseComObject(wsDb);
+                wb = null;
+                wsCh = null;
+                wsDb = null;
 
                 xlApp.Quit();
                 Marshal.ReleaseComObject(xlApp);
+                xlApp = null;
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-
-                //Thread.Sleep(10000);
+                // Thread.Sleep(10000);
                 ExitThread();
             }
         }
@@ -142,9 +143,33 @@ namespace Meter
             // InitMyContextMenu();
         }
 
-        public void Restart()
+        public void Restart(string thisYear, string thisMonth, string file)
         {
-            System.Windows.Forms.Application.Restart();
+            string sourceFolder = dir + @"\current";
+            foreach (NewMenuBase form in menues)
+            {
+                form.FormClose();
+            }
+            Arhivate(thisYear, thisMonth);
+            //xlApp.Visible = false;
+            wb.Save();
+            wb.Close();
+            references.ReleaseAllComObjects();
+            ClearEvents();
+
+            Marshal.ReleaseComObject(wb);
+            Marshal.ReleaseComObject(wsCh);
+            Marshal.ReleaseComObject(wsDb);
+
+            xlApp.Quit();
+            Marshal.ReleaseComObject(xlApp);
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+            Directory.Delete(sourceFolder, true);
+            Directory.CreateDirectory(sourceFolder);
+            System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder);
+
+            Start();
         }
 
         private void InitExcel()
@@ -204,6 +229,7 @@ namespace Meter
             //     form.FormClosed += onFormClosed;
             // }
             // forms[0].Show();
+
 
             menues = new List<Form>();
             menues.Add(new NewMenu());
@@ -276,10 +302,6 @@ namespace Meter
             if (!closed)
             {
                 closed = true;
-                // foreach (MenuBase form in MyApplicationContext.forms)
-                // {
-                //     form.FormClose();
-                // }
                 foreach (NewMenuBase form in menues)
                 {
                     form.FormClose();

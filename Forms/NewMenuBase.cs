@@ -263,18 +263,18 @@ namespace Meter.Forms
 
         protected virtual void btnFromArhive_Click(object sender, EventArgs e)
         {
-            Thread t = new Thread(() =>
-            {
-                OpenArchive form = new OpenArchive(this.lblYear.Text, this.lblMonth.Text);
-                form.FormClosed += (s, args) =>
-                {
-                    System.Windows.Forms.Application.ExitThread();
-                };
-                form.Show();
-                System.Windows.Forms.Application.Run();
-            });
-            t.SetApartmentState(ApartmentState.STA);
-            t.Start();
+            // Thread t = new Thread(() =>
+            // {
+            //     OpenArchive form = new OpenArchive(this.lblYear.Text, this.lblMonth.Text);
+            //     form.FormClosed += (s, args) =>
+            //     {
+            //         System.Windows.Forms.Application.ExitThread();
+            //     };
+            //     form.Show();
+            //     System.Windows.Forms.Application.Run();
+            // });
+            // t.SetApartmentState(ApartmentState.STA);
+            // t.Start();
         }
 
         protected virtual void lblMonth_MouseDoubleClick(object sender, MouseEventArgs e)

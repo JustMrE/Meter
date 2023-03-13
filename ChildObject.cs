@@ -265,7 +265,6 @@ namespace Meter
             {
                 return false;
             }
-            
         }
         public Excel.Range RangeByDay(int day)
         {

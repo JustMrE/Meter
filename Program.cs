@@ -95,6 +95,7 @@ namespace Meter
 
             MyApplicationContext myAppContext = new MyApplicationContext();
             Application.Run(myAppContext);
+            
             File.Delete(file1);
         }    
     }
