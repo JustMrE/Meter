@@ -43,7 +43,6 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.flowLayoutPanel1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -216,22 +215,11 @@
             this.flowLayoutPanel1.Size = new System.Drawing.Size(245, 117);
             this.flowLayoutPanel1.TabIndex = 14;
             // 
-            // checkBox1
-            // 
-            this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(167, 15);
-            this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(45, 19);
-            this.checkBox1.TabIndex = 15;
-            this.checkBox1.Text = "Exit";
-            this.checkBox1.UseVisualStyleBackColor = true;
-            // 
             // OpenArchive
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(261, 165);
-            this.Controls.Add(this.checkBox1);
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.textBox1);
@@ -264,6 +252,5 @@
         private TextBox textBox1;
         private Label label1;
         private FlowLayoutPanel flowLayoutPanel1;
-        private CheckBox checkBox1;
     }
 }

@@ -12,7 +12,7 @@ namespace Meter.Forms
 {
     public partial class MonthSelect : Form
     {
-        public string selectedMonth;
+        public string? selectedMonth = null;
         public MonthSelect()
         {
             InitializeComponent();

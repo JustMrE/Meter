@@ -22,13 +22,12 @@ namespace Meter.Forms
         public NewMenuBase()
         {
             InitializeComponent();
+            this.lblMonth.Text = Main.instance.wsCh.Range["B5"].Value.ToString();
+            this.lblYear.Text = Main.instance.wsCh.Range["D5"].Value.ToString();
         }
 
         protected virtual void NewMenuBase_Load(object sender, EventArgs e)
         {
-            this.lblMonth.Text = Main.instance.wsCh.Range["B5"].Value.ToString();
-            this.lblYear.Text = Main.instance.wsCh.Range["D5"].Value.ToString();
-
             listBox1.Items.AddRange(Main.instance.references.references.Keys.OrderBy(m => m).ToArray());
             formHwnd = this.Handle;
             SetParent(formHwnd, Main.instance.xlAppHwnd);

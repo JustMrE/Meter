@@ -14,6 +14,7 @@ namespace Meter.Forms
     public partial class OpenArchive : Form
     {
         string thisYear, thisMonth;
+        string selectedYear, selectedMonth;
         string archPath;
         private Dictionary<string, string> archMap;
 
@@ -28,12 +29,16 @@ namespace Meter.Forms
         private void btn_Click(object sender, EventArgs e)
         {
             Control c = sender as Control;
-            if (c.Text == thisMonth)
+            if (c.BackColor == Color.Gold)
             {
                 return;
             }
-            NewMenuBase.month = c.Text;
-            NewMenuBase.year = textBox1.Text; 
+            else
+            {
+                selectedMonth = c.Text;
+            }
+            NewMenuBase.month = selectedMonth;
+            NewMenuBase.year = selectedYear; 
 
             Main.instance.RunOnUiThread(Main.instance.Restart, thisYear, thisMonth, archMap[c.Text]);
             
@@ -42,7 +47,7 @@ namespace Meter.Forms
 
         private void OpenArchive_Load(object sender, EventArgs e)
         {
-            this.textBox1.Text = DateTime.Now.ToString("yyyy");
+            this.textBox1.Text = thisYear;
         }
 
         private void Check()
@@ -55,7 +60,7 @@ namespace Meter.Forms
                 return;
                 //Directory.CreateDirectory(archPath);
             }
-            archPath = archPath + @"\" + this.textBox1.Text;
+            archPath = archPath + @"\" + selectedYear;
             if (!Directory.Exists(archPath))
             {
                 DisableAll();
@@ -69,7 +74,7 @@ namespace Meter.Forms
                 {
                     archMap.Add(item.Text, arhiveName);
                     item.Enabled = true;
-                    if (item.Text == thisMonth)
+                    if (selectedYear == thisYear && item.Text == thisMonth)
                     {
                         item.BackColor = Color.Gold;
                     }
@@ -106,14 +111,12 @@ namespace Meter.Forms
 
         private void OpenArchive_FormClosed(object sender, FormClosedEventArgs e)
         {
-            if (checkBox1.Checked == true)
-            {
-                Main.Exit();
-            }
+
         }
 
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
+            selectedYear = ((TextBox)sender).Text;
             Check();
         }
 

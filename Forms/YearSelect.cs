@@ -15,8 +15,8 @@ namespace Meter.Forms
         public string? year;
         public YearSelect(string thisYear)
         {
-            this.textBox1.Text = thisYear;
             InitializeComponent();
+            this.textBox1.Text = thisYear;
         }
 
         private void textBox1_KeyPress(object sender, KeyPressEventArgs e)

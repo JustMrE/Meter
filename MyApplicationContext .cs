@@ -105,12 +105,6 @@ namespace Meter
             Start();
         }
 
-        public static void Exit()
-        {
-            Thread.Sleep(2000);
-            instance.ExitThread();
-        }
-
         public void Start()
         {
             restarted = false;
@@ -122,12 +116,12 @@ namespace Meter
 
             // dir = Process.GetCurrentProcess().MainModule.FileName ;
             // dir = System.IO.Path.GetDirectoryName(dir) + @"\DB"; 
-            file = dir + @"\current\Счетчики.xlsm";
+            file = dir + @"\current\meter.xlsm";
             if (!File.Exists(file))
             {
                 dir = System.Reflection.Assembly.GetExecutingAssembly().Location;
                 dir = System.IO.Path.GetDirectoryName(dir) + @"\DB"; 
-                file = dir + @"\current\Счетчики.xlsm";
+                file = dir + @"\current\meter.xlsm";
             }
             
             InitExcel();

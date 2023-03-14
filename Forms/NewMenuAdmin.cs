@@ -103,9 +103,14 @@ namespace Meter.Forms
             using (MonthSelect form = new MonthSelect())
             {
                 form.ShowDialog();
-                this.lblMonth.Text = form.selectedMonth;
-                month = form.selectedMonth;
-                Main.instance.wsCh.Range["B5"].Value = month;
+                if (!string.IsNullOrEmpty(form.selectedMonth))
+                {
+                    this.lblMonth.Text = form.selectedMonth;
+                    month = form.selectedMonth;
+                    Main.instance.StopAll();
+                    Main.instance.wsCh.Range["B5"].Value = month;
+                    Main.instance.ResumeAll();
+                }
             }
         }
 
@@ -118,7 +123,9 @@ namespace Meter.Forms
                 {
                     this.lblYear.Text = form.year;
                     year = form.year;
+                    Main.instance.StopAll();
                     Main.instance.wsCh.Range["D5"].Value = year;
+                    Main.instance.ResumeAll();
                 }
             }
         }
