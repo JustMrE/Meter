@@ -33,6 +33,10 @@ namespace Meter.Forms
             base.NewMenuBase_Shown(sender, e);
             textBox1.Text = DateTime.Today.AddDays(-1).ToString("dd");
         }
+        public override void FormClose()
+        {
+            base.FormClose();
+        }
         protected override void Button2_Click(object sender, EventArgs e)
         {
             CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");

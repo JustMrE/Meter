@@ -53,5 +53,20 @@ namespace Meter
             }
             Main.instance.ResumeAll();
         }
+    
+        public static void ReleseObject(object o)
+        {
+            if (o is not null)
+            {
+                try
+                {
+                    Marshal.ReleaseComObject(o);
+                }
+                catch
+                {
+                    
+                }
+            }
+        }
     }
 }

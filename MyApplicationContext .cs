@@ -19,9 +19,6 @@ namespace Meter
         [DllImport( "user32.dll" )]
         private static extern int ShowWindow( IntPtr hWnd, uint Msg );
 
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern IntPtr SetParent(IntPtr hWndChild, IntPtr hWndNewParent);
-
         [DllImport("user32.dll")]
         public static extern bool GetWindowRect(IntPtr hwnd, ref Rect rectangle);
 
@@ -31,8 +28,6 @@ namespace Meter
 
         // public static List<Form> forms;
         public static List<Form> menues;
-
-        Excel.OLEObject inkPicture; 
         
         public Excel.Application xlApp;
         public Excel.Workbook wb;
@@ -40,9 +35,7 @@ namespace Meter
         public bool closed, excelClosed;
         public IntPtr xlAppHwnd;
         public Rect xlAppRect;
-        // public MenuBase menu;
         public NewMenuBase menu;
-        //public NewMenuBase newMenu; 
         public ColorsData colors;
         public double zoom;
         public RangeReferences references;
@@ -52,6 +45,7 @@ namespace Meter
         public static string dir;
         public static List<int> menuIndexes = new List<int>();
         string file;
+        bool restarted;
 
         public Excel.WorkbookEvents_BeforeCloseEventHandler Event_BeforeClose;
         public Excel.WorkbookEvents_WindowResizeEventHandler Event_WindowResize;
@@ -74,7 +68,7 @@ namespace Meter
                 }
                 else
                 {
-                    xlApp.DisplayAlerts = false;
+                    wb.Saved = true;
                 }
 
                 references.ReleaseAllComObjects();
@@ -94,7 +88,7 @@ namespace Meter
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
                 // Thread.Sleep(10000);
-                ExitThread();
+                if (restarted == false) ExitThread();
             }
         }
 
@@ -119,6 +113,7 @@ namespace Meter
 
         public void Start()
         {
+            restarted = false;
             string file1 = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\db.txt";
             if (File.Exists(file1))
             {
@@ -139,37 +134,79 @@ namespace Meter
             InitForms();
             InitExcelEvents();
             menu.ClearContextMenu();
-
-            // InitMyContextMenu();
         }
 
         public void Restart(string thisYear, string thisMonth, string file)
         {
-            string sourceFolder = dir + @"\current";
-            foreach (NewMenuBase form in menues)
+            restarted = true;
+
+            if (menu.InvokeRequired)
             {
-                form.FormClose();
+                menu.Invoke(new MethodInvoker(() => 
+                {
+                    wb.Save();
+                    foreach (NewMenuBase form in menues)
+                    {
+                        form.FormClose();
+                    }
+
+                    // ClearEvents();
+                    // ReleaseAllComObjects();
+
+                    // wb.Save();
+                    // wb.Close();
+
+                    // Marshal.ReleaseComObject(wb);
+                    // Marshal.ReleaseComObject(wsCh);
+                    // Marshal.ReleaseComObject(wsDb);
+
+                    // xlApp.Quit();
+                    // Marshal.ReleaseComObject(xlApp);
+                    // GC.Collect();
+                    // GC.WaitForPendingFinalizers();
+
+                    Arhivate(thisYear, thisMonth);
+                    string sourceFolder = dir + @"\current";
+                    Directory.Delete(sourceFolder, true);
+                    System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder, true);
+                    Start();
+                }));
             }
-            Arhivate(thisYear, thisMonth);
-            //xlApp.Visible = false;
-            wb.Save();
-            wb.Close();
-            references.ReleaseAllComObjects();
-            ClearEvents();
+            else
+            {
+                wb.Save();
+                foreach (NewMenuBase form in menues)
+                {
+                    form.Close();
+                }
+                // ClearEvents();
+                // ReleaseAllComObjects();
 
-            Marshal.ReleaseComObject(wb);
-            Marshal.ReleaseComObject(wsCh);
-            Marshal.ReleaseComObject(wsDb);
+                // wb.Save();
+                // wb.Close();
 
-            xlApp.Quit();
-            Marshal.ReleaseComObject(xlApp);
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
-            Directory.Delete(sourceFolder, true);
-            Directory.CreateDirectory(sourceFolder);
-            System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder);
+                // Marshal.ReleaseComObject(wb);
+                // Marshal.ReleaseComObject(wsCh);
+                // Marshal.ReleaseComObject(wsDb);
 
-            Start();
+                // xlApp.Quit();
+                // Marshal.ReleaseComObject(xlApp);
+                // GC.Collect();
+                // GC.WaitForPendingFinalizers();
+
+                Arhivate(thisYear, thisMonth);
+                string sourceFolder = dir + @"\current";
+                Directory.Delete(sourceFolder, true);
+                System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder, true);
+                Start();
+            }
+            
+        }
+
+        public void RunOnUiThread(System.Action<string, string, string> action, string thisYear, string thisMonth, string file)
+        {
+            if (SynchronizationContext.Current == null) return;
+            SynchronizationContext.Current.Post(state => action(thisYear, thisMonth, file), null);
         }
 
         private void InitExcel()
@@ -211,26 +248,34 @@ namespace Meter
             }
             xlApp.Visible = true;
             RestoreExcel();
-            
-            //ColorsData.RefreshColors();
 
             zoom = (double)xlApp.ActiveWindow.Zoom;
         }
         private void InitForms()
         {
-            // forms = new List<Form>()
-            // {
-            //     new Menu(),
-            //     new AdminMenu()
-            // };
+            menues = new List<Form>();
+            menues.Add(new NewMenu());
+            menues.Add(new NewMenuAdmin());
 
-            // foreach (var form in forms)
-            // {
-            //     form.FormClosed += onFormClosed;
-            // }
-            // forms[0].Show();
+            foreach (NewMenuBase form in menues)
+            {
+                form.FormClosed += onFormClosed;
+                // form.Disposed += (object sender, EventArgs e) => 
+                // {
+                //     if (menues.Contains(form))
+                //     {
+                //         menues.Remove(form);
+                //     }
+                //     onFormClosed(sender, e);
+                // };
+            }
+            menu = menues[0] as NewMenuBase;
+            menu.Show();
 
-
+            xlApp.Visible = true;
+        }
+        private void InitFormsRestart()
+        {
             menues = new List<Form>();
             menues.Add(new NewMenu());
             menues.Add(new NewMenuAdmin());
@@ -396,6 +441,12 @@ namespace Meter
             }
             ZipFile.CreateFromDirectory(tempDirectory, arhiveName);
             Directory.Delete(tempDirectory, true);
+        }
+    
+        public void ReleaseAllComObjects()
+        {
+            references.ReleaseAllComObjects();
+            heads.ReleaseAllComObjects();
         }
     }
 }

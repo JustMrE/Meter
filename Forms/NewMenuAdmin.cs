@@ -55,7 +55,10 @@ namespace Meter.Forms
             }
             selectedButtons.Add("Special");
         }
-
+        public override void FormClose()
+        {
+            base.FormClose();
+        }
         protected override void btnAdmin_Click(object sender, EventArgs e)
         {
             base.btnAdmin_Click(sender, e);
@@ -102,6 +105,7 @@ namespace Meter.Forms
                 form.ShowDialog();
                 this.lblMonth.Text = form.selectedMonth;
                 month = form.selectedMonth;
+                Main.instance.wsCh.Range["B5"].Value = month;
             }
         }
 
@@ -114,6 +118,7 @@ namespace Meter.Forms
                 {
                     this.lblYear.Text = form.year;
                     year = form.year;
+                    Main.instance.wsCh.Range["D5"].Value = year;
                 }
             }
         }

@@ -8,5 +8,13 @@ namespace Meter
         {
             heads = new Dictionary<string, HeadObject>();
         }
+
+        public void ReleaseAllComObjects()
+        {
+            foreach (HeadObject ho in heads.Values)
+            {
+                ho.ReleaseAllComObjects();
+            }
+        }
     }
 }

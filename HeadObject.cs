@@ -111,7 +111,14 @@ namespace Meter
         {
             get
             {
-                return (Excel.Range)_range.Columns[_range.Columns.Count];
+                try
+                {
+                    return (Excel.Range)_range.Columns[_range.Columns.Count];
+                }
+                catch
+                {
+                    return null;
+                }
             }
         }
         [JsonIgnore]
@@ -119,7 +126,15 @@ namespace Meter
         {
             get
             {
-                return (Excel.Range)_range.Cells[1, _range.Columns.Count];
+                try
+                {
+                    return (Excel.Range)_range.Cells[1, _range.Columns.Count];
+                }
+                catch
+                {
+                    return null;
+                }
+                
             }
         }
         public Dictionary<string, HeadObject> childs { get; set; }
@@ -218,6 +233,21 @@ namespace Meter
         public void Decrese(bool stopall = true)
         {
             Resize(-1, false, stopall);
+        }
+    
+        public void ReleaseAllComObjects()
+        {
+            if (childs != null)
+            {
+                foreach (HeadObject ho in childs.Values)
+                {
+                    ho.ReleaseAllComObjects();
+                }
+            }
+            GlobalMethods.ReleseObject(Range);
+            GlobalMethods.ReleseObject(WS);
+            GlobalMethods.ReleseObject(LastCell);
+            GlobalMethods.ReleseObject(LastColumn);
         }
     }
 }

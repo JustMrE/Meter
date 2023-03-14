@@ -2,7 +2,6 @@ using Excel = Microsoft.Office.Interop.Excel;
 using Main = Meter.MyApplicationContext;
 using Newtonsoft.Json;
 using System.Threading;
-using Microsoft.Office.Interop.Excel;
 using System;
 using System.Globalization;
 using System.Runtime.InteropServices;

@@ -1,4 +1,3 @@
-using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Meter
 {

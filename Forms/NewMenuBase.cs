@@ -26,6 +26,9 @@ namespace Meter.Forms
 
         protected virtual void NewMenuBase_Load(object sender, EventArgs e)
         {
+            this.lblMonth.Text = Main.instance.wsCh.Range["B5"].Value.ToString();
+            this.lblYear.Text = Main.instance.wsCh.Range["D5"].Value.ToString();
+
             listBox1.Items.AddRange(Main.instance.references.references.Keys.OrderBy(m => m).ToArray());
             formHwnd = this.Handle;
             SetParent(formHwnd, Main.instance.xlAppHwnd);
@@ -43,6 +46,8 @@ namespace Meter.Forms
         protected virtual void NewMenuBase_Closing(object sender, EventArgs e)
         {
             listBox1.Items.Clear();
+            GlobalMethods.ReleseObject(cb);
+            GlobalMethods.ReleseObject(_activeRange);
         }
         protected virtual void NewMenuBase_Activated(object sender, EventArgs e)
         {
@@ -53,8 +58,8 @@ namespace Meter.Forms
         private void MenuBase_FormClosed(object sender, FormClosedEventArgs e)
         {
             ResetContextMenu();
-            Marshal.ReleaseComObject(cb);
-            if (_activeRange != null) Marshal.ReleaseComObject(_activeRange);
+            GlobalMethods.ReleseObject(cb);
+            GlobalMethods.ReleseObject(_activeRange);
         }
         protected virtual void btnAdmin_Click(object sender, EventArgs e)
         {
@@ -263,18 +268,19 @@ namespace Meter.Forms
 
         protected virtual void btnFromArhive_Click(object sender, EventArgs e)
         {
-            // Thread t = new Thread(() =>
-            // {
-            //     OpenArchive form = new OpenArchive(this.lblYear.Text, this.lblMonth.Text);
-            //     form.FormClosed += (s, args) =>
-            //     {
-            //         System.Windows.Forms.Application.ExitThread();
-            //     };
-            //     form.Show();
-            //     System.Windows.Forms.Application.Run();
-            // });
-            // t.SetApartmentState(ApartmentState.STA);
-            // t.Start();
+            Thread t = new Thread(() =>
+            {
+                OpenArchive form = new OpenArchive(this.lblYear.Text, this.lblMonth.Text);
+                form.FormClosed += (s, args) =>
+                {
+                    System.Windows.Forms.Application.ExitThread();
+                };
+                form.Show();
+                System.Windows.Forms.Application.Run();
+            });
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+            
         }
 
         protected virtual void lblMonth_MouseDoubleClick(object sender, MouseEventArgs e)

@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Main = Meter.MyApplicationContext;
-using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Meter.Forms
 {
@@ -34,13 +33,10 @@ namespace Meter.Forms
                 return;
             }
             NewMenuBase.month = c.Text;
-            NewMenuBase.year = textBox1.Text;
+            NewMenuBase.year = textBox1.Text; 
 
-            Main.instance.Arhivate(thisYear, thisMonth);
-            string sourceFolder = Main.dir + @"\current";
-            Directory.Delete(sourceFolder, true);
-            System.IO.Compression.ZipFile.ExtractToDirectory(archMap[c.Text], sourceFolder, true);
-
+            Main.instance.RunOnUiThread(Main.instance.Restart, thisYear, thisMonth, archMap[c.Text]);
+            
             Close();
         }
 
@@ -119,6 +115,19 @@ namespace Meter.Forms
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             Check();
+        }
+
+        public void FormClose()
+        {
+            Action action = () => {System.Windows.Forms.Application.ExitThread(); };
+            if (InvokeRequired)
+            {
+                Invoke(action);
+            }
+            else
+            {
+                action();
+            }
         }
     }
 }

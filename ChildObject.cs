@@ -25,7 +25,9 @@ namespace Meter
                 if (ws is null)
                     return null;
                 else
+                {
                     return ws.CodeName;
+                }
             }
             set
             {   if (value is not null)
@@ -1189,17 +1191,20 @@ namespace Meter
                 childs["формула"].WriteFormula(formula);
             }
         }
-
         public void ReleaseAllComObjects()
         {
-            if (_range != null) 
-                Marshal.ReleaseComObject(_range);
-            if (_body != null)
-                Marshal.ReleaseComObject(_body);
-            if (_head != null)
-                Marshal.ReleaseComObject(_head);
-            if (ws != null)
-                Marshal.ReleaseComObject(ws);
+            if (childs != null)
+            {
+                foreach (ChildObject co in childs.Values)
+                {
+                    co.ReleaseAllComObjects();
+                }
+            }
+            GlobalMethods.ReleseObject(Range);
+            GlobalMethods.ReleseObject(Body);
+            GlobalMethods.ReleseObject(Head);
+            GlobalMethods.ReleseObject(WS);
+            GlobalMethods.ReleseObject(_activeChild);
         }
     }
 }

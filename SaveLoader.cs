@@ -6,20 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
-using Excel = Microsoft.Office.Interop.Excel;
 using Main = Meter.MyApplicationContext;
 
 namespace Meter
 {
     public static class SaveLoader
     {
-        // public static void Save()
-        // {
-        //     SaveReferences();
-        //     SaveColors();
-        //     SaveHeads();
-        // }
-
         public static void SaveAsync()
         {
             SaveReferencesNew();
@@ -27,39 +19,13 @@ namespace Meter
             SaveHeads();
         }
 
-        // public async static void Load()
-        // {
-        //     LoadReferences();
-        //     LoadColors();
-        //     LoadHeads();
-        // }
-
         public async static void LoadAsync()
         {
             LoadReferencesNew();
             LoadColors();
             LoadHeads();
         }
-        // static void SaveReferences()
-        // {
-        //     string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\referencesDictionary.json";
-        //     using (StreamWriter writer = File.CreateText(file))
-        //     {
-        //         JsonSerializer serializer = new JsonSerializer();
-        //         var jsonString = JsonConvert.SerializeObject(Main.instance.references);
-        //         writer.Write(jsonString);
-        //         //serializer.Serialize(writer, jsonString);
-        //     }
-
-        //     file = System.IO.Path.GetDirectoryName(Main.dir) + @"\formulasDictionary.json";
-        //     using (StreamWriter writer = File.CreateText(file))
-        //     {
-        //         JsonSerializer serializer = new JsonSerializer();
-        //         var jsonString = JsonConvert.SerializeObject(Main.instance.formulas);
-        //         writer.Write(jsonString);
-        //         //serializer.Serialize(writer, jsonString);
-        //     }
-        // }
+        
         static async void SaveReferencesNew()
         {
             var tasks = new List<Task>();
@@ -98,24 +64,7 @@ namespace Meter
             Task.WaitAll(tasks.ToArray());
             //await Task.WhenAll(tasks);
         }
-        // static void LoadReferences()
-        // {
-        //     string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\referencesDictionary.json";
-        //     var stringJson = File.ReadAllText(file);
-        //     //var root = JsonConvert.DeserializeObject(stringJson).ToString();
-        //     Main.instance.references = JsonConvert.DeserializeObject<RangeReferences>(stringJson);
-
-        //     Main.instance.references.UpdateAllLevels();
-        //     Main.instance.references.UpdateAllParents();
-
-        //     file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\formulasDictionary.json";
-        //     if (File.Exists(file))
-        //     {
-        //         stringJson = File.ReadAllText(file);
-        //         //root = JsonConvert.DeserializeObject(stringJson).ToString();
-        //         Main.instance.formulas = JsonConvert.DeserializeObject<Formula>(stringJson);
-        //     }
-        // }
+        
         static void LoadReferencesNew()
         {
             var tasks = new List<Task>();
