@@ -32,10 +32,13 @@ namespace Meter
 
         public async static void LoadAsyncFromFolder(string folder)
         {
+            GlobalMethods.ToLog("Загрузка данных");
+            Main.loading = true;
             string path = @"\" + folder;
             LoadReferencesNew(path);
             LoadColors(path);
             LoadHeads(path);
+            Main.loading = false;
         }
         
         static async void SaveReferencesNew()
