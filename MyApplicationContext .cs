@@ -199,7 +199,7 @@ namespace Meter
         
         public void OpenMonth(string thisYear, string thisMonth, string selectedMonth, string file)
         {
-            //ArhivateNew(thisYear, thisMonth);
+            ArhivateNew(thisYear, thisMonth);
             if (menu.InvokeRequired)
             {
                 menu.Invoke(new MethodInvoker(() => 
@@ -240,8 +240,8 @@ namespace Meter
                     wsCh = null;
                     wsDb = null;
 
-                    wsCh1.Copy(Type.Missing, wb.Worksheets[1]);
                     wsDb1.Copy(Type.Missing, wb.Worksheets[1]);
+                    wsCh1.Copy(Type.Missing, wb.Worksheets[1]);
                     
                     foreach (Excel.Worksheet ws in wb.Worksheets)
                     {

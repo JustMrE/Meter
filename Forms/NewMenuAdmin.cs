@@ -67,21 +67,6 @@ namespace Meter.Forms
             this.Hide();
             GlobalMethods.CalculateFormsPositions();
         }
-        protected override void Button40_Click(object sender, EventArgs e)
-        {
-            foreach (Excel.Worksheet ws in Main.instance.wb.Worksheets)
-            {
-                if (ws.CodeName == "PS")
-                {
-                    Main.instance.wsCh = ws;
-                }
-                if (ws.CodeName == "DB")
-                {
-                    Main.instance.wsDb = ws;
-                }
-            }
-            Main.instance.wsDb.Activate();
-        }
         
         protected override void Button41_Click(object sender, EventArgs e)
         {
