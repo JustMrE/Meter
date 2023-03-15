@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using Meter.Forms;
 using System.Globalization;
 using System.IO.Compression;
+using Newtonsoft.Json.Linq;
 
 namespace Meter
 {
@@ -47,6 +48,8 @@ namespace Meter
         string file;
         bool restarted;
         public static bool loading = false;
+        private static object[,] oldValsArray;
+        private static string oldVal;
 
         public Excel.WorkbookEvents_BeforeCloseEventHandler Event_BeforeClose;
         public Excel.WorkbookEvents_WindowResizeEventHandler Event_WindowResize;
@@ -57,6 +60,8 @@ namespace Meter
         public Excel.DocEvents_ChangeEventHandler Events_Change;
         public Excel.DocEvents_SelectionChangeEventHandler Events_SelectionChange;
         public Excel.WorkbookEvents_BeforeSaveEventHandler Events_BeforeSave;
+        public Excel.WorkbookEvents_SheetSelectionChangeEventHandler Events_SheetSelectionChange;
+        public Excel.WorkbookEvents_SheetChangeEventHandler Events_SheetChange;
 
         private void onFormClosed(object sender, EventArgs e)
         {
@@ -199,9 +204,10 @@ namespace Meter
             
         }
         
-        public void OpenMonth(string thisYear, string thisMonth, string selectedMonth, string file)
+        public void OpenMonth(string thisYear, string thisMonth, string selectedYear, string selectedMonth, string file)
         {
             ArhivateNew(thisYear, thisMonth);
+            GlobalMethods.ToLog("Загрузка архива за " + selectedMonth + " " + selectedYear + " из файла " + file);
             if (menu.InvokeRequired)
             {
                 menu.Invoke(new MethodInvoker(() => 
@@ -341,7 +347,7 @@ namespace Meter
                 Directory.Delete(sourceFolder, true);
                 InitExcelEvents();
             }
-            
+            GlobalMethods.ToLog("Открыты счетчики за " + selectedMonth + " " + selectedYear);
         }
 
         public void RunOnUiThread(System.Action<string, string, string, string> action, string thisYear, string thisMonth, string selectedMonth, string file)
@@ -452,6 +458,12 @@ namespace Meter
             Events_SelectionChange = new Excel.DocEvents_SelectionChangeEventHandler(Application_SelectionChange);
             wsCh.SelectionChange += Events_SelectionChange;
 
+            Events_SheetSelectionChange = new Excel.WorkbookEvents_SheetSelectionChangeEventHandler(Application_SelectionChange);
+            wb.SheetSelectionChange += Events_SheetSelectionChange;
+
+            Events_SheetChange = new Excel.WorkbookEvents_SheetChangeEventHandler(Application_Change);
+            wb.SheetChange += Events_SheetChange;
+
             Events_BeforeSave = new Excel.WorkbookEvents_BeforeSaveEventHandler(Wb_BeforeSave);
             wb.BeforeSave += Events_BeforeSave;
 
@@ -511,12 +523,74 @@ namespace Meter
         private void Application_SelectionChange(Excel.Range range)
         {
             GlobalMethods.ToLog("Выделены ячейки " + range.Address);
+            if (range.Formula is string)
+            {
+                oldVal = (string)range.Formula;
+            }
+            else if (range.Formula is object[,])
+            {
+                oldValsArray = (object[,])range.Formula;
+            }
             menu.SlectionChanged(range);
+        }
+        private void Application_SelectionChange(object sh, Excel.Range range)
+        {
+            if (((Excel.Worksheet)sh).CodeName != "PS")
+            {
+                GlobalMethods.ToLog("Выделены ячейки " + range.Address);
+                if (range.Formula is string)
+                {
+                    oldVal = (string)range.Formula;
+                }
+                else if (range.Formula is object[,])
+                {
+                    oldValsArray = (object[,])range.Formula;
+                }
+            }
         }
         private void Application_Change(Excel.Range range)
         {
-            GlobalMethods.ToLog("Изменено значение ячейки " + range.Address + " на '" + range.Value + "'");
+            if (range.Cells.Count > 1)
+            {
+                ChagedRange(range);
+            }
+            else
+            {
+                Changed(range);
+            }
             menu.CellValueChanged(range);
+        }
+
+        private void Application_Change(object sh, Excel.Range range)
+        {
+            if (((Excel.Worksheet)sh).CodeName != "PS")
+            {
+                if (range.Cells.Count > 1)
+                {
+                    ChagedRange(range);
+                }
+                else
+                {
+                    Changed(range);
+                }
+            }
+        }
+
+        private void ChagedRange(Excel.Range rng)
+        {
+            object[,] newValsArray = (object[,])rng.Formula;
+            for (int i = 1; i <= rng.Columns.Count; i++)
+            {
+                for (int j = 1; j <= rng.Rows.Count; j++)
+                {
+                    GlobalMethods.ToLog("Изменено значение ячейки " + ((Excel.Range)rng.Cells[j,i]).Address + " с '" + oldValsArray[j,i] + "' на '" + newValsArray[j,i] + "'");
+                }
+            }
+        }
+
+        private void Changed(Excel.Range rng)
+        {
+            GlobalMethods.ToLog("Изменено значение ячейки " + rng.Address + " с '" + oldVal + "' на '" + rng.Value + "'");
         }
         
         public void RestoreExcel()

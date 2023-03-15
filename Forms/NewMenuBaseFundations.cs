@@ -433,11 +433,19 @@ namespace Meter.Forms
         private void DontEdit(Excel.Range rng, int? day = null)
         {
             string val = rng.Formula != null ? rng.Formula.ToString() : "";
-            GlobalMethods.ToLog("Изменено значение ячейки " + rng.Address + " с '" + oldVal + "' на '" + val + "'");
             rng.Formula = oldVal;
+            GlobalMethods.ToLog("Изменено значение ячейки " + rng.Address + " с '" + val + "' на '" + oldVal + "'");
         }
         private void DontEditRange(Excel.Range rng)
         {
+            object[,] newValsArray = (object[,])rng.Formula;
+            for (int i = 1; i <= rng.Columns.Count; i++)
+            {
+                for (int j = 1; j <= rng.Rows.Count; j++)
+                {
+                    GlobalMethods.ToLog("Изменено значение ячейки " + ((Excel.Range)rng.Cells[j, i]).Address + " с '" + newValsArray[j, i] + "' на '" + oldValsArray[j, i] + "'");
+                }
+            }
             rng.Formula = oldValsArray;
         }
         private void NewMenuBase_FormClosed(object sender, FormClosedEventArgs e)

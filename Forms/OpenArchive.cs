@@ -29,7 +29,6 @@ namespace Meter.Forms
         private void btn_Click(object sender, EventArgs e)
         {
             GlobalMethods.ToLog(this, sender);
-            GlobalMethods.ToLog("Открытие архива за " + selectedMonth + " " + selectedYear);
             Control c = sender as Control;
             if (c.BackColor == Color.Gold)
             {
@@ -40,11 +39,13 @@ namespace Meter.Forms
                 selectedMonth = c.Text;
             }
             NewMenuBase.month = selectedMonth;
-            NewMenuBase.year = selectedYear; 
+            NewMenuBase.year = selectedYear;
+
+            GlobalMethods.ToLog("Открытие архива за " + selectedMonth + " " + selectedYear);
 
             //Main.instance.RunOnUiThread(Main.instance.Restart, thisYear, thisMonth, archMap[c.Text]);
             //Main.instance.RunOnUiThread(Main.instance.OpenMonth, thisYear, thisMonth, selectedMonth, archMap[c.Text]);
-            Main.instance.OpenMonth(thisYear, thisMonth, selectedMonth, archMap[c.Text]);
+            Main.instance.OpenMonth(thisYear, thisMonth, selectedYear, selectedMonth, archMap[c.Text]);
             Close();
         }
 
