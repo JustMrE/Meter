@@ -86,6 +86,12 @@ namespace Meter.Forms
             }
         }
 
+        protected override void Button40_Click(object sender, EventArgs e)
+        {
+            base.Button40_Click(sender, e);
+            GlobalMethods.ClearLogs();
+        }
+
         protected override void NewMenuBase_Activated(object sender, EventArgs e)
         {
             Main.instance.menu = this;

@@ -115,5 +115,14 @@ namespace Meter
         {
             ToLog("Открыта форма " + form.Name);
         }
+
+        public static void ClearLogs()
+        {
+            if (File.Exists(logFile))
+            {
+                using (File.CreateText(logFile));
+            }
+            ToLog("Логи очищены");
+        }
     }
 }

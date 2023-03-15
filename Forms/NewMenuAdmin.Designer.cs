@@ -44,6 +44,10 @@
             this.Text = "NewMenuAdmin";
             this.ResumeLayout(false);
             //
+            //ColorSettings (button40)
+            //
+            this.button40.Visible = true;
+            this.button40.Text = "Очистить логи";
             //
             //ColorSettings (button41)
             //
