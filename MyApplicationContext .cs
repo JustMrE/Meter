@@ -159,7 +159,7 @@ namespace Meter
                     // GC.Collect();
                     // GC.WaitForPendingFinalizers();
 
-                    Arhivate(thisYear, thisMonth);
+                    ArhivateNew(thisYear, thisMonth);
                     string sourceFolder = dir + @"\current";
                     Directory.Delete(sourceFolder, true);
                     System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder, true);
@@ -188,13 +188,164 @@ namespace Meter
                 // GC.Collect();
                 // GC.WaitForPendingFinalizers();
 
-                Arhivate(thisYear, thisMonth);
+                ArhivateNew(thisYear, thisMonth);
                 string sourceFolder = dir + @"\current";
                 Directory.Delete(sourceFolder, true);
                 System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder, true);
                 Start();
             }
             
+        }
+        
+        public void OpenMonth(string thisYear, string thisMonth, string selectedMonth, string file)
+        {
+            //ArhivateNew(thisYear, thisMonth);
+            if (menu.InvokeRequired)
+            {
+                menu.Invoke(new MethodInvoker(() => 
+                {
+                    string sourceFolder = dir + @"\TEMP";
+                    if (Directory.Exists(sourceFolder))
+                    {
+                        Directory.Delete(sourceFolder, true);
+                        Directory.CreateDirectory(sourceFolder);
+                    }
+                    System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder, true);
+
+                    StopAll();
+                    xlApp.EnableEvents = false;
+                    Excel.Application xlApp1;
+                    Excel.Workbook wb1;
+                    Excel.Worksheet wsCh1 = null, wsDb1 = null;
+                    Excel.Range destinationRange;
+                
+                    wb1 = xlApp.Workbooks.Open(Filename: sourceFolder + @"\" + selectedMonth + @".xlsm");
+                    wb1.Activate();
+                    foreach (Excel.Worksheet ws in wb1.Worksheets)
+                    {
+                        if (ws.CodeName == "PS")
+                        {
+                            wsCh1 = ws;
+                        }
+                        if (ws.CodeName == "DB")
+                        {
+                            wsDb1 = ws;
+                        }
+                    }
+
+                    xlApp.DisplayAlerts = false;
+                    wsCh.Delete();
+                    wsDb.Delete();
+                    xlApp.DisplayAlerts = true;
+                    wsCh = null;
+                    wsDb = null;
+
+                    wsCh1.Copy(Type.Missing, wb.Worksheets[1]);
+                    wsDb1.Copy(Type.Missing, wb.Worksheets[1]);
+                    
+                    foreach (Excel.Worksheet ws in wb.Worksheets)
+                    {
+                        if (ws.CodeName == "PS")
+                        {
+                            wsCh = ws;
+                        }
+                        if (ws.CodeName == "DB")
+                        {
+                            wsDb = ws;
+                        }
+                    }
+
+                    wsCh.Cells.Replace( What: "[" + selectedMonth + ".xlsm]", Replacement: "", LookAt: XlLookAt.xlPart, SearchOrder: XlSearchOrder.xlByRows, MatchCase: false, SearchFormat: false, ReplaceFormat: false);
+                    wsCh.Activate();
+                    ResumeAll();
+
+                    GlobalMethods.ReleseObject(wsCh1);
+                    GlobalMethods.ReleseObject(wsDb1);
+                    wb1.Saved = true;
+                    wb1.Close();
+                    GlobalMethods.ReleseObject(wb1);
+
+                    SaveLoader.LoadAsyncFromFolder("TEMP");
+                    //references.UpdateAllWSs();
+                    Directory.Delete(sourceFolder, true);
+                    InitExcelEvents();
+                }));
+            }
+            else
+            {
+                string sourceFolder = dir + @"\TEMP";
+                if (Directory.Exists(sourceFolder))
+                {
+                    Directory.Delete(sourceFolder, true);
+                    Directory.CreateDirectory(sourceFolder);
+                }
+                System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder, true);
+
+                StopAll();
+                xlApp.EnableEvents = false;
+                Excel.Application xlApp1;
+                Excel.Workbook wb1;
+                Excel.Worksheet wsCh1 = null, wsDb1 = null;
+                Excel.Range destinationRange;
+            
+                wb1 = xlApp.Workbooks.Open(Filename: sourceFolder + @"\" + selectedMonth + @".xlsm");
+                wb1.Activate();
+                foreach (Excel.Worksheet ws in wb1.Worksheets)
+                {
+                    if (ws.CodeName == "PS")
+                    {
+                        wsCh1 = ws;
+                    }
+                    if (ws.CodeName == "DB")
+                    {
+                        wsDb1 = ws;
+                    }
+                }
+
+                xlApp.DisplayAlerts = false;
+                wsCh.Delete();
+                wsDb.Delete();
+                xlApp.DisplayAlerts = true;
+                wsCh = null;
+                wsDb = null;
+
+                wsCh1.Copy(Type.Missing, wb.Worksheets[1]);
+                wsDb1.Copy(Type.Missing, wb.Worksheets[1]);
+                
+                foreach (Excel.Worksheet ws in wb.Worksheets)
+                {
+                    if (ws.CodeName == "PS")
+                    {
+                        wsCh = ws;
+                    }
+                    if (ws.CodeName == "DB")
+                    {
+                        wsDb = ws;
+                    }
+                }
+
+                wsCh.Cells.Replace( What: "[" + selectedMonth + ".xlsm]", Replacement: "", LookAt: XlLookAt.xlPart, SearchOrder: XlSearchOrder.xlByRows, MatchCase: false, SearchFormat: false, ReplaceFormat: false);
+                wsCh.Activate();
+                ResumeAll();
+
+                GlobalMethods.ReleseObject(wsCh1);
+                GlobalMethods.ReleseObject(wsDb1);
+                wb1.Saved = true;
+                wb1.Close();
+                GlobalMethods.ReleseObject(wb1);
+
+                SaveLoader.LoadAsyncFromFolder("TEMP");
+                //references.UpdateAllWSs();
+                Directory.Delete(sourceFolder, true);
+                InitExcelEvents();
+            }
+            
+        }
+
+        public void RunOnUiThread(System.Action<string, string, string, string> action, string thisYear, string thisMonth, string selectedMonth, string file)
+        {
+            if (SynchronizationContext.Current == null) return;
+            SynchronizationContext.Current.Post(state => action(thisYear, thisMonth, selectedMonth, file), null);
         }
 
         public void RunOnUiThread(System.Action<string, string, string> action, string thisYear, string thisMonth, string file)
@@ -434,6 +585,49 @@ namespace Meter
                 File.Delete(arhiveName);
             }
             ZipFile.CreateFromDirectory(tempDirectory, arhiveName);
+            Directory.Delete(tempDirectory, true);
+        }
+
+        public void ArhivateNew(string year, string month)
+        {
+            wb.Save();
+
+            string sourceFolder = dir + @"\current";
+            string tempDirectory = Path.Combine(Path.GetTempPath(), DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU")));
+            Directory.CreateDirectory(tempDirectory);
+            foreach (string dirPath in Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories))
+            {
+                Directory.CreateDirectory(dirPath.Replace(sourceFolder, tempDirectory));
+            }
+            foreach (string filePath in Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories))
+            {
+                string newFilePath = filePath.Replace(sourceFolder, tempDirectory);
+                if (newFilePath.Contains("meter"))
+                {
+                    newFilePath = newFilePath.Replace("meter", month);
+                }
+                if (newFilePath.Contains("~$"))
+                {
+                    continue;
+                }
+                File.Copy(filePath, newFilePath, true);
+            }
+            string archPath = dir + @"\arch";
+            if (!Directory.Exists(archPath))
+            {
+                Directory.CreateDirectory(archPath);
+            }
+            archPath = archPath + @"\" + year;
+            if (!Directory.Exists(archPath))
+            {
+                Directory.CreateDirectory(archPath);
+            }
+            string arhiveName = archPath + @"\" + month + @".zip";
+            if (File.Exists(arhiveName))
+            {
+                File.Delete(arhiveName);
+            }
+            ZipFile.CreateFromDirectory(tempDirectory, arhiveName, CompressionLevel.Fastest, false, System.Text.Encoding.UTF8);
             Directory.Delete(tempDirectory, true);
         }
     

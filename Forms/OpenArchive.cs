@@ -40,8 +40,9 @@ namespace Meter.Forms
             NewMenuBase.month = selectedMonth;
             NewMenuBase.year = selectedYear; 
 
-            Main.instance.RunOnUiThread(Main.instance.Restart, thisYear, thisMonth, archMap[c.Text]);
-            
+            //Main.instance.RunOnUiThread(Main.instance.Restart, thisYear, thisMonth, archMap[c.Text]);
+            //Main.instance.RunOnUiThread(Main.instance.OpenMonth, thisYear, thisMonth, selectedMonth, archMap[c.Text]);
+            Main.instance.OpenMonth(thisYear, thisMonth, selectedMonth, archMap[c.Text]);
             Close();
         }
 

@@ -260,26 +260,27 @@ namespace Meter.Forms
                 return;
             }
 
-            Main.instance.Arhivate(this.lblYear.Text, this.lblMonth.Text);
+            Main.instance.ArhivateNew(this.lblYear.Text, this.lblMonth.Text);
 
             MessageBox.Show("Готово!");
         }
 
         protected virtual void btnFromArhive_Click(object sender, EventArgs e)
         {
-            Thread t = new Thread(() =>
-            {
-                OpenArchive form = new OpenArchive(this.lblYear.Text, this.lblMonth.Text);
-                form.FormClosed += (s, args) =>
-                {
-                    System.Windows.Forms.Application.ExitThread();
-                };
-                form.Show();
-                System.Windows.Forms.Application.Run();
-            });
-            t.SetApartmentState(ApartmentState.STA);
-            t.Start();
-            
+            // Thread t = new Thread(() =>
+            // {
+            //     OpenArchive form = new OpenArchive(this.lblYear.Text, this.lblMonth.Text);
+            //     form.FormClosed += (s, args) =>
+            //     {
+            //         System.Windows.Forms.Application.ExitThread();
+            //     };
+            //     form.Show();
+            //     System.Windows.Forms.Application.Run();
+            // });
+            // t.SetApartmentState(ApartmentState.STA);
+            // t.Start();
+            OpenArchive form = new OpenArchive(this.lblYear.Text, this.lblMonth.Text);
+            form.ShowDialog();
         }
 
         protected virtual void lblMonth_MouseDoubleClick(object sender, MouseEventArgs e)

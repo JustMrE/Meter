@@ -25,6 +25,14 @@ namespace Meter
             LoadColors();
             LoadHeads();
         }
+
+        public async static void LoadAsyncFromFolder(string folder)
+        {
+            string path = @"\" + folder;
+            LoadReferencesNew(path);
+            LoadColors(path);
+            LoadHeads(path);
+        }
         
         static async void SaveReferencesNew()
         {
@@ -65,10 +73,10 @@ namespace Meter
             //await Task.WhenAll(tasks);
         }
         
-        static void LoadReferencesNew()
+        static void LoadReferencesNew(string path = @"\current")
         {
             var tasks = new List<Task>();
-            string path1 = Main.dir + @"\current\references";
+            string path1 = Main.dir + path + @"\references";
             List<string> filePaths1 = Directory.GetFiles(path1, "*.json").ToList();
             ConcurrentDictionary<string, ReferenceObject> concurentDictionary1 = new ConcurrentDictionary<string, ReferenceObject>();
             foreach (var file in filePaths1)
@@ -86,7 +94,7 @@ namespace Meter
                 tasks.Add(task);
             }
 
-            string path2 = Main.dir + @"\current\formulas";
+            string path2 = Main.dir + path + @"\formulas";
             List<string> filePaths2 = Directory.GetFiles(path2, "*.json").ToList();
             ConcurrentDictionary<string, List<ForTags>> concurentDictionary2 = new ConcurrentDictionary<string, List<ForTags>>();
             foreach (var file in filePaths2)
@@ -124,9 +132,9 @@ namespace Meter
                 writer.Write(jsonString);
             }
         }
-        static void LoadColors()
+        static void LoadColors(string path = @"\current")
         {
-            string file = Main.dir + @"\current\colors.json";
+            string file = Main.dir + path + @"\colors.json";
             var stringJson = File.ReadAllText(file);
             //var root = JsonConvert.DeserializeObject(stringJson).ToString();
             Main.instance.colors = JsonConvert.DeserializeObject<ColorsData>(stringJson);
@@ -142,9 +150,9 @@ namespace Meter
                 writer.Write(jsonString);
             }
         }
-        static void LoadHeads()
+        static void LoadHeads(string path = @"\current")
         {
-            string file = Main.dir + @"\current\heads.json";
+            string file = Main.dir + path + @"\heads.json";
             var stringJson = File.ReadAllText(file);
             Main.instance.heads = JsonConvert.DeserializeObject<HeadReferences>(stringJson);
         }
