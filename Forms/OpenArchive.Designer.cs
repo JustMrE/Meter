@@ -229,6 +229,7 @@
             this.Text = "OpenArchive";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.OpenArchive_FormClosed);
             this.Load += new System.EventHandler(this.OpenArchive_Load);
+            this.Shown += new System.EventHandler(this.OpenArchive_Shown);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();

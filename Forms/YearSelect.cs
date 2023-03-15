@@ -30,18 +30,21 @@ namespace Meter.Forms
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             year = null;
             Close();
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             if (string.IsNullOrEmpty(textBox1.Text))
             {
                 MessageBox.Show("Введите год!");
                 return;
             }
             year = textBox1.Text;
+            GlobalMethods.ToLog("Изменен год на " + year);
             Close();
         }
     }

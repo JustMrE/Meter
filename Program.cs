@@ -76,6 +76,7 @@ namespace Meter
             //MessageBox.Show(dir);
 
             string file1 = db + @"\opened.txt";
+            string logFile = db + @"\log.txt";
             string username = Environment.UserName;
             if (File.Exists(file1))
             {
@@ -86,10 +87,21 @@ namespace Meter
                     return;
                 }
             }
+
+            GlobalMethods.username = username;
+            GlobalMethods.logFile = logFile;
+
             using (StreamWriter writer = File.CreateText(file1))
             {
                 writer.Write(username);
                 File.SetAttributes(file1, File.GetAttributes(file1) | FileAttributes.Hidden);
+            }
+
+            using (StreamWriter writer = new StreamWriter(logFile, true)) 
+            {
+                writer.WriteLine();
+                writer.WriteLine();
+                writer.WriteLine(DateTime.Now +  " Счетчики открыты пользователем " + username);
             }
 
 

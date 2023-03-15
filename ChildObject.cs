@@ -15,9 +15,43 @@ namespace Meter
         public Excel.Worksheet ws;
         public Level _level;
         public string? parentID, firstParentID;
-        public int? emcosID { get; set; }
-        public int? emcosMLID { get; set; }
-        
+        [JsonIgnore]
+        int? _emcosID, _emcosMLID;
+        public int? emcosID
+        {
+            get
+            {
+                return _emcosID;
+            }
+            set
+            {
+                if (Main.loading == false) GlobalMethods.ToLog("Изменен emcosID для субъекта {" + GetFirstParent._name + "} " + _name + " с '" + emcosID + "' на '" + value + "'");
+                _emcosID = value;
+            }
+        }
+        //public int? emcosID
+        //{
+        //    get;
+        //    set;
+        //}
+        public int? emcosMLID
+        {
+            get
+            {
+                return _emcosMLID;
+            }
+            set
+            {
+                if (Main.loading == false) GlobalMethods.ToLog("Изменен emcosMLID для субъекта {" + GetFirstParent._name + "} " + _name + " с '" + emcosMLID + "' на '" + value + "'");
+                _emcosMLID = value;
+            }
+        }
+        //public int? emcosMLID
+        //{
+        //    get;
+        //    set;
+        //}
+
         public string WSName 
         {
             get
@@ -323,6 +357,7 @@ namespace Meter
         }
         public void AddNewRange(string nameL1, string nameL2, bool stopall = true)
         {
+            GlobalMethods.ToLog("Для субъекта " + GetFirstParent._name + " на листе " + WS.Name + " добавлен " + nameL1 + " " + nameL2);
             if (stopall) Main.instance.StopAll();
             int row, column, sizeColumn, sizeRow;
             string adr;
@@ -425,6 +460,7 @@ namespace Meter
         }
         public void CreateNewRange(string nameL1, string nameL2, bool stopall = true)
         {
+            GlobalMethods.ToLog("Для субъекта " + GetFirstParent._name + " на листе " + WS.Name + " добавлен " + nameL1 + " " + nameL2);
             if (stopall) Main.instance.StopAll();
             int row, column, sizeColumn, sizeRow;
             string adr;
@@ -482,6 +518,7 @@ namespace Meter
         }
         public void RemoveRange(string nameL1, string nameL2)
         {
+            GlobalMethods.ToLog("Для субъекта " + GetFirstParent._name + " на листе " + WS.Name + " удален " + nameL1 + " " + nameL2);
             if (_level == Level.level0)
             {
                 childs[nameL1].childs[nameL2].Remove();

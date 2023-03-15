@@ -17,13 +17,15 @@ namespace Meter
             InitializeComponent();
         }
 
-        private void Rename_Shown(System.Object? sender, System.EventArgs e)
+        private void Rename_Shown(object sender, System.EventArgs e)
         {
+            GlobalMethods.ToLog(this);
             tbNewName.Text = oldName;
         }
 
-        protected void btnOk_Click(System.Object? sender, System.EventArgs e)
+        protected void btnOk_Click(object sender, System.EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             newName = tbNewName.Text;
 
             if (Main.instance.references.references.ContainsKey(newName))
@@ -46,11 +48,14 @@ namespace Meter
             }
             Main.instance.ResumeAll();
 
+            GlobalMethods.ToLog("Изменено название субъекта с '" + oldName + "' на '" + newName + "'");
+
             Close();
         }
 
-        protected void btnCancel_Click(System.Object? sender, System.EventArgs e)
+        protected void btnCancel_Click(object sender, System.EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             Close();
         }
     }

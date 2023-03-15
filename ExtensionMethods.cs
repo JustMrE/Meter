@@ -38,16 +38,6 @@ namespace Meter
                 return false;
         }
     }
-    //public class RangesClass
-    //{
-    //    Excel.Range range;
-    //    public RangesClass(Excel.Range range)
-    //    {
-    //        this.range = range;
-    //    }
-
-    //    public IEnumerator<Excel.Range> GetEnumerator() => new RangesEnumerator(range);
-    //}
     internal static class ControlExtensions
     {
         public static ForTags? SpecialTag(this Control control)

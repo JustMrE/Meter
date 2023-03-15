@@ -24,6 +24,7 @@ namespace Meter.Forms
 
         private void button1_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             string newValue = textBox1.Text;
             if (!string.IsNullOrEmpty(newValue))
             {
@@ -47,6 +48,7 @@ namespace Meter.Forms
 
         private void ChangeCoef_Shown(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this);
             string? oldValue = referenceObject.meterCoef;
             if (!string.IsNullOrEmpty(oldValue))
             {
@@ -61,6 +63,7 @@ namespace Meter.Forms
 
         private void button2_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             Close();
         }
 

@@ -8,11 +8,15 @@ using Main = Meter.MyApplicationContext;
 using Excel = Microsoft.Office.Interop.Excel;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 
 namespace Meter
 {
     public static class GlobalMethods
     {
+        public static string logFile;
+        public static string username;
+
         public static void CalculateFormsPositions()
         {
             Main.instance.StopAll();
@@ -67,6 +71,49 @@ namespace Meter
                     
                 }
             }
+        }
+
+        public static void ToLog(string msg)
+        {
+            
+            using (StreamWriter writer = new StreamWriter(logFile, true))
+            {
+                writer.WriteLine(DateTime.Now + " " + username + " " + msg);
+            }
+        }
+
+        public static void ToLog(object sender)
+        {
+            ToLog("Нажато " + ((Control)sender).Name);
+        }
+        public static void ToLog(object sender, string txt)
+        {
+            ToLog("Изменен текст " + ((Control)sender).Name + " на '" + txt + "'");
+        }
+        public static void ToLog(object sender, object selectedItem)
+        {
+            ToLog("В списке " + ((Control)sender).Name + " выбран " + selectedItem.ToString());
+        }
+
+        public static void ToLog(Form form, object sender)
+        {
+            ToLog("Нажато " + ((Control)sender).Name + " на форме " + form.Name);
+        }
+        public static void ToLog(Form form, object sender, string txt)
+        {
+            ToLog("Изменен текст " + ((Control)sender).Name + " на '" + txt + "' на форме " + form.Name);
+        }
+        public static void ToLog(Form form, object sender, object selectedItem)
+        {
+            ToLog("В списке " + ((Control)sender).Name + " выбран " + selectedItem.ToString() + " на форме " + form.Name);
+        }
+        public static void ToLog(Form form, object sender, bool ch)
+        {
+            ToLog("Переключатель переключен на " + ((Control)sender).Name + " на '" + ch.ToString() + "' на форме " + form.Name);
+        }
+        public static void ToLog(Form form)
+        {
+            ToLog("Открыта форма " + form.Name);
         }
     }
 }

@@ -76,6 +76,7 @@
             this.Name = "Password";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Password";
+            this.Shown += new System.EventHandler(this.Password_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

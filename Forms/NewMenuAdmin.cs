@@ -70,6 +70,7 @@ namespace Meter.Forms
         
         protected override void Button41_Click(object sender, EventArgs e)
         {
+            base.Button41_Click(sender, e);
             using (AddSubject form = new AddSubject())
             {
                 form.ShowDialog();
@@ -78,6 +79,7 @@ namespace Meter.Forms
 
         protected override void Button42_Click(object sender, EventArgs e)
         {
+            base.Button42_Click(sender, e);
             using (ColorSettings colorSettings = new ColorSettings())
             {
                 colorSettings.ShowDialog();
@@ -101,6 +103,7 @@ namespace Meter.Forms
 
         protected override void lblMonth_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            base.lblMonth_MouseDoubleClick(sender, e);
             using (MonthSelect form = new MonthSelect())
             {
                 form.ShowDialog();
@@ -117,6 +120,7 @@ namespace Meter.Forms
 
         protected override void lblYear_MouseDoubleClick(object sender, MouseEventArgs e)
         {
+            base.lblYear_MouseDoubleClick(sender, e);
             using (YearSelect form = new YearSelect(this.lblYear.Text))
             {
                 form.ShowDialog();

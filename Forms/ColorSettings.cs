@@ -25,6 +25,7 @@ namespace Meter
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             ColorsData.UpdateColors();
         }
 
@@ -144,6 +145,7 @@ namespace Meter
 
         private void btnLoadStandart_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             if (MessageBox.Show("Вы хотите восстановить цвета по умолчанию?", "По умолчанию", MessageBoxButtons.YesNo) == DialogResult.Yes);
             {
                 ColorsData.LoadStandartColors();
@@ -153,11 +155,17 @@ namespace Meter
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             //if (MessageBox.Show("Вы хотите отменить внесенные изменения?", "Отмена", MessageBoxButtons.YesNo) == DialogResult.Yes) ;
             {
                 SaveLoader.LoadStandartColors();
                 Close();
             }
+        }
+
+        private void ColorSettings_Shown(object sender, EventArgs e)
+        {
+            GlobalMethods.ToLog(this);
         }
     }
 }

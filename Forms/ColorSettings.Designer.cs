@@ -207,6 +207,7 @@ namespace Meter
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Напстройка цвета";
             this.Load += new System.EventHandler(this.ColorSettings_Load);
+            this.Shown += new System.EventHandler(this.ColorSettings_Shown);
             this.ResumeLayout(false);
 
         }

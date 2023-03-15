@@ -29,6 +29,7 @@ namespace Meter.Forms
 
         private void SCH_Shown(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this);
             var coefVal = referenceObject.DB.childs[RangeReferences.ActiveL1].childs["по счетчику"].RangeByDay(0).Value;
             if (coefVal == null || !double.TryParse(coefVal.ToString(), out coef))
             {
@@ -56,15 +57,21 @@ namespace Meter.Forms
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             Close();
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             if (sum >= 0)
             {
                 referenceObject.WriteToDB(RangeReferences.ActiveL1, "счетчик", (int)day - 1, tbPrev.Text);
                 referenceObject.WriteToDB(RangeReferences.ActiveL1, "счетчик", (int)day, tbNext.Text);
+
+                GlobalMethods.ToLog("Измены показания счетчика {" + referenceObject._name + "} " + RangeReferences.ActiveL1 + " за " + ((int)day - 1) + " число на " + tbPrev.Text);
+                GlobalMethods.ToLog("Измены показания счетчика {" + referenceObject._name + "} " + RangeReferences.ActiveL1 + " за " + ((int)day) + " число на " + tbNext.Text);
+
                 Close();
             }
             else
@@ -90,6 +97,7 @@ namespace Meter.Forms
         private void tbPrev_TextChanged(object sender, EventArgs e)
         {
             string tbVal = tbPrev.Text;
+            GlobalMethods.ToLog(this, sender, tbVal);
             if (string.IsNullOrEmpty(tbVal) || tbVal == "-") return;
 
             if (!double.TryParse(tbVal, out prev))
@@ -103,6 +111,7 @@ namespace Meter.Forms
         private void tbNext_TextChanged(object sender, EventArgs e)
         {
             string tbVal = tbNext.Text;
+            GlobalMethods.ToLog(this, sender, tbVal);
             if (string.IsNullOrEmpty(tbVal) || tbVal == "-") return;
 
             if (!double.TryParse(tbVal, out next))

@@ -124,6 +124,7 @@ namespace Meter
 
         public void CreateNew(string name, string nameL1, string psAddress, bool insert = true)
         {
+            GlobalMethods.ToLog("Добавлен субъект {" + name + "}");
             ReferenceObject ro = new ReferenceObject(name, nameL1, psAddress, insert);
             references.Add(name, ro);
         }
@@ -270,6 +271,7 @@ namespace Meter
 
         public void ClearAllDB()
         {
+            GlobalMethods.ToLog("База данных очищена");
             MessageBox.Show("Это может занять некоторое время! \nДождитесь сообщения об окончании.");
             var watch = Stopwatch.StartNew();
             Main.instance.StopAll();

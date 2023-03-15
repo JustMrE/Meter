@@ -14,6 +14,7 @@ namespace Meter
     {
         public static void SaveAsync()
         {
+            GlobalMethods.ToLog("Сохранение данных");
             SaveReferencesNew();
             SaveColors();
             SaveHeads();
@@ -21,9 +22,12 @@ namespace Meter
 
         public async static void LoadAsync()
         {
+            GlobalMethods.ToLog("Загрузка данных");
+            Main.loading = true;
             LoadReferencesNew();
             LoadColors();
             LoadHeads();
+            Main.loading = false;
         }
 
         public async static void LoadAsyncFromFolder(string folder)

@@ -18,12 +18,14 @@ namespace Meter.Forms
 
         private void AddSubject_Shown(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this);
             ComboBox11.Text = string.Empty;
         }
 
         public void ComboBox11_TextChanged(object sender, EventArgs e)
         {
             nameL0 = ComboBox11.Text;
+            GlobalMethods.ToLog(this, sender, nameL0);
             if (!string.IsNullOrEmpty(nameL0))
             {
                 ComboBox12.Visible = true;
@@ -54,6 +56,7 @@ namespace Meter.Forms
         public void ComboBox12_TextChanged(object sender, EventArgs e)
         {
             nameL1 = ComboBox12.Text;
+            GlobalMethods.ToLog(this, sender, nameL1);
             if (!string.IsNullOrEmpty(nameL1))
             {
                 ComboBox13.Visible = true;
@@ -79,11 +82,13 @@ namespace Meter.Forms
         public void ComboBox13_TextChanged(object sender, EventArgs e)
         {
             nameL2 = ComboBox13.Text;
+            GlobalMethods.ToLog(this, sender, nameL2);
         }
 
         private void CheckBox_CheckedChanged(object sender, EventArgs e)
         {
             CheckBox cb = sender as CheckBox;
+            GlobalMethods.ToLog(this, sender, cb.Checked);
             string type = cb.Text;  
             if (cb.Checked == true)
             {
@@ -97,6 +102,7 @@ namespace Meter.Forms
 
         public void btnOk_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             name = TextBox15.Text + " " + ComboBox13.Text;
             if (string.IsNullOrEmpty(nameL0) || string.IsNullOrEmpty(nameL1) || string.IsNullOrEmpty(nameL2))
             {
@@ -286,6 +292,7 @@ namespace Meter.Forms
 
         public void btnCancel_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             Close();
         }
     }

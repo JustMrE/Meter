@@ -46,6 +46,7 @@ namespace Meter
         public static List<int> menuIndexes = new List<int>();
         string file;
         bool restarted;
+        public static bool loading = false;
 
         public Excel.WorkbookEvents_BeforeCloseEventHandler Event_BeforeClose;
         public Excel.WorkbookEvents_WindowResizeEventHandler Event_WindowResize;
@@ -87,6 +88,7 @@ namespace Meter
                 xlApp = null;
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
+                GlobalMethods.ToLog("Счетчики закрыты");
                 // Thread.Sleep(10000);
                 if (restarted == false) ExitThread();
             }
@@ -469,6 +471,7 @@ namespace Meter
         }
         private void Wb_BeforeSave(bool SaveAsUI, ref bool Cancel)
         {
+            GlobalMethods.ToLog("Книга сохранена");
             SaveLoader.SaveAsync();
         }
 
@@ -497,18 +500,22 @@ namespace Meter
         }
         private void Application_ActivateSheet(object sh)
         {
+            GlobalMethods.ToLog("Активирован лист " + ((Excel.Worksheet)sh).Name);
             menu.ActivateSheet(sh);
         }
         private void Application_BeforeDoubleClick(Excel.Range range, ref bool cancel)
         {
+            GlobalMethods.ToLog("Двойной клик на ячейке " + range.Address);
             menu.DblClick(range);
         }
         private void Application_SelectionChange(Excel.Range range)
         {
+            GlobalMethods.ToLog("Выделены ячейки " + range.Address);
             menu.SlectionChanged(range);
         }
         private void Application_Change(Excel.Range range)
         {
+            GlobalMethods.ToLog("Изменено значение ячейки " + range.Address + " на '" + range.Value + "'");
             menu.CellValueChanged(range);
         }
         
@@ -541,42 +548,9 @@ namespace Meter
             MessageBox.Show("Closed");
         }
 
-        public void Arhivate(string year, string month)
-        {
-            string sourceFolder = dir + @"\current";
-            string tempDirectory = Path.Combine(Path.GetTempPath(), DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU")));
-            Directory.CreateDirectory(tempDirectory);
-            foreach (string dirPath in Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories))
-            {
-                Directory.CreateDirectory(dirPath.Replace(sourceFolder, tempDirectory));
-            }
-            foreach (string filePath in Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories))
-            {
-                File.Copy(filePath, filePath.Replace(sourceFolder, tempDirectory), true);
-            }
-            string archPath = dir + @"\arch";
-            if (!Directory.Exists(archPath))
-            {
-                Directory.CreateDirectory(archPath);
-            }
-            archPath = archPath + @"\" + year;
-            if (!Directory.Exists(archPath))
-            {
-                Directory.CreateDirectory(archPath);
-            }
-            string arhiveName = archPath + @"\" + month + @".zip";
-            if (File.Exists(arhiveName))
-            {
-                File.Delete(arhiveName);
-            }
-            ZipFile.CreateFromDirectory(tempDirectory, arhiveName);
-            Directory.Delete(tempDirectory, true);
-        }
-
         public void ArhivateNew(string year, string month)
         {
             wb.Save();
-
             string sourceFolder = dir + @"\current";
             string tempDirectory = Path.Combine(Path.GetTempPath(), DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU")));
             Directory.CreateDirectory(tempDirectory);
@@ -614,6 +588,7 @@ namespace Meter
             }
             ZipFile.CreateFromDirectory(tempDirectory, arhiveName, CompressionLevel.Fastest, false, System.Text.Encoding.UTF8);
             Directory.Delete(tempDirectory, true);
+            GlobalMethods.ToLog("Книга архивирована (" + month + " " + year + " года) в файл " + arhiveName);
         }
     
         public void ReleaseAllComObjects()

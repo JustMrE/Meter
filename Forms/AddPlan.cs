@@ -32,6 +32,7 @@ namespace Meter.Forms
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             if (!string.IsNullOrEmpty(tbCod.Text))
             {
                 int cod = Convert.ToInt32(tbCod.Text);
@@ -60,6 +61,7 @@ namespace Meter.Forms
 
                 if (ro == null)
                 {
+                    
                     if (!referenceObject.DB.HasItem("план"))
                     {
                         referenceObject.AddPlans();
@@ -71,10 +73,12 @@ namespace Meter.Forms
                 {
                     if (/*ReplaceDialogue(cod, ro)*/MessageBox.Show(text: "Код " + cod + " уже используется для \"" + ro._name + "\". \nХотите заменить?", caption: "", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
+                        ro.codPlan = null;
                         if (!referenceObject.DB.HasItem("план"))
                         {
                             referenceObject.AddPlans();
                         }
+                        referenceObject.codPlan = cod;
                         Close();
                     }
                 }
@@ -115,11 +119,13 @@ namespace Meter.Forms
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             this.Close();
         }
 
         private void AddPlan_Shown(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this);
             if (referenceObject.codPlan != null)
             {
                 label1.Visible = true;

@@ -24,7 +24,13 @@ namespace Meter
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
+            GlobalMethods.ToLog("Введен пароль " + txtInput.Text);
+        }
 
+        private void Password_Shown(object sender, EventArgs e)
+        {
+            GlobalMethods.ToLog(this);
         }
     }
 }

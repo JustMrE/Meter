@@ -8,6 +8,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using Main = Meter.MyApplicationContext;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+//using Microsoft.Office.Interop.Excel;
 
 namespace Meter.Forms
 {
@@ -41,30 +42,7 @@ namespace Meter.Forms
         public static HashSet<string> editedFormulas = new HashSet<string>();
         public static HashSet<string> selectedButtons = new HashSet<string>();
 
-        protected virtual void searchTextBox_Changed(object sender, EventArgs e)
-        {
-            RegexSearch();
-        }
-        protected virtual void TextBox1_TextChanged(object sender, EventArgs e)
-        {
-            if (textBox1.Text == "stop")
-            {
-                ResetContextMenu();
-                Main.instance.xlApp.EnableEvents = false;
-            }
-            else
-            {
-                Main.instance.xlApp.EnableEvents = true;
-            }
-            if(textBox1.Text == "save")
-            {
-                Main.save = true;
-            }
-            else
-            {
-                Main.save = false;
-            }
-        }
+        
         private void RegexSearch()
         {
             RegexOptions ro = checkBox1.Checked ? RegexOptions.None : RegexOptions.IgnoreCase;
@@ -158,6 +136,7 @@ namespace Meter.Forms
         }
         public virtual void ContextMenu()
         {
+            GlobalMethods.ToLog("Открыто контекстное меню");
             if (Main.instance.colors.mainTitle.ContainsValue(activeColor))
             {
                 selectedButtons.Add("Изменить main");
@@ -215,6 +194,7 @@ namespace Meter.Forms
         {
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
+                GlobalMethods.ToLog("Нажат пункт контекстного меню " + caption);
                 action.Invoke();
             };
             CommandBarButton b = (CommandBarButton)cb.Controls.Add(Type: type, Temporary: true);
@@ -230,6 +210,7 @@ namespace Meter.Forms
         {
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
+                GlobalMethods.ToLog("Нажат пункт контекстного меню " + caption);
                 action.Invoke(s1);
             };
             CommandBarButton b = (CommandBarButton)cb.Controls.Add(Type: type, Temporary: true);
@@ -240,27 +221,32 @@ namespace Meter.Forms
         {
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
+                GlobalMethods.ToLog("Нажат пункт контекстного меню " + caption);
                 action.Invoke(s1, s2);
             };
             CommandBarButton b = (CommandBarButton)cb.Controls.Add(Type: type, Temporary: true);
             b.Caption = caption;
             b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
         }
+
         public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, Action action, int type = 1)
         {
+            string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
+                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
                 action.Invoke();
             };
             CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
             b.Caption = caption;
             b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
         }
-        
         public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, Action<bool> action, bool b1, int type = 1)
         {
+            string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
+                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
                 action.Invoke(b1);
             };
             CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
@@ -269,8 +255,10 @@ namespace Meter.Forms
         }
         public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, Action<string> action, string s1, int type = 1)
         {
+            string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
+                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
                 action.Invoke(s1);
             };
             CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
@@ -279,8 +267,10 @@ namespace Meter.Forms
         }
         public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, Action<string, string> action, string s1, string s2, int type = 1)
         {
+            string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
+                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
                 action.Invoke(s1, s2);
             };
             CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
@@ -289,8 +279,10 @@ namespace Meter.Forms
         }
         public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, Action<string, string, bool> action, string s1, string s2, bool b1 = true, int type = 1)
         {
+            string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
+                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
                 action.Invoke(s1, s2, b1);
             };
             CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
@@ -299,8 +291,10 @@ namespace Meter.Forms
         }
         public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, Action<string, string, string?> action, string s1, string s2, string? s3 = null, int type = 1)
         {
+            string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
+                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
                 action.Invoke(s1, s2, s3);
             };
             CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
@@ -309,8 +303,10 @@ namespace Meter.Forms
         }
         public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, List<Action> action, int type = 1)
         {
+            string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
+                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
                 foreach (Action item in action)
                 {
                     item.Invoke();
@@ -322,8 +318,10 @@ namespace Meter.Forms
         }
         public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, List<Action<string>> action, string s1, int type = 1)
         {
+            string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
+                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
                 foreach (Action<string> item in action)
                 {
                     item.Invoke(s1);
@@ -345,6 +343,7 @@ namespace Meter.Forms
         }
         public virtual void RightClick(Excel.Range range)
         {
+            GlobalMethods.ToLog("Нажата правая кнопка мыши на ячейке " + range.Address);
             _activeRange = range;
             activeColor = _activeRange.ColorRGB();
             Main.instance.references.ActivateTable(range);
@@ -410,7 +409,11 @@ namespace Meter.Forms
                         c == Main.instance.colors.extraSubtitle["СЧЕТЧИК"])
                     {
                         int? day = RangeReferences.activeTable.ActiveDay();
-                        if (day != null) WriteToDB(_activeRange, (int)day);
+                        if (day != null)
+                        {
+                            
+                            WriteToDB(_activeRange, (int)day);
+                        }
                     }
                     else
                     {
@@ -425,9 +428,12 @@ namespace Meter.Forms
             string val = rng.Formula != null ? rng.Formula.ToString() : "";
             DontEdit(rng, day);
             RangeReferences.activeTable.WriteToDB(RangeReferences.ActiveL1, RangeReferences.activeL2,(int)day, val);
+            
         }
         private void DontEdit(Excel.Range rng, int? day = null)
         {
+            string val = rng.Formula != null ? rng.Formula.ToString() : "";
+            GlobalMethods.ToLog("Изменено значение ячейки " + rng.Address + " с '" + oldVal + "' на '" + val + "'");
             rng.Formula = oldVal;
         }
         private void DontEditRange(Excel.Range rng)

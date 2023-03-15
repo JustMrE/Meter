@@ -11,8 +11,25 @@ namespace Meter
 {
     public class ReferenceObject : ReferencesParent
     {
-        public int? codPlan { get; set; }
-        public string? meterCoef { get; set; }
+        [JsonIgnore]
+        int? _codPlan;
+        public int? codPlan
+        {
+            get
+            {
+                return _codPlan;
+            }
+            set
+            {
+                if (Main.loading == false) GlobalMethods.ToLog("Для субъекта {" + _name + "} изменен код плана с '" + _codPlan + "' на '" + value.ToString() + "'");
+                _codPlan = value; 
+            }
+        }
+        public string? meterCoef
+        {
+            get;
+            set;
+        }
 
         [JsonIgnore]
         public HeadObject HeadL0
@@ -163,11 +180,6 @@ namespace Meter
             Main.instance.ResumeAll();
         }
 
-        public void Test()
-        {
-            MessageBox.Show(PS.rangeAddress);
-        }
-
         public int? ActiveDay()
         {
             return _activeChild._activeChild._activeChild.DayByRange(NewMenuBase._activeRange);
@@ -176,10 +188,6 @@ namespace Meter
         {
             return Main.instance.xlApp.Intersect(PS.Range, rng) != null;
         }
-        /*public void WriteToDB(int day, string val)
-        {
-            WriteToDB(_activeChild._activeChild._name, _activeChild._activeChild._activeChild._name.ToLower(), day, val);
-        }*/
         public void WriteToDB(string nameL1, string nameL2, int day, string val)
         {
             if (!string.IsNullOrEmpty(val))
@@ -191,13 +199,10 @@ namespace Meter
                     return;
                 }
             }
-            //Excel.Range r = DB.childs[nameL1].childs[nameL2.ToLower()].RangeByDay(day);
-            DB.childs[nameL1].childs[nameL2.ToLower()].RangeByDay(day).Value = val;
+            Excel.Range r = DB.childs[nameL1].childs[nameL2.ToLower()].RangeByDay(day);
+            r.Value = val;
+            GlobalMethods.ToLog("Запись в Базу данных ячейка " + r.Address + " Субект {" + _name + "} " + nameL1 + " " + nameL2 + " день " + day + " значение " + val);
             //Marshal.ReleaseComObject(r);
-        }
-        public void AddNewRange(string psdb, string nameL1, string nameL2 = "ручное")
-        {
-
         }
         public int GetCode(string name, string? L1 = null)
         {
@@ -210,6 +215,7 @@ namespace Meter
             {
                 L1 = PS._activeChild._name;
             }
+            GlobalMethods.ToLog("Изменео {" + _name + "} " + L1 + " с '" + oldName + "' на '" + newName + "'");
             //Main.instance.stopped = true;
             Main.instance.StopAll();
             if (PS.childs[L1].childs.ContainsKey(newName))
@@ -443,6 +449,7 @@ namespace Meter
                     if (item.HasItem("по счетчику"))
                     {
                         Excel.Range r = ((Excel.Range)item.childs["по счетчику"].Body.Cells[1, 1]);
+                        GlobalMethods.ToLog("Изменен коэфициент счетчика для {" + _name + "} с '" + r.Value + "' на '" + meterCoef + "'");
                         r.Value = meterCoef;
                         Marshal.ReleaseComObject(r);
                     }
@@ -453,6 +460,7 @@ namespace Meter
 
         public void RemovePlan()
         {
+            GlobalMethods.ToLog("Удален план для {" + _name + "}");
             DB.childs["план"].Remove();
             if (PS.HasItem("план")) PS.childs["план"].Remove();
 
@@ -476,6 +484,7 @@ namespace Meter
         }
         public void RemoveMeter(string nameL1)
         {
+            GlobalMethods.ToLog("Удалены по счетчику для {" + _name + "} " + nameL1);
             DB.RemoveRange(nameL1, "счетчик");
             DB.RemoveRange(nameL1, "по счетчику");
             if (!DB.HasItem("счетчик"))
@@ -507,6 +516,8 @@ namespace Meter
 
         public void RemoveSubject()
         {
+            GlobalMethods.ToLog("Субъект {" + _name + "} удален");
+
             string u0, u1, u2;
             u0 = ((Excel.Range)PS.Head.Offset[-3].MergeArea.Cells[1,1]).Value as string;
             u1 = ((Excel.Range)PS.Head.Offset[-2].MergeArea.Cells[1,1]).Value as string;

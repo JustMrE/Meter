@@ -39,6 +39,7 @@ namespace Meter.Forms
         }
         protected override void Button2_Click(object sender, EventArgs e)
         {
+            base.Button2_Click(sender, e);
             CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");
             ReferenceObject[] ranges = Main.instance.references.references.Values.Where(n => n.HasEmcosID == true).ToArray();
             Login();
@@ -93,6 +94,7 @@ namespace Meter.Forms
 
         protected override void TextBox1_TextChanged(object sender, EventArgs e)
         {
+            base.TextBox1_TextChanged(sender, e);
             string tbVal = textBox1.Text;
             if (string.IsNullOrEmpty(tbVal) || changed)
             {
@@ -111,13 +113,14 @@ namespace Meter.Forms
 
         protected override void btnAdmin_Click(object sender, EventArgs e)
         {
+            base.btnAdmin_Click(sender, e);
             using (Password pass = new Password())
             {
                 if (pass.ShowDialog() == DialogResult.OK)
                 {
                     //if (pass.Val == "123456")
                     {
-                        base.btnAdmin_Click(sender, e);
+                        GlobalMethods.ToLog("Введен правильный пароль");
                         Main.instance.menu = Main.menues[1] as NewMenuBase;
                         Main.instance.menu.Show();
                         this.Hide();

@@ -20,10 +20,19 @@ namespace Meter.Forms
 
         private void btn_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             Control c = sender as Control;
 
             selectedMonth = c.Text;
+
+            GlobalMethods.ToLog("Изменен месяц на " + selectedMonth);
+
             Close();
+        }
+
+        private void MonthSelect_Shown(object sender, EventArgs e)
+        {
+            GlobalMethods.ToLog(this);
         }
     }
 }

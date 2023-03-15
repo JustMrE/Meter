@@ -193,6 +193,7 @@
             this.Name = "MonthSelect";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "MonthSelect";
+            this.Shown += new System.EventHandler(this.MonthSelect_Shown);
             this.flowLayoutPanel1.ResumeLayout(false);
             this.ResumeLayout(false);
 

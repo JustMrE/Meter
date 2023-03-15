@@ -25,6 +25,7 @@ namespace Meter.Forms
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             string newValue = textBox1.Text;
             if (string.IsNullOrEmpty(newValue))
             {
@@ -48,12 +49,14 @@ namespace Meter.Forms
 
         private void ChangeCoef_Shown(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this);
             oldVal = button.Text;
             textBox1.Text = oldVal;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             Close();
         }
 

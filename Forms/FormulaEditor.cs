@@ -28,6 +28,8 @@ namespace Meter.Forms
         HashSet<Control> active = new HashSet<Control>();
 
         ForTags lastControl = null;
+        string oldFormula = "";
+        string newFormula = "";
         //ButtonsType? lastType = null;
 
         public FormulaEditor(ref ReferenceObject referenceObject, string nameL1)
@@ -45,6 +47,7 @@ namespace Meter.Forms
 
         private void FormulaEditor_Shown(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this);
             ListViewItem item;
             listView1.Columns[0].Width = listView1.Width;
             this.Text = referenceObject._name;
@@ -108,6 +111,7 @@ namespace Meter.Forms
                             b.MouseDown += ShowPara;
                         }
                     }
+                    oldFormula += "{" + b.Text + "} ";
                     flowLayoutPanel1.Controls.Add(b);
                 }
                 UpdateCheck();
@@ -594,6 +598,7 @@ namespace Meter.Forms
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             if (MessageBox.Show("Все внесенные изменения будут отменены. Вы уверены?", "",MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 Close();
@@ -602,6 +607,7 @@ namespace Meter.Forms
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             List<ForTags> formulaIDs = new List<ForTags>();
             //List<string> formula = new List<string>();
             string formula = "=";
@@ -636,6 +642,7 @@ namespace Meter.Forms
                 {
                     formula += item.Text;
                 }
+                newFormula += "{" + item.Text + "} ";
             }
             formula = formula.Replace(",",".");
             if (formula == "=")
@@ -654,6 +661,9 @@ namespace Meter.Forms
             }
 
             referenceObject.DB.childs[nameL1].WriteFormula(formula);
+
+            GlobalMethods.ToLog("Изменена формула для субъекта {" + referenceObject._name + "} " + nameL1 + " с '" + oldFormula + "' на '" + newFormula + "'");
+
             //MessageBox.Show(formula + "; Корректность:" + Main.instance.xlApp.WorksheetFunction.IsError(formula) + "; результат:" + Main.instance.xlApp.Evaluate(formula));
             Close();
         }

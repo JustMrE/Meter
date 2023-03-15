@@ -30,6 +30,7 @@ namespace Meter.Forms
 
         private void Correct_Shown(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this);
             changed = true;
 
             var oldStringVal = referenceObject.DB.childs[RangeReferences.ActiveL1].childs["основное"].RangeByDay((int)day).Value;
@@ -68,6 +69,7 @@ namespace Meter.Forms
         private void tbSum_TextChanged(object sender, EventArgs e)
         {
             string tbVal = tbSum.Text;
+            GlobalMethods.ToLog(this, sender, tbVal);
             if (!changed) 
             {
                 if (string.IsNullOrEmpty(tbSum.Text) || tbVal == "-")
@@ -92,6 +94,7 @@ namespace Meter.Forms
         private void tbCorr_TextChanged(object sender, EventArgs e)
         {
             string tbVal = tbCorr.Text;
+            GlobalMethods.ToLog(this, sender, tbVal);
             if (!changed)
             {
                 if (string.IsNullOrEmpty(tbVal) || tbVal == "-")
@@ -160,12 +163,14 @@ namespace Meter.Forms
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             referenceObject.WriteToDB(RangeReferences.ActiveL1, nameL2, (int)day, tbCorr.Text);
             Close();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             Close();
         }
     }

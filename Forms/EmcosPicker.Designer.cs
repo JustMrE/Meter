@@ -107,6 +107,7 @@ namespace Meter
             this.Text = "Emcos Pick";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.EmcosPicker_Load);
+            this.Shown += new System.EventHandler(this.EmcosPicker_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
 

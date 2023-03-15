@@ -28,6 +28,8 @@ namespace Meter.Forms
 
         private void btn_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
+            GlobalMethods.ToLog("Открытие архива за " + selectedMonth + " " + selectedYear);
             Control c = sender as Control;
             if (c.BackColor == Color.Gold)
             {
@@ -115,9 +117,15 @@ namespace Meter.Forms
 
         }
 
+        private void OpenArchive_Shown(object sender, EventArgs e)
+        {
+            GlobalMethods.ToLog(this);
+        }
+
         private void textBox1_TextChanged(object sender, EventArgs e)
         {
             selectedYear = ((TextBox)sender).Text;
+            GlobalMethods.ToLog(this, sender, selectedYear);
             Check();
         }
 

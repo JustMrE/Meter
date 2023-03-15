@@ -56,6 +56,7 @@ namespace Meter.Forms
 
         private void listBox0_DoubleClick(object? sender, System.EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender, listBox0.SelectedItem);
             string name = listBox0.SelectedItem as string;
             string id = idByName[name];
             OpenFormula(id);
@@ -102,12 +103,19 @@ namespace Meter.Forms
 
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender, tbSearch.Text);
             RegexSearch();
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             Close();
+        }
+
+        private void AllFormulas_Shown(object sender, EventArgs e)
+        {
+            GlobalMethods.ToLog(this);
         }
     }
 }

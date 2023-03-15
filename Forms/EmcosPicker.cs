@@ -52,6 +52,7 @@ namespace Meter
 
         protected void SelectNewGroup(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender, listBox1.SelectedItem);
             if (selectType == false)
             {
                 string name = (string)this.listBox1.SelectedItem;
@@ -154,10 +155,11 @@ namespace Meter
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-
+            GlobalMethods.ToLog(this, sender);
         }
         private void btnBack_Click(object sender, EventArgs e)
         {
+            GlobalMethods.ToLog(this, sender);
             //if (selectType == false)
             {
                 int last = root.Count - 1;
@@ -251,7 +253,12 @@ namespace Meter
                 }
             }
         }
-        
+
+        private void EmcosPicker_Shown(object sender, EventArgs e)
+        {
+            GlobalMethods.ToLog(this);
+        }
+
         // private void Test(string jsonRequest, string type)
         // {
         //     var client = new HttpClient();
