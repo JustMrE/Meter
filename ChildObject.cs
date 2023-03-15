@@ -1165,6 +1165,27 @@ namespace Meter
                     item.Check();
                 }
             }
+            //if (_level == Level.level0)
+            //{
+            //    if (WS.CodeName == "PS")
+            //    {
+            //        ReferenceObject co = Main.instance.references.references.Values.Where(c => c != GetFirstParent && c.HasRangePS(Range) == true).FirstOrDefault();
+
+            //        if (co != null)
+            //        {
+            //            Main.instance.references.Errors.Add("Дубликат: " + name + " and " + co._name);
+            //        }
+            //    }
+            //    else if (WS.CodeName == "DB")
+            //    {
+            //        ReferenceObject co = Main.instance.references.references.Values.Where(c => c != GetFirstParent && c.HasRangeDB(Range) == true).FirstOrDefault();
+
+            //        if (co != null)
+            //        {
+            //            Main.instance.references.Errors.Add("Дубликат: " + name + " and " + co._name);
+            //        }
+            //    }
+            //}
         }
         public void WriteFormula(string formula)
         {

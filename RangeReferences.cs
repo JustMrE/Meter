@@ -308,6 +308,36 @@ namespace Meter
             Errors = null;
         }
 
+        public void CheckDublicates()
+        {
+            Errors = new List<string>();
+
+            var watch = Stopwatch.StartNew();
+            Main.instance.StopAll();
+            foreach (ReferenceObject ro in references.Values)
+            {
+                ReferenceObject co = references.Values.AsParallel().FirstOrDefault(n => n != ro && n.HasRange(ro.PS.Range)); //Main.instance.references.references.Values.Where(c => c != ro && c.HasRangePS(ro.PS.Range) == true).FirstOrDefault();
+
+                if (co != null)
+                {
+                    Errors.Add("{" + co._name + "} and {" + ro._name + "}");
+                }
+            }
+            Main.instance.ResumeAll();
+            MessageBox.Show("Done!\n" + (watch.ElapsedMilliseconds / 1000) + " sec");
+
+            string file = System.IO.Path.GetDirectoryName(Main.dir) + @"\DB\errors.json";
+            using (StreamWriter writer = File.CreateText(file))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                var jsonString = JsonConvert.SerializeObject(Errors);
+                //serializer.Serialize(writer, Errors);
+                writer.Write(jsonString);
+            }
+            Errors.Clear();
+            Errors = null;
+        }
+
         public void ReleaseAllComObjects()
         {
             foreach (ReferenceObject item in references.Values)

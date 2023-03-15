@@ -419,21 +419,6 @@ namespace Meter
 
             xlApp.Visible = true;
         }
-        private void InitFormsRestart()
-        {
-            menues = new List<Form>();
-            menues.Add(new NewMenu());
-            menues.Add(new NewMenuAdmin());
-
-            foreach (NewMenuBase form in menues)
-            {
-                form.FormClosed += onFormClosed;
-            }
-            menu = menues[0] as NewMenuBase;
-            menu.Show();
-
-            xlApp.Visible = true;
-        }
         private void InitExcelEvents()
         {
             closed = false;

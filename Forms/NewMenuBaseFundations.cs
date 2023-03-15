@@ -618,6 +618,16 @@ namespace Meter.Forms
                 t.SetApartmentState(ApartmentState.STA);
                 t.Start();
             });
+            AddButtonToPopUpCommandBar(ref p, "CheckDublicate", () => 
+            {
+                Main.instance.references.CheckDublicates();
+                //ReferenceObject co = Main.instance.references.references.Values.Where(c => c != RangeReferences.activeTable && c.HasRangePS(RangeReferences.activeTable.PS.Range) == true).FirstOrDefault();
+
+                //if (co != null)
+                //{
+                //    MessageBox.Show(co._name + " " + RangeReferences.activeTable._name);
+                //}
+            });
         }
         protected void OpenForm()
         {
