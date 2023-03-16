@@ -9,10 +9,11 @@ namespace Meter
     partial class Rename : Form
     {
         ReferenceObject referenceObject;
-        string oldName, newName;
+        string oldnameShown, oldName, newName;
         public Rename(ReferenceObject referenceObject)
         {
             this.referenceObject = referenceObject;
+            oldnameShown = referenceObject._name.Replace(" " + referenceObject.HeadL2._name,"");
             oldName = referenceObject._name;
             InitializeComponent();
         }
@@ -20,13 +21,13 @@ namespace Meter
         private void Rename_Shown(object sender, System.EventArgs e)
         {
             GlobalMethods.ToLog(this);
-            tbNewName.Text = oldName;
+            tbNewName.Text = oldnameShown;
         }
 
         protected void btnOk_Click(object sender, System.EventArgs e)
         {
             GlobalMethods.ToLog(this, sender);
-            newName = tbNewName.Text;
+            newName = tbNewName.Text + " " + referenceObject.HeadL2._name;
 
             if (Main.instance.references.references.ContainsKey(newName))
             {
