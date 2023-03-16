@@ -77,7 +77,7 @@ namespace Meter
                     wb.Saved = true;
                 }
 
-                references.ReleaseAllComObjects();
+                ReleaseAllComObjects();
 
                 ClearEvents();
 
@@ -224,6 +224,7 @@ namespace Meter
 
         private void OpenMonthMethod(string thisYear, string thisMonth, string selectedYear, string selectedMonth, string file)
         {
+            StopAll();
             string sourceFolder = dir + @"\TEMP";
             if (Directory.Exists(sourceFolder))
             {
@@ -232,7 +233,7 @@ namespace Meter
             }
             System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder, true);
 
-            StopAll();
+            
             xlApp.EnableEvents = false;
             Excel.Application xlApp1;
             Excel.Workbook wb1;
@@ -278,7 +279,7 @@ namespace Meter
 
             wsCh.Cells.Replace( What: "[" + selectedMonth + ".xlsm]", Replacement: "", LookAt: XlLookAt.xlPart, SearchOrder: XlSearchOrder.xlByRows, MatchCase: false, SearchFormat: false, ReplaceFormat: false);
             wsCh.Activate();
-            ResumeAll();
+            
 
             GlobalMethods.ReleseObject(wsCh1);
             GlobalMethods.ReleseObject(wsDb1);
@@ -289,6 +290,7 @@ namespace Meter
             SaveLoader.LoadAsyncFromFolder("TEMP");
             //references.UpdateAllWSs();
             Directory.Delete(sourceFolder, true);
+            ResumeAll();
             InitExcelEvents();
         }
 
