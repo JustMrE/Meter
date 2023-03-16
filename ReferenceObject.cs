@@ -568,10 +568,10 @@ namespace Meter
         public void UpdateHeads(bool stopall = true)
         {
             HeadObject h0 = HeadL0, h1 = HeadL1, h2 = HeadL2;
-
             if (h0.LastColumn.Column < PS.LastColumn.Column)
             {
                 int resizeValue = PS.LastColumn.Column - h0.LastColumn.Column;
+                GlobalMethods.ToLog("resizeValue H0: " + resizeValue);
                 h0.Resize(resizeValue, false, stopall);
                 h0.UpdateColors();
                 h0.UpdateBorders();
@@ -580,6 +580,7 @@ namespace Meter
             if (h1.LastColumn.Column < PS.LastColumn.Column)
             {
                 int resizeValue = PS.LastColumn.Column - h1.LastColumn.Column;
+                GlobalMethods.ToLog("resizeValue H1: " + resizeValue);
                 h1.Resize(resizeValue, false, stopall);
                 h1.UpdateColors();
                 h1.UpdateBorders();
@@ -588,6 +589,7 @@ namespace Meter
             if (h2.LastColumn.Column < PS.LastColumn.Column)
             {
                 int resizeValue = PS.LastColumn.Column - h2.LastColumn.Column;
+                GlobalMethods.ToLog("resizeValue H2: " + resizeValue);
                 h2.Resize(resizeValue, false, stopall);
                 h2.UpdateColors();
                 h2.UpdateBorders();

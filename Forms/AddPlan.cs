@@ -64,7 +64,9 @@ namespace Meter.Forms
                     
                     if (!referenceObject.DB.HasItem("план"))
                     {
-                        referenceObject.AddPlans();
+                        Main.instance.StopAll();
+                        referenceObject.AddPlans(false);
+                        Main.instance.ResumeAll();
                     }
                     referenceObject.codPlan = cod;
                     Close();
@@ -76,7 +78,9 @@ namespace Meter.Forms
                         ro.codPlan = null;
                         if (!referenceObject.DB.HasItem("план"))
                         {
-                            referenceObject.AddPlans();
+                            Main.instance.StopAll();
+                            referenceObject.AddPlans(false);
+                            Main.instance.ResumeAll();
                         }
                         referenceObject.codPlan = cod;
                         Close();

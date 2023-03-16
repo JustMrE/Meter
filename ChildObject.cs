@@ -358,7 +358,7 @@ namespace Meter
         public void AddNewRange(string nameL1, string nameL2, bool stopall = true)
         {
             GlobalMethods.ToLog("Для субъекта " + GetFirstParent._name + " на листе " + WS.Name + " добавлен " + nameL1 + " " + nameL2);
-            if (stopall) Main.instance.StopAll();
+            if (stopall == true) Main.instance.StopAll();
             int row, column, sizeColumn, sizeRow;
             string adr;
 
@@ -461,14 +461,12 @@ namespace Meter
             }
             UpdateAllBorders();
             
-            
-            //Marshal.ReleaseComObject(r);
-            if (stopall) Main.instance.ResumeAll();
+            if (stopall == true) Main.instance.ResumeAll();
         }
         public void CreateNewRange(string nameL1, string nameL2, bool stopall = true)
         {
             GlobalMethods.ToLog("Для субъекта " + GetFirstParent._name + " на листе " + WS.Name + " добавлен " + nameL1 + " " + nameL2);
-            if (stopall) Main.instance.StopAll();
+            if (stopall == true) Main.instance.StopAll();
             int row, column, sizeColumn, sizeRow;
             string adr;
 
@@ -521,7 +519,7 @@ namespace Meter
                 l2.UpdateFormulas(stopall);
             }
             UpdateAllBorders();
-            if (stopall) Main.instance.ResumeAll();
+            if (stopall == true) Main.instance.ResumeAll();
         }
         public void RemoveRange(string nameL1, string nameL2)
         {
@@ -545,6 +543,7 @@ namespace Meter
         }
         public void Remove()
         {
+            string nameL1 = "", nameL2 = "";
             Main.instance.StopAll();
             int a = 0;
             int b = 0;
@@ -556,12 +555,15 @@ namespace Meter
             if (_level == Level.level2)
             {
                 b = 2;
+                nameL2 = _name;
+                nameL1 = GetParent<ChildObject>()._name;
             }
             else if (_level == Level.level1)
             {
                 b = 1;
+                nameL1 = _name;
             }
-
+            GlobalMethods.ToLog("Для субъекта " + GetFirstParent._name + " на листе " + WS.Name + " удален " + nameL1 + " " + nameL2);
             c = a + b;
             Excel.Range r = _range.Resize[_range.Rows.Count + c].Offset[-c];
             string _id = GetFirstParent.ID;
@@ -570,6 +572,7 @@ namespace Meter
             RangeReferences.idDictionary[_id].UpdateBorders();
             //Marshal.ReleaseComObject(r);
             Main.instance.ResumeAll();
+
         }
 
         public void UpdateChilds()
@@ -745,7 +748,7 @@ namespace Meter
             if (childs == null && WS.CodeName != "DB")
             {
                 //Main.instance.stopped = true;
-                if (stopall) Main.instance.StopAll();
+                if (stopall == true) Main.instance.StopAll();
                 if (Main.instance.colors.mainTitle.ContainsKey(_name))
                 {
                     Body.Formula = "=" + GetFirstParent.DB.WS.Name + "!" + ((Excel.Range)GetFirstParent.DB.childs[GetParent<ChildObject>()._name].childs["основное"]._body.Cells[2, 1]).Address[false, false];
@@ -760,7 +763,7 @@ namespace Meter
                 ((Excel.Range)Body.Rows[35]).FormulaR1C1 = "=SUM(R[-11]C:R[-1]C)";
                 ((Excel.Range)Body.Rows[36]).FormulaR1C1 = "=R[-13]C+R[-1]C";
                 //Main.instance.stopped = false;
-                if (stopall) Main.instance.ResumeAll();
+                if (stopall == true) Main.instance.ResumeAll();
             }
             else if (childs == null && WS.CodeName == "DB")
             {
@@ -945,9 +948,9 @@ namespace Meter
                 Body = Body.Resize[Body.Rows.Count ,Body.Columns.Count + column];
             }
 
-            if (stopall) Main.instance.xlApp.DisplayAlerts = false;
+            if (stopall == true) Main.instance.xlApp.DisplayAlerts = false;
             Head.Merge();
-            if (stopall) Main.instance.xlApp.DisplayAlerts = true;
+            if (stopall == true) Main.instance.xlApp.DisplayAlerts = true;
         }
         public void ClearDatas()
         {

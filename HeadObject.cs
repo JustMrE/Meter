@@ -117,6 +117,7 @@ namespace Meter
                 }
                 catch
                 {
+                    GlobalMethods.ToLog("Err");
                     return null;
                 }
             }
@@ -201,9 +202,9 @@ namespace Meter
                 Range = Range.Resize[Range.Rows.Count, Range.Columns.Count + column];
             }
 
-            if (stopall) Main.instance.xlApp.DisplayAlerts = false;
+            if (stopall == true) Main.instance.xlApp.DisplayAlerts = false;
             Range.Merge();
-            if (stopall) Main.instance.xlApp.DisplayAlerts = true;
+            if (stopall == true) Main.instance.xlApp.DisplayAlerts = true;
         }
         public void UpdateColors()
         {
