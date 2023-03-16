@@ -132,9 +132,11 @@ namespace Meter.Forms
                 {
                     if (Main.instance.heads.heads[nameL0].childs[nameL1].childs.ContainsKey(nameL2))
                     {
+                        Main.instance.StopAll();
                         adr = Main.instance.heads.heads[nameL0].childs[nameL1].childs[nameL2].LastCell.Offset[1, 1].Address[false, false];
                         CreateNew();
-                        UpdateUps();
+                        UpdateUps(false);
+                        Main.instance.ResumeAll();
                         Close();
                     }
                     else
@@ -152,12 +154,10 @@ namespace Meter.Forms
                             Range = r,
                             _level = Level.level2,
                         });
-
-                        Main.instance.ResumeAll();
                         adr = r.Offset[1].Address[false, false];
                         CreateNew(false);
-
-                        UpdateUps();
+                        UpdateUps(false);
+                        Main.instance.ResumeAll();
                         Close();
                     }
                 }
@@ -169,7 +169,6 @@ namespace Meter.Forms
                     r.Insert(Shift: Excel.XlInsertShiftDirection.xlShiftToRight, CopyOrigin: Excel.XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
                     r = Main.instance.wsCh.Range[address];
                     r.Value = nameL1;
-
                     Main.instance.heads.heads[nameL0].childs.Add(nameL1, new HeadObject()
                     {
                         WS = Main.instance.wsCh,
@@ -178,10 +177,8 @@ namespace Meter.Forms
                         _level = Level.level1,
                         childs = new Dictionary<string, HeadObject>(),
                     });
-
                     r = r.Offset[1];
                     r.Value = nameL2;
-
                     Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, new HeadObject()
                     {
                         WS = Main.instance.wsCh,
@@ -189,13 +186,10 @@ namespace Meter.Forms
                         Range = r,
                         _level = Level.level2,
                     });
-
-                    Main.instance.ResumeAll();
-
                     adr = r.Offset[1].Address[false, false];
                     CreateNew(false);
-
-                    UpdateUps();
+                    UpdateUps(false);
+                    Main.instance.ResumeAll();
                     Close();
                 }
             }
@@ -206,7 +200,6 @@ namespace Meter.Forms
                 Main.instance.StopAll();
                 Excel.Range r = (Excel.Range)Main.instance.wsCh.Cells[row, 2];
                 r.Value = nameL0;
-
                 Main.instance.heads.heads.Add(nameL0, new HeadObject()
                 {
                     WS = Main.instance.wsCh,
@@ -215,10 +208,8 @@ namespace Meter.Forms
                     _level = Level.level0,
                     childs = new Dictionary<string, HeadObject>(),
                 });
-
                 r = r.Offset[1];
                 r.Value = nameL1;
-
                 Main.instance.heads.heads[nameL0].childs.Add(nameL1, new HeadObject()
                 {
                     WS = Main.instance.wsCh,
@@ -227,10 +218,8 @@ namespace Meter.Forms
                     _level = Level.level1,
                     childs = new Dictionary<string, HeadObject>(),
                 });
-
                 r = r.Offset[1];
                 r.Value = nameL2;
-
                 Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, new HeadObject()
                 {
                     WS = Main.instance.wsCh,
@@ -238,46 +227,43 @@ namespace Meter.Forms
                     Range = r,
                     _level = Level.level2,
                 });
-
-                Main.instance.ResumeAll();
-
                 adr = r.Offset[1].Address[false, false];
                 CreateNew(false);
-
-                UpdateUps();
+                UpdateUps(false);
+                Main.instance.ResumeAll();
                 Close();
             }
         }
 
         private void CreateNew(bool insert = true)
         {            
-            Main.instance.references.CreateNew(name, types[0], adr, insert);
+            Main.instance.references.CreateNew(name, types[0], adr, insert, false);
             types.RemoveAt(0);
             if (types.Count > 0)
             {
                 foreach (string t in types)
                 {
-                    Main.instance.references.references[name].AddNewDBL1StandartOther(t);
-                    Main.instance.references.references[name].AddNewPS(t, "ручное");
+                    Main.instance.references.references[name].AddNewDBL1StandartOther(t, false);
+                    Main.instance.references.references[name].AddNewPS(t, "ручное", false);
                     Main.instance.references.references[name].PS.childs[t].childs["ручное"].ChangeCod();
                 }
             }
         }
 
-        public void UpdateUps()
+        public void UpdateUps(bool stopall = true)
         {
 
             if (Main.instance.heads.heads[nameL0].LastCell.Column < Main.instance.wsCh.Range[adr].Column)
             {
-                Main.instance.heads.heads[nameL0].Increase();
+                Main.instance.heads.heads[nameL0].Increase(stopall);
             }
             if (Main.instance.heads.heads[nameL0].childs[nameL1].LastCell.Column < Main.instance.wsCh.Range[adr].Column)
             {
-                Main.instance.heads.heads[nameL0].childs[nameL1].Increase();
+                Main.instance.heads.heads[nameL0].childs[nameL1].Increase(stopall);
             }
             if (Main.instance.heads.heads[nameL0].childs[nameL1].childs[nameL2].LastCell.Column < Main.instance.wsCh.Range[adr].Column)
             {
-                Main.instance.heads.heads[nameL0].childs[nameL1].childs[nameL2].Increase();
+                Main.instance.heads.heads[nameL0].childs[nameL1].childs[nameL2].Increase(stopall);
             }
             
             Main.instance.heads.heads[nameL0].UpdateColors();

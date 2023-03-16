@@ -113,9 +113,9 @@ namespace Meter.Forms
         }
         public virtual void FormClose()
         {
-            if (textBox1.Text == "save")
+            if (textBox1.Text == "dontsave")
             {
-                Main.save = true;
+                Main.dontsave = true;
             }
             Action action = Close;
             if (InvokeRequired)

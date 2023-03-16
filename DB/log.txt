@@ -1,0 +1,114 @@
+
+
+16.03.2023 13:35:35 Счетчики открыты пользователем Nurakhmanov
+16.03.2023 13:35:37 Nurakhmanov Загрузка данных из папки source
+16.03.2023 13:35:45 Nurakhmanov Данные загружены из папки source
+16.03.2023 13:35:48 Nurakhmanov Изменен текст textBox1 на '15'
+16.03.2023 13:35:59 Nurakhmanov Нажато btnAdmin
+16.03.2023 13:35:59 Nurakhmanov Открыта форма Password
+16.03.2023 13:36:00 Nurakhmanov Нажато btnOK на форме Password
+16.03.2023 13:36:00 Nurakhmanov Введен пароль 
+16.03.2023 13:36:00 Nurakhmanov Введен правильный пароль
+16.03.2023 13:36:03 Nurakhmanov Нажато button41
+16.03.2023 13:36:03 Nurakhmanov Изменен текст ComboBox11 на 'Общие для АлмМЭС' на форме AddSubject
+16.03.2023 13:36:03 Nurakhmanov Изменен текст ComboBox12 на 'заголовок U2' на форме AddSubject
+16.03.2023 13:36:03 Nurakhmanov Изменен текст ComboBox13 на 'Общее' на форме AddSubject
+16.03.2023 13:36:03 Nurakhmanov Изменен текст ComboBox13 на '' на форме AddSubject
+16.03.2023 13:36:03 Nurakhmanov Изменен текст ComboBox12 на '' на форме AddSubject
+16.03.2023 13:36:03 Nurakhmanov Открыта форма AddSubject
+16.03.2023 13:36:03 Nurakhmanov Изменен текст ComboBox11 на '' на форме AddSubject
+16.03.2023 13:36:03 Nurakhmanov Изменен текст ComboBox12 на '' на форме AddSubject
+16.03.2023 13:36:05 Nurakhmanov Изменен текст ComboBox11 на 'Общие для АлмМЭС' на форме AddSubject
+16.03.2023 13:36:05 Nurakhmanov Изменен текст ComboBox12 на 'заголовок U2' на форме AddSubject
+16.03.2023 13:36:05 Nurakhmanov Изменен текст ComboBox13 на 'Общее' на форме AddSubject
+16.03.2023 13:36:05 Nurakhmanov Изменен текст ComboBox13 на '' на форме AddSubject
+16.03.2023 13:36:05 Nurakhmanov Изменен текст ComboBox12 на '' на форме AddSubject
+16.03.2023 13:36:05 Nurakhmanov Изменен текст ComboBox13 на '' на форме AddSubject
+16.03.2023 13:36:07 Nurakhmanov Изменен текст ComboBox12 на 'заголовок U2' на форме AddSubject
+16.03.2023 13:36:07 Nurakhmanov Изменен текст ComboBox13 на 'Общее' на форме AddSubject
+16.03.2023 13:36:07 Nurakhmanov Изменен текст ComboBox13 на '' на форме AddSubject
+16.03.2023 13:36:08 Nurakhmanov Изменен текст ComboBox13 на 'Общее' на форме AddSubject
+16.03.2023 13:36:11 Nurakhmanov Переключатель переключен на CheckBox17 на 'True' на форме AddSubject
+16.03.2023 13:36:12 Nurakhmanov Переключатель переключен на CheckBox18 на 'True' на форме AddSubject
+16.03.2023 13:36:12 Nurakhmanov Нажато btnOk на форме AddSubject
+16.03.2023 13:36:12 Nurakhmanov Добавлен субъект {Test Общее}
+16.03.2023 13:36:12 Nurakhmanov Для субъекта Test Общее на листе БД добавлен прием код
+16.03.2023 13:36:12 Nurakhmanov Для субъекта Test Общее на листе БД добавлен прием основное
+16.03.2023 13:36:13 Nurakhmanov Для субъекта Test Общее на листе БД добавлен прием корректировка факт
+16.03.2023 13:36:13 Nurakhmanov Для субъекта Test Общее на листе БД добавлен прием ручное
+16.03.2023 13:36:13 Nurakhmanov Для субъекта Test Общее на листе ПС добавлен прием ручное
+16.03.2023 13:36:13 Nurakhmanov Для субъекта Test Общее на листе БД добавлен отдача код
+16.03.2023 13:36:14 Nurakhmanov Для субъекта Test Общее на листе БД добавлен отдача основное
+16.03.2023 13:36:14 Nurakhmanov Для субъекта Test Общее на листе БД добавлен отдача корректировка факт
+16.03.2023 13:36:14 Nurakhmanov Для субъекта Test Общее на листе БД добавлен отдача ручное
+16.03.2023 13:36:15 Nurakhmanov Для субъекта Test Общее на листе ПС добавлен отдача ручное
+16.03.2023 13:36:27 Nurakhmanov Выделены ячейки $AA$16
+16.03.2023 13:36:28 Nurakhmanov Выделены ячейки $Z$17
+16.03.2023 13:36:30 Nurakhmanov Выделены ячейки $B$8:$AA$8
+16.03.2023 13:36:31 Nurakhmanov Выделены ячейки $Z$21
+16.03.2023 13:36:38 Nurakhmanov Инициализация закрытия книги...
+16.03.2023 13:36:38 Nurakhmanov Книга сохранена
+16.03.2023 13:36:38 Nurakhmanov Сохранение данных в папку source
+16.03.2023 13:36:41 Nurakhmanov Данные сохранены в папку source
+16.03.2023 13:36:43 Nurakhmanov Удален временный архив D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\temparch\16.03.2023 12.28.06.zip
+16.03.2023 13:36:43 Nurakhmanov Книга архивирована в файл D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\temparch\16.03.2023 13.36.41.zip
+16.03.2023 13:36:51 Nurakhmanov Счетчики закрыты
+
+
+16.03.2023 13:40:23 Счетчики открыты пользователем Nurakhmanov
+16.03.2023 13:40:25 Nurakhmanov Загрузка данных из папки source
+16.03.2023 13:40:32 Nurakhmanov Данные загружены из папки source
+16.03.2023 13:40:34 Nurakhmanov Изменен текст textBox1 на '15'
+16.03.2023 13:40:37 Nurakhmanov Нажато btnAdmin
+16.03.2023 13:40:37 Nurakhmanov Открыта форма Password
+16.03.2023 13:40:38 Nurakhmanov Нажато btnOK на форме Password
+16.03.2023 13:40:38 Nurakhmanov Введен пароль 
+16.03.2023 13:40:38 Nurakhmanov Введен правильный пароль
+16.03.2023 13:40:41 Nurakhmanov Нажато button41
+16.03.2023 13:40:41 Nurakhmanov Изменен текст ComboBox11 на 'Общие для АлмМЭС' на форме AddSubject
+16.03.2023 13:40:41 Nurakhmanov Изменен текст ComboBox12 на 'заголовок U2' на форме AddSubject
+16.03.2023 13:40:41 Nurakhmanov Изменен текст ComboBox13 на 'Общее' на форме AddSubject
+16.03.2023 13:40:41 Nurakhmanov Изменен текст ComboBox13 на '' на форме AddSubject
+16.03.2023 13:40:41 Nurakhmanov Изменен текст ComboBox12 на '' на форме AddSubject
+16.03.2023 13:40:41 Nurakhmanov Открыта форма AddSubject
+16.03.2023 13:40:41 Nurakhmanov Изменен текст ComboBox11 на '' на форме AddSubject
+16.03.2023 13:40:41 Nurakhmanov Изменен текст ComboBox12 на '' на форме AddSubject
+16.03.2023 13:40:43 Nurakhmanov Изменен текст ComboBox11 на 'Общие для АлмМЭС' на форме AddSubject
+16.03.2023 13:40:43 Nurakhmanov Изменен текст ComboBox12 на 'заголовок U2' на форме AddSubject
+16.03.2023 13:40:43 Nurakhmanov Изменен текст ComboBox13 на 'Общее' на форме AddSubject
+16.03.2023 13:40:43 Nurakhmanov Изменен текст ComboBox13 на '' на форме AddSubject
+16.03.2023 13:40:43 Nurakhmanov Изменен текст ComboBox12 на '' на форме AddSubject
+16.03.2023 13:40:43 Nurakhmanov Изменен текст ComboBox13 на '' на форме AddSubject
+16.03.2023 13:40:44 Nurakhmanov Изменен текст ComboBox12 на 'заголовок U2' на форме AddSubject
+16.03.2023 13:40:44 Nurakhmanov Изменен текст ComboBox13 на 'Общее' на форме AddSubject
+16.03.2023 13:40:44 Nurakhmanov Изменен текст ComboBox13 на '' на форме AddSubject
+16.03.2023 13:40:45 Nurakhmanov Изменен текст ComboBox13 на 'Общее' на форме AddSubject
+16.03.2023 13:40:49 Nurakhmanov Переключатель переключен на CheckBox17 на 'True' на форме AddSubject
+16.03.2023 13:40:50 Nurakhmanov Переключатель переключен на CheckBox18 на 'True' на форме AddSubject
+16.03.2023 13:40:55 Nurakhmanov Нажато btnOk на форме AddSubject
+16.03.2023 13:40:55 Nurakhmanov Добавлен субъект {Test Общее}
+16.03.2023 13:40:55 Nurakhmanov Для субъекта Test Общее на листе БД добавлен прием код
+16.03.2023 13:40:55 Nurakhmanov Для субъекта Test Общее на листе БД добавлен прием основное
+16.03.2023 13:40:56 Nurakhmanov Err
+16.03.2023 13:40:56 Nurakhmanov Для субъекта Test Общее на листе БД добавлен прием корректировка факт
+16.03.2023 13:40:56 Nurakhmanov Err
+16.03.2023 13:40:56 Nurakhmanov Для субъекта Test Общее на листе БД добавлен прием ручное
+16.03.2023 13:40:56 Nurakhmanov Err
+16.03.2023 13:40:56 Nurakhmanov Для субъекта Test Общее на листе ПС добавлен прием ручное
+16.03.2023 13:40:56 Nurakhmanov Для субъекта Test Общее на листе БД добавлен отдача код
+16.03.2023 13:40:57 Nurakhmanov Err
+16.03.2023 13:40:57 Nurakhmanov Для субъекта Test Общее на листе БД добавлен отдача основное
+16.03.2023 13:40:57 Nurakhmanov Err
+16.03.2023 13:40:57 Nurakhmanov Для субъекта Test Общее на листе БД добавлен отдача корректировка факт
+16.03.2023 13:40:57 Nurakhmanov Err
+16.03.2023 13:40:57 Nurakhmanov Для субъекта Test Общее на листе БД добавлен отдача ручное
+16.03.2023 13:40:58 Nurakhmanov Err
+16.03.2023 13:40:58 Nurakhmanov Для субъекта Test Общее на листе ПС добавлен отдача ручное
+16.03.2023 13:40:58 Nurakhmanov Err
+16.03.2023 13:41:28 Nurakhmanov Инициализация закрытия книги...
+16.03.2023 13:41:28 Nurakhmanov Книга сохранена
+16.03.2023 13:41:28 Nurakhmanov Сохранение данных в папку source
+16.03.2023 13:41:31 Nurakhmanov Данные сохранены в папку source
+16.03.2023 13:41:34 Nurakhmanov Удален временный архив D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\temparch\16.03.2023 12.30.38.zip
+16.03.2023 13:41:34 Nurakhmanov Книга архивирована в файл D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\temparch\16.03.2023 13.41.32.zip
+16.03.2023 13:41:42 Nurakhmanov Счетчики закрыты

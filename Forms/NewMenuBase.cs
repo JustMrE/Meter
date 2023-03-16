@@ -109,13 +109,13 @@ namespace Meter.Forms
             {
                 Main.instance.xlApp.EnableEvents = true;
             }
-            if (textBox1.Text == "save")
+            if (textBox1.Text == "dontsave")
             {
-                Main.save = true;
+                Main.dontsave = true;
             }
             else
             {
-                Main.save = false;
+                Main.dontsave = false;
             }
         }
 

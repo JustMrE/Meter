@@ -117,9 +117,9 @@ namespace Meter
                 }
             }
         }
-        public ReferenceObject(string name, string nameL1, string address, bool insert = true) : this()
+        public ReferenceObject(string name, string nameL1, string address, bool insert = true, bool stopall = true) : this()
         {
-            Main.instance.StopAll();
+            if (stopall == true) Main.instance.StopAll();
 
             RangeReferences.idDictionary.Add(ID, this);
             _name = name;
@@ -174,10 +174,10 @@ namespace Meter
             childs.Add("PS", ps);
             childs.Add("DB", db);
 
-            CreateNewDBL1StandartOther(nameL1, false);
-            CreateNewPS(nameL1, "ручное", false);
+            CreateNewDBL1StandartOther(nameL1, stopall);
+            CreateNewPS(nameL1, "ручное", stopall);
 
-            Main.instance.ResumeAll();
+             if (stopall == true) Main.instance.ResumeAll();
         }
 
         public int? ActiveDay()

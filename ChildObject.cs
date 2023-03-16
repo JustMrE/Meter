@@ -450,11 +450,18 @@ namespace Meter
                 childs[nameL1]._head.Interior.Color = Main.instance.colors.main[nameL1];
                 l2.UpdateColors();
                 l2.UpdateFormulas(stopall);
+                try
+                {
+                    GetFirstParent.UpdateHeads(false);
+                }
+                catch
+                {
+                    GlobalMethods.ToLog("Err");
+                }
             }
             UpdateAllBorders();
             
-            //GetFirstParent.UpdateHeads(false);
-
+            
             //Marshal.ReleaseComObject(r);
             if (stopall) Main.instance.ResumeAll();
         }

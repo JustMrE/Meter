@@ -42,7 +42,7 @@ namespace Meter
         public RangeReferences references;
         public HeadReferences heads;
         public Formula formulas;
-        public static bool save;
+        public static bool dontsave;
         public static string dir;
         public static List<int> menuIndexes = new List<int>();
         string file;
@@ -50,6 +50,7 @@ namespace Meter
         public static bool loading = false;
         private static object[,] oldValsArray;
         private static string oldVal;
+
 
         public Excel.WorkbookEvents_BeforeCloseEventHandler Event_BeforeClose;
         public Excel.WorkbookEvents_WindowResizeEventHandler Event_WindowResize;
@@ -77,7 +78,7 @@ namespace Meter
                 // {
                 //     wb.Saved = true;
                 // }
-                ArhivateNewTempFile();
+                if (dontsave == false) ArhivateNewTempFile();
 
                 ReleaseAllComObjects();
 
@@ -110,7 +111,7 @@ namespace Meter
             //Without such a global event, we have to register each Form when it is created
             //This means that any forms created outside of the ApplicationContext will not prevent the 
             //application close.
-            save = false;
+            dontsave = false;
             
             Start();
         }

@@ -122,10 +122,10 @@ namespace Meter
         //     return null;
         // }
 
-        public void CreateNew(string name, string nameL1, string psAddress, bool insert = true)
+        public void CreateNew(string name, string nameL1, string psAddress, bool insert = true, bool stopall = true)
         {
             GlobalMethods.ToLog("Добавлен субъект {" + name + "}");
-            ReferenceObject ro = new ReferenceObject(name, nameL1, psAddress, insert);
+            ReferenceObject ro = new ReferenceObject(name, nameL1, psAddress, insert, stopall);
             references.Add(name, ro);
         }
 
