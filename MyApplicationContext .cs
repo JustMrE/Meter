@@ -230,6 +230,7 @@ namespace Meter
             SaveLoader.LoadAsyncFromFolder("TEMP");
             Directory.Delete(sourceFolder, true);
             ResumeAll();
+            ClearEvents();
             InitExcelEvents();
         }
 
@@ -354,6 +355,17 @@ namespace Meter
         }
         private void ClearEvents()
         {
+            try{wb.BeforeClose -= Event_BeforeClose;}catch{}
+            try{wb.WindowResize -= Event_WindowResize;}catch{}
+            try{wsCh.BeforeRightClick -= Events_BeforeRightClick;}catch{}
+            try{wsCh.Deactivate -= Events_DeactivateSheet;}catch{}
+            try{wb.SheetActivate -= Events_ActivateSheet;}catch{}
+            try{wsCh.BeforeDoubleClick -= Events_BeforeDoubleClick;}catch{}
+            try{wsCh.Change -= Events_Change;}catch{}
+            try{wsCh.SelectionChange -= Events_SelectionChange;}catch{}
+            try{wb.SheetSelectionChange -= Events_SheetSelectionChange;}catch{}
+            try{wb.SheetChange -= Events_SheetChange;}catch{}
+            try{wb.BeforeSave -= Events_BeforeSave;}catch{}
             Event_BeforeClose = null;
             Event_WindowResize = null;
             Events_BeforeRightClick = null;
