@@ -67,15 +67,16 @@ namespace Meter
         {
             if (System.Windows.Forms.Application.OpenForms.Count == 0)
             {
-                if (save == true)
-                {
-                    //SaveLoader.Save();
-                    wb.Save();
-                }
-                else
-                {
-                    wb.Saved = true;
-                }
+                // if (save == true)
+                // {
+                //     //SaveLoader.Save();
+                //     wb.Save();
+                // }
+                // else
+                // {
+                //     wb.Saved = true;
+                // }
+                ArhivateNewTempFile();
 
                 ReleaseAllComObjects();
 
@@ -93,6 +94,7 @@ namespace Meter
                 xlApp = null;
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
+
                 GlobalMethods.ToLog("Счетчики закрыты");
                 // Thread.Sleep(10000);
                 if (restarted == false) ExitThread();
@@ -136,77 +138,17 @@ namespace Meter
             InitExcelEvents();
             menu.ClearContextMenu();
         }
-
-        public void Restart(string thisYear, string thisMonth, string file)
-        {
-            restarted = true;
-
-            if (menu.InvokeRequired)
-            {
-                menu.Invoke(new MethodInvoker(() => 
-                {
-                    wb.Save();
-                    foreach (NewMenuBase form in menues)
-                    {
-                        form.FormClose();
-                    }
-
-                    // ClearEvents();
-                    // ReleaseAllComObjects();
-
-                    // wb.Save();
-                    // wb.Close();
-
-                    // Marshal.ReleaseComObject(wb);
-                    // Marshal.ReleaseComObject(wsCh);
-                    // Marshal.ReleaseComObject(wsDb);
-
-                    // xlApp.Quit();
-                    // Marshal.ReleaseComObject(xlApp);
-                    // GC.Collect();
-                    // GC.WaitForPendingFinalizers();
-
-                    ArhivateNew(thisYear, thisMonth);
-                    string sourceFolder = dir + @"\current";
-                    Directory.Delete(sourceFolder, true);
-                    System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder, true);
-                    Start();
-                }));
-            }
-            else
-            {
-                wb.Save();
-                foreach (NewMenuBase form in menues)
-                {
-                    form.Close();
-                }
-                // ClearEvents();
-                // ReleaseAllComObjects();
-
-                // wb.Save();
-                // wb.Close();
-
-                // Marshal.ReleaseComObject(wb);
-                // Marshal.ReleaseComObject(wsCh);
-                // Marshal.ReleaseComObject(wsDb);
-
-                // xlApp.Quit();
-                // Marshal.ReleaseComObject(xlApp);
-                // GC.Collect();
-                // GC.WaitForPendingFinalizers();
-
-                ArhivateNew(thisYear, thisMonth);
-                string sourceFolder = dir + @"\current";
-                Directory.Delete(sourceFolder, true);
-                System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder, true);
-                Start();
-            }
-            
-        }
         
-        public void OpenMonth(string thisYear, string thisMonth, string selectedYear, string selectedMonth, string file)
+        public void OpenMonth(string thisYear, string thisMonth, string selectedYear, string selectedMonth, string file, bool silent = false)
         {
-            ArhivateNew(thisYear, thisMonth);
+            if (silent) xlApp.Visible = false;
+
+            if (thisMonth == DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU")) && thisYear == DateTime.Today.ToString("yyyy"))
+            {
+                ArhivateNew(thisYear, thisMonth);
+            }
+            //ArhivateNew(thisYear, thisMonth);
+            // wb.Save();
             GlobalMethods.ToLog("Загрузка архива за " + selectedMonth + " " + selectedYear + " из файла " + file);
             if (menu.InvokeRequired)
             {
@@ -288,7 +230,6 @@ namespace Meter
             GlobalMethods.ReleseObject(wb1);
 
             SaveLoader.LoadAsyncFromFolder("TEMP");
-            //references.UpdateAllWSs();
             Directory.Delete(sourceFolder, true);
             ResumeAll();
             InitExcelEvents();
@@ -607,6 +548,60 @@ namespace Meter
             ZipFile.CreateFromDirectory(tempDirectory, arhiveName, CompressionLevel.Fastest, false, System.Text.Encoding.UTF8);
             Directory.Delete(tempDirectory, true);
             GlobalMethods.ToLog("Книга архивирована (" + month + " " + year + " года) в файл " + arhiveName);
+        }
+
+        public void ArhivateNewTempFile()
+        {
+            string thisYear, thisMonth, selectedYear, selectedMonth, file;
+
+            thisMonth = NewMenuBase.month;
+            thisYear = NewMenuBase.year;
+            selectedMonth = DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU"));
+            selectedYear = DateTime.Today.ToString("yyyy");
+            file = dir + @"\arch\" + selectedYear + @"\" + selectedMonth + @".zip";
+
+            wb.Save();
+            string sourceFolder = dir + @"\current";
+            string tempDirectory = Path.Combine(Path.GetTempPath(), GlobalMethods.username + " " + DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU")));
+            Directory.CreateDirectory(tempDirectory);
+            foreach (string dirPath in Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories))
+            {
+                Directory.CreateDirectory(dirPath.Replace(sourceFolder, tempDirectory));
+            }
+            foreach (string filePath in Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories))
+            {
+                string newFilePath = filePath.Replace(sourceFolder, tempDirectory);
+                if (newFilePath.Contains("~$"))
+                {
+                    continue;
+                }
+                File.Copy(filePath, newFilePath, true);
+            }
+            string archPath = dir + @"\temparch";
+            if (!Directory.Exists(archPath))
+            {
+                Directory.CreateDirectory(archPath);
+            }
+            string arhiveName = archPath + @"\" + DateTime.Now.ToString("dd'.'MM'.'yyyy HH'.'mm'.'ss") + @".zip";
+            ZipFile.CreateFromDirectory(tempDirectory, arhiveName, CompressionLevel.Fastest, false, System.Text.Encoding.UTF8);
+            Directory.Delete(tempDirectory, true);
+
+            DirectoryInfo directoryInfo = new DirectoryInfo(archPath);
+            FileInfo[] files = directoryInfo.GetFiles();
+            if (files.Length > 10)
+            {
+                FileInfo oldestFile = files.OrderBy(f => f.LastWriteTime).First();
+                oldestFile.Delete();
+                GlobalMethods.ToLog("Удален временный архив " + oldestFile);
+            }
+
+            GlobalMethods.ToLog("Книга архивирована в файл " + arhiveName);
+
+            if (thisMonth != selectedMonth && thisYear != selectedYear) 
+            {
+                OpenMonth(thisYear, thisMonth, selectedYear, selectedMonth, file, true);
+                wb.Save();
+            }
         }
     
         public void ReleaseAllComObjects()
