@@ -253,17 +253,20 @@ namespace Meter.Forms
         public void UpdateUps(bool stopall = true)
         {
 
-            if (Main.instance.heads.heads[nameL0].LastCell.Column < Main.instance.wsCh.Range[adr].Column)
+            if (Main.instance.heads.heads[nameL0].LastCell.Column < Main.instance.references.references[name].PS.LastColumn.Column)
             {
-                Main.instance.heads.heads[nameL0].Increase(stopall);
+                int resizeValue = Main.instance.references.references[name].PS.LastColumn.Column - Main.instance.heads.heads[nameL0].LastCell.Column;
+                Main.instance.heads.heads[nameL0].Resize(resizeValue, false, stopall);
             }
-            if (Main.instance.heads.heads[nameL0].childs[nameL1].LastCell.Column < Main.instance.wsCh.Range[adr].Column)
+            if (Main.instance.heads.heads[nameL0].childs[nameL1].LastCell.Column < Main.instance.references.references[name].PS.LastColumn.Column)
             {
-                Main.instance.heads.heads[nameL0].childs[nameL1].Increase(stopall);
+                int resizeValue = Main.instance.references.references[name].PS.LastColumn.Column - Main.instance.heads.heads[nameL0].childs[nameL1].LastCell.Column;
+                Main.instance.heads.heads[nameL0].childs[nameL1].Resize(resizeValue, false, stopall);
             }
-            if (Main.instance.heads.heads[nameL0].childs[nameL1].childs[nameL2].LastCell.Column < Main.instance.wsCh.Range[adr].Column)
+            if (Main.instance.heads.heads[nameL0].childs[nameL1].childs[nameL2].LastCell.Column < Main.instance.references.references[name].PS.LastColumn.Column)
             {
-                Main.instance.heads.heads[nameL0].childs[nameL1].childs[nameL2].Increase(stopall);
+                int resizeValue = Main.instance.references.references[name].PS.LastColumn.Column - Main.instance.heads.heads[nameL0].childs[nameL1].childs[nameL2].LastCell.Column;
+                Main.instance.heads.heads[nameL0].childs[nameL1].childs[nameL2].Resize(resizeValue, false, stopall);
             }
             
             Main.instance.heads.heads[nameL0].UpdateColors();
