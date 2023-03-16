@@ -212,142 +212,84 @@ namespace Meter
             {
                 menu.Invoke(new MethodInvoker(() => 
                 {
-                    string sourceFolder = dir + @"\TEMP";
-                    if (Directory.Exists(sourceFolder))
-                    {
-                        Directory.Delete(sourceFolder, true);
-                        Directory.CreateDirectory(sourceFolder);
-                    }
-                    System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder, true);
-
-                    StopAll();
-                    xlApp.EnableEvents = false;
-                    Excel.Application xlApp1;
-                    Excel.Workbook wb1;
-                    Excel.Worksheet wsCh1 = null, wsDb1 = null;
-                    Excel.Range destinationRange;
-                
-                    wb1 = xlApp.Workbooks.Open(Filename: sourceFolder + @"\" + selectedMonth + @".xlsm");
-                    wb1.Activate();
-                    foreach (Excel.Worksheet ws in wb1.Worksheets)
-                    {
-                        if (ws.CodeName == "PS")
-                        {
-                            wsCh1 = ws;
-                        }
-                        if (ws.CodeName == "DB")
-                        {
-                            wsDb1 = ws;
-                        }
-                    }
-
-                    xlApp.DisplayAlerts = false;
-                    wsCh.Delete();
-                    wsDb.Delete();
-                    xlApp.DisplayAlerts = true;
-                    wsCh = null;
-                    wsDb = null;
-
-                    wsDb1.Copy(Type.Missing, wb.Worksheets[1]);
-                    wsCh1.Copy(Type.Missing, wb.Worksheets[1]);
-                    
-                    foreach (Excel.Worksheet ws in wb.Worksheets)
-                    {
-                        if (ws.CodeName == "PS")
-                        {
-                            wsCh = ws;
-                        }
-                        if (ws.CodeName == "DB")
-                        {
-                            wsDb = ws;
-                        }
-                    }
-
-                    wsCh.Cells.Replace( What: "[" + selectedMonth + ".xlsm]", Replacement: "", LookAt: XlLookAt.xlPart, SearchOrder: XlSearchOrder.xlByRows, MatchCase: false, SearchFormat: false, ReplaceFormat: false);
-                    wsCh.Activate();
-                    ResumeAll();
-
-                    GlobalMethods.ReleseObject(wsCh1);
-                    GlobalMethods.ReleseObject(wsDb1);
-                    wb1.Saved = true;
-                    wb1.Close();
-                    GlobalMethods.ReleseObject(wb1);
-
-                    SaveLoader.LoadAsyncFromFolder("TEMP");
-                    //references.UpdateAllWSs();
-                    Directory.Delete(sourceFolder, true);
-                    InitExcelEvents();
+                    OpenMonthMethod(thisYear, thisMonth, selectedYear, selectedMonth, file);
                 }));
             }
             else
             {
-                string sourceFolder = dir + @"\TEMP";
-                if (Directory.Exists(sourceFolder))
-                {
-                    Directory.Delete(sourceFolder, true);
-                    Directory.CreateDirectory(sourceFolder);
-                }
-                System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder, true);
-
-                StopAll();
-                xlApp.EnableEvents = false;
-                Excel.Application xlApp1;
-                Excel.Workbook wb1;
-                Excel.Worksheet wsCh1 = null, wsDb1 = null;
-                Excel.Range destinationRange;
-            
-                wb1 = xlApp.Workbooks.Open(Filename: sourceFolder + @"\" + selectedMonth + @".xlsm");
-                wb1.Activate();
-                foreach (Excel.Worksheet ws in wb1.Worksheets)
-                {
-                    if (ws.CodeName == "PS")
-                    {
-                        wsCh1 = ws;
-                    }
-                    if (ws.CodeName == "DB")
-                    {
-                        wsDb1 = ws;
-                    }
-                }
-
-                xlApp.DisplayAlerts = false;
-                wsCh.Delete();
-                wsDb.Delete();
-                xlApp.DisplayAlerts = true;
-                wsCh = null;
-                wsDb = null;
-
-                wsCh1.Copy(Type.Missing, wb.Worksheets[1]);
-                wsDb1.Copy(Type.Missing, wb.Worksheets[1]);
-                
-                foreach (Excel.Worksheet ws in wb.Worksheets)
-                {
-                    if (ws.CodeName == "PS")
-                    {
-                        wsCh = ws;
-                    }
-                    if (ws.CodeName == "DB")
-                    {
-                        wsDb = ws;
-                    }
-                }
-
-                wsCh.Cells.Replace( What: "[" + selectedMonth + ".xlsm]", Replacement: "", LookAt: XlLookAt.xlPart, SearchOrder: XlSearchOrder.xlByRows, MatchCase: false, SearchFormat: false, ReplaceFormat: false);
-                wsCh.Activate();
-                ResumeAll();
-
-                GlobalMethods.ReleseObject(wsCh1);
-                GlobalMethods.ReleseObject(wsDb1);
-                wb1.Saved = true;
-                wb1.Close();
-                GlobalMethods.ReleseObject(wb1);
-
-                SaveLoader.LoadAsyncFromFolder("TEMP");
-                //references.UpdateAllWSs();
-                Directory.Delete(sourceFolder, true);
-                InitExcelEvents();
+                OpenMonthMethod(thisYear, thisMonth, selectedYear, selectedMonth, file);
             }
             GlobalMethods.ToLog("Открыты счетчики за " + selectedMonth + " " + selectedYear);
+        }
+
+        private void OpenMonthMethod(string thisYear, string thisMonth, string selectedYear, string selectedMonth, string file)
+        {
+            string sourceFolder = dir + @"\TEMP";
+            if (Directory.Exists(sourceFolder))
+            {
+                Directory.Delete(sourceFolder, true);
+                Directory.CreateDirectory(sourceFolder);
+            }
+            System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder, true);
+
+            StopAll();
+            xlApp.EnableEvents = false;
+            Excel.Application xlApp1;
+            Excel.Workbook wb1;
+            Excel.Worksheet wsCh1 = null, wsDb1 = null;
+            Excel.Range destinationRange;
+        
+            wb1 = xlApp.Workbooks.Open(Filename: sourceFolder + @"\" + selectedMonth + @".xlsm");
+            wb1.Activate();
+            wb1.Windows[1].Visible = false;
+            foreach (Excel.Worksheet ws in wb1.Worksheets)
+            {
+                if (ws.CodeName == "PS")
+                {
+                    wsCh1 = ws;
+                }
+                if (ws.CodeName == "DB")
+                {
+                    wsDb1 = ws;
+                }
+            }
+
+            xlApp.DisplayAlerts = false;
+            wsCh.Delete();
+            wsDb.Delete();
+            xlApp.DisplayAlerts = true;
+            wsCh = null;
+            wsDb = null;
+
+            wsDb1.Copy(Type.Missing, wb.Worksheets[1]);
+            wsCh1.Copy(Type.Missing, wb.Worksheets[1]);
+            
+            foreach (Excel.Worksheet ws in wb.Worksheets)
+            {
+                if (ws.CodeName == "PS")
+                {
+                    wsCh = ws;
+                }
+                if (ws.CodeName == "DB")
+                {
+                    wsDb = ws;
+                }
+            }
+
+            wsCh.Cells.Replace( What: "[" + selectedMonth + ".xlsm]", Replacement: "", LookAt: XlLookAt.xlPart, SearchOrder: XlSearchOrder.xlByRows, MatchCase: false, SearchFormat: false, ReplaceFormat: false);
+            wsCh.Activate();
+            ResumeAll();
+
+            GlobalMethods.ReleseObject(wsCh1);
+            GlobalMethods.ReleseObject(wsDb1);
+            wb1.Saved = true;
+            wb1.Close();
+            GlobalMethods.ReleseObject(wb1);
+
+            SaveLoader.LoadAsyncFromFolder("TEMP");
+            //references.UpdateAllWSs();
+            Directory.Delete(sourceFolder, true);
+            InitExcelEvents();
         }
 
         public void RunOnUiThread(System.Action<string, string, string, string> action, string thisYear, string thisMonth, string selectedMonth, string file)
