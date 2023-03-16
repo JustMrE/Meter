@@ -190,11 +190,15 @@ namespace Meter.Forms
         }
     
         #region AddButtonToCommandBar
+        private void ContextMenuClickLog(string caption)
+        {
+            GlobalMethods.ToLog("Нажат пункт контекстного меню '" + caption + "'");
+        }
         protected void AddButtonToCommandBar(string caption, Action action, int type = 1)
         {
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
-                GlobalMethods.ToLog("Нажат пункт контекстного меню " + caption);
+                ContextMenuClickLog(caption);
                 action.Invoke();
             };
             CommandBarButton b = (CommandBarButton)cb.Controls.Add(Type: type, Temporary: true);
@@ -210,7 +214,7 @@ namespace Meter.Forms
         {
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
-                GlobalMethods.ToLog("Нажат пункт контекстного меню " + caption);
+                ContextMenuClickLog(caption);
                 action.Invoke(s1);
             };
             CommandBarButton b = (CommandBarButton)cb.Controls.Add(Type: type, Temporary: true);
@@ -221,7 +225,7 @@ namespace Meter.Forms
         {
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
-                GlobalMethods.ToLog("Нажат пункт контекстного меню " + caption);
+                ContextMenuClickLog(caption);
                 action.Invoke(s1, s2);
             };
             CommandBarButton b = (CommandBarButton)cb.Controls.Add(Type: type, Temporary: true);
@@ -234,7 +238,7 @@ namespace Meter.Forms
             string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
-                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
+                ContextMenuClickLog(pName + " => " + caption);
                 action.Invoke();
             };
             CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
@@ -246,7 +250,7 @@ namespace Meter.Forms
             string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
-                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
+                ContextMenuClickLog(pName + " => " + caption);
                 action.Invoke(b1);
             };
             CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
@@ -258,7 +262,7 @@ namespace Meter.Forms
             string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
-                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
+                ContextMenuClickLog(pName + " => " + caption);
                 action.Invoke(s1);
             };
             CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
@@ -270,7 +274,7 @@ namespace Meter.Forms
             string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
-                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
+                ContextMenuClickLog(pName + " => " + caption);
                 action.Invoke(s1, s2);
             };
             CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
@@ -282,7 +286,7 @@ namespace Meter.Forms
             string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
-                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
+                ContextMenuClickLog(pName + " => " + caption);
                 action.Invoke(s1, s2, b1);
             };
             CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
@@ -294,7 +298,7 @@ namespace Meter.Forms
             string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
-                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
+                ContextMenuClickLog(pName + " => " + caption);
                 action.Invoke(s1, s2, s3);
             };
             CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
@@ -306,7 +310,7 @@ namespace Meter.Forms
             string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
-                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
+                ContextMenuClickLog(pName + " => " + caption);
                 foreach (Action item in action)
                 {
                     item.Invoke();
@@ -321,7 +325,7 @@ namespace Meter.Forms
             string pName = p.Caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
-                GlobalMethods.ToLog("Нажат пункт контекстного меню " + pName + " => " + caption);
+                ContextMenuClickLog(pName + " => " + caption);
                 foreach (Action<string> item in action)
                 {
                     item.Invoke(s1);

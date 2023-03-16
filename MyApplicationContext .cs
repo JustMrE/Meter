@@ -409,7 +409,7 @@ namespace Meter
         }
         private void Application_ActivateSheet(object sh)
         {
-            GlobalMethods.ToLog("Активирован лист " + ((Excel.Worksheet)sh).Name);
+            GlobalMethods.ToLog("Активирован лист '" + ((Excel.Worksheet)sh).Name + "'");
             menu.ActivateSheet(sh);
         }
         private void Application_BeforeDoubleClick(Excel.Range range, ref bool cancel)
@@ -449,11 +449,11 @@ namespace Meter
         {
             if (range.Cells.Count > 1)
             {
-                ChagedRange(range);
+                ChagedRange(wsCh, range);
             }
             else
             {
-                Changed(range);
+                Changed(wsCh, range);
             }
             menu.CellValueChanged(range);
         }
@@ -464,30 +464,39 @@ namespace Meter
             {
                 if (range.Cells.Count > 1)
                 {
-                    ChagedRange(range);
+                    ChagedRange(sh, range);
                 }
                 else
                 {
-                    Changed(range);
+                    Changed(sh, range);
                 }
             }
         }
 
-        private void ChagedRange(Excel.Range rng)
+        private void ChagedRange(object sh, Excel.Range rng)
         {
+            
             object[,] newValsArray = (object[,])rng.Formula;
             for (int i = 1; i <= rng.Columns.Count; i++)
             {
                 for (int j = 1; j <= rng.Rows.Count; j++)
                 {
-                    GlobalMethods.ToLog("Изменено значение ячейки " + ((Excel.Range)rng.Cells[j,i]).Address + " с '" + oldValsArray[j,i] + "' на '" + newValsArray[j,i] + "'");
+                    try
+                    {
+                        GlobalMethods.ToLog("Изменено значение ячейки " + ((Excel.Range)rng.Cells[j,i]).Address + " на листе " + ((Excel.Worksheet)sh).Name + " с '" + oldValsArray[j,i] + "' на '" + newValsArray[j,i] + "'");
+                    }
+                    catch
+                    {
+                        GlobalMethods.ToLog("Err");
+                    }
+                    
                 }
             }
         }
 
-        private void Changed(Excel.Range rng)
+        private void Changed(object sh, Excel.Range rng)
         {
-            GlobalMethods.ToLog("Изменено значение ячейки " + rng.Address + " с '" + oldVal + "' на '" + rng.Value + "'");
+            GlobalMethods.ToLog("Изменено значение ячейки " + rng.Address + " на листе " + ((Excel.Worksheet)sh).Name + " с '" + oldVal + "' на '" + rng.Value + "'");
         }
         
         public void RestoreExcel()
