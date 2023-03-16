@@ -3052,3 +3052,130 @@
 16.03.2023 17:18:54 Nurakhmanov Данные сохранены в папку source
 16.03.2023 17:18:56 Nurakhmanov Книга архивирована (март 2023 года) в файл D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\arch\2023\март.zip
 16.03.2023 17:19:39 Nurakhmanov Выделены ячейки $R$57
+16.03.2023 17:20:21 Nurakhmanov Выделены ячейки $K$65
+16.03.2023 17:20:26 Nurakhmanov Инициализация закрытия книги...
+16.03.2023 17:20:26 Nurakhmanov Книга сохранена
+16.03.2023 17:20:26 Nurakhmanov Сохранение данных в папку source
+16.03.2023 17:20:28 Nurakhmanov Данные сохранены в папку source
+16.03.2023 17:20:31 Nurakhmanov Удален временный архив D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\temparch\16.03.2023 12.24.48.zip
+16.03.2023 17:20:31 Nurakhmanov Книга архивирована в файл D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\temparch\16.03.2023 17.20.29.zip
+16.03.2023 17:20:31 Nurakhmanov Загрузка архива за март 2023 из файла D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\arch\2023\март.zip
+16.03.2023 17:20:35 Nurakhmanov Загрузка данных из папки temp
+16.03.2023 17:20:41 Nurakhmanov Данные загружены из папки temp
+16.03.2023 17:20:42 Nurakhmanov Открыты счетчики за март 2023
+16.03.2023 17:20:42 Nurakhmanov Книга сохранена
+16.03.2023 17:20:42 Nurakhmanov Сохранение данных в папку source
+16.03.2023 17:20:44 Nurakhmanov Данные сохранены в папку source
+16.03.2023 17:20:46 Nurakhmanov Err
+16.03.2023 17:20:46 Nurakhmanov Err
+16.03.2023 17:20:46 Nurakhmanov Err
+16.03.2023 17:20:46 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:47 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:48 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:49 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:50 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:51 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:52 Nurakhmanov Err
+16.03.2023 17:20:53 Nurakhmanov Счетчики закрыты
