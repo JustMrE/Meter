@@ -554,8 +554,8 @@ namespace Meter
         {
             string thisYear, thisMonth, selectedYear, selectedMonth, file;
 
-            thisMonth = NewMenuBase.month;
-            thisYear = NewMenuBase.year;
+            thisMonth = menu.lblMonth.Text;
+            thisYear = menu.lblMonth.Text;
             selectedMonth = DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU"));
             selectedYear = DateTime.Today.ToString("yyyy");
             file = dir + @"\arch\" + selectedYear + @"\" + selectedMonth + @".zip";
@@ -599,7 +599,7 @@ namespace Meter
 
             if (thisMonth != selectedMonth || thisYear != selectedYear) 
             {
-                OpenMonth(thisYear, thisMonth, selectedYear, selectedMonth, file, true);
+                OpenMonth(thisYear, thisMonth, selectedYear, selectedMonth, file);
                 wb.Save();
             }
         }

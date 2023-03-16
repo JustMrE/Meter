@@ -820,6 +820,7 @@
             this.lblMonth.TabIndex = 52;
             this.lblMonth.Text = "март";
             this.lblMonth.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lblMonth_MouseDoubleClick);
+            this.lblMonth.TextChanged += new EventHandler(this.lblMonth_TextChanged);
             // 
             // lblYear
             // 
@@ -831,6 +832,7 @@
             this.lblYear.TabIndex = 53;
             this.lblYear.Text = "2023";
             this.lblYear.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.lblYear_MouseDoubleClick);
+            this.lblYear.TextChanged += new EventHandler(this.lblYear_TextChanged);
             // 
             // button46
             // 
@@ -947,7 +949,7 @@
         protected TableLayoutPanel tableLayoutPanel3;
         protected TableLayoutPanel tableLayoutPanel2;
 
-        protected Label lblMonth;
-        protected Label lblYear;
+        public Label lblMonth;
+        public Label lblYear;
     }
 }

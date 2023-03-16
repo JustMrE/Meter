@@ -132,6 +132,22 @@ namespace Meter.Forms
             GlobalMethods.ToLog("В списке " + ((Control)sender).Name + " выбран " + selectedItem.ToString());
         }
 
+        protected virtual void lblMonth_TextChanged(object sender, EventArgs e)
+        {
+            GlobalMethods.ToLog(this, sender, lblMonth.Text);
+            Main.instance.StopAll();
+            Main.instance.wsCh.Range["B5"].Value = lblMonth.Text;
+            Main.instance.ResumeAll();
+        }
+
+        protected virtual void lblYear_TextChanged(object sender, EventArgs e)
+        {
+            GlobalMethods.ToLog(this, sender, lblYear.Text);
+            Main.instance.StopAll();
+            Main.instance.wsCh.Range["D5"].Value = lblYear.Text;
+            Main.instance.ResumeAll();
+        }
+
         protected virtual void Button2_Click(object sender, EventArgs e)
         {
             ToLog(sender);

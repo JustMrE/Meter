@@ -259,3 +259,120 @@
 16.03.2023 11:24:23 Nurakhmanov Сохранение данных в папку source
 16.03.2023 11:24:27 Nurakhmanov Данные сохранены в папку source
 16.03.2023 11:24:35 Nurakhmanov Счетчики закрыты
+
+
+16.03.2023 11:25:45 Счетчики открыты пользователем Nurakhmanov
+16.03.2023 11:25:47 Nurakhmanov Загрузка данных из папки source
+16.03.2023 11:25:53 Nurakhmanov Данные загружены из папки source
+16.03.2023 11:25:56 Nurakhmanov Изменен текст textBox1 на '15'
+16.03.2023 11:26:30 Nurakhmanov Нажато btnFromArhive
+16.03.2023 11:26:30 Nurakhmanov Изменен текст textBox1 на '2023' на форме OpenArchive
+16.03.2023 11:26:30 Nurakhmanov Открыта форма OpenArchive
+16.03.2023 11:26:31 Nurakhmanov Нажато button2 на форме OpenArchive
+16.03.2023 11:26:31 Nurakhmanov Открытие архива за февраль 2023
+16.03.2023 11:26:31 Nurakhmanov Книга сохранена
+16.03.2023 11:26:31 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:26:35 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:26:38 Nurakhmanov Книга архивирована (март 2023 года) в файл D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\arch\2023\март.zip
+16.03.2023 11:26:38 Nurakhmanov Загрузка архива за февраль 2023 из файла D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\arch\2023\февраль.zip
+16.03.2023 11:26:42 Nurakhmanov Загрузка данных из папки temp
+16.03.2023 11:26:48 Nurakhmanov Данные загружены из папки temp
+16.03.2023 11:26:49 Nurakhmanov Открыты счетчики за февраль 2023
+16.03.2023 11:26:57 Nurakhmanov Книга сохранена
+16.03.2023 11:26:57 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:27:00 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:27:00 Nurakhmanov Книга сохранена
+16.03.2023 11:27:00 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:27:03 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:27:05 Nurakhmanov Книга архивирована в файл D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\temparch\16.03.2023 11.27.03.zip
+16.03.2023 11:27:05 Nurakhmanov Загрузка архива за март 2023 из файла D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\arch\2023\март.zip
+16.03.2023 11:27:09 Nurakhmanov Загрузка данных из папки temp
+16.03.2023 11:27:15 Nurakhmanov Данные загружены из папки temp
+16.03.2023 11:27:15 Nurakhmanov Открыты счетчики за март 2023
+16.03.2023 11:27:15 Nurakhmanov Книга сохранена
+16.03.2023 11:27:15 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:27:18 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:27:18 Nurakhmanov Книга сохранена
+16.03.2023 11:27:18 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:27:21 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:27:21 Nurakhmanov Книга сохранена
+16.03.2023 11:27:21 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:27:23 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:27:32 Nurakhmanov Счетчики закрыты
+
+
+16.03.2023 11:29:07 Счетчики открыты пользователем Nurakhmanov
+16.03.2023 11:29:09 Nurakhmanov Загрузка данных из папки source
+16.03.2023 11:29:16 Nurakhmanov Данные загружены из папки source
+16.03.2023 11:29:18 Nurakhmanov Изменен текст textBox1 на '15'
+16.03.2023 11:29:33 Nurakhmanov Книга сохранена
+16.03.2023 11:29:33 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:29:37 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:29:41 Nurakhmanov Книга сохранена
+16.03.2023 11:29:41 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:29:44 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:29:56 Nurakhmanov Книга сохранена
+16.03.2023 11:29:56 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:29:58 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:30:01 Nurakhmanov Книга архивирована в файл D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\temparch\16.03.2023 11.29.59.zip
+16.03.2023 11:30:01 Nurakhmanov Загрузка архива за март 2023 из файла D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\arch\2023\март.zip
+16.03.2023 11:30:05 Nurakhmanov Загрузка данных из папки temp
+16.03.2023 11:30:11 Nurakhmanov Данные загружены из папки temp
+16.03.2023 11:30:11 Nurakhmanov Открыты счетчики за март 2023
+16.03.2023 11:30:11 Nurakhmanov Книга сохранена
+16.03.2023 11:30:11 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:30:14 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:30:14 Nurakhmanov Книга сохранена
+16.03.2023 11:30:14 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:30:17 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:30:25 Nurakhmanov Счетчики закрыты
+
+
+16.03.2023 11:33:08 Счетчики открыты пользователем Nurakhmanov
+16.03.2023 11:33:10 Nurakhmanov Загрузка данных из папки source
+16.03.2023 11:33:16 Nurakhmanov Данные загружены из папки source
+16.03.2023 11:33:18 Nurakhmanov Изменен текст textBox1 на '15'
+16.03.2023 11:33:24 Nurakhmanov Нажато button40
+16.03.2023 11:33:24 Nurakhmanov Книга сохранена
+16.03.2023 11:33:24 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:33:28 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:33:34 Nurakhmanov Нажато button40
+16.03.2023 11:33:34 Nurakhmanov Книга сохранена
+16.03.2023 11:33:34 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:33:37 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:33:50 Nurakhmanov Книга сохранена
+16.03.2023 11:33:50 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:33:52 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:33:55 Nurakhmanov Книга архивирована в файл D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\temparch\16.03.2023 11.33.53.zip
+16.03.2023 11:33:55 Nurakhmanov Загрузка архива за март 2023 из файла D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\arch\2023\март.zip
+16.03.2023 11:33:59 Nurakhmanov Загрузка данных из папки temp
+16.03.2023 11:34:05 Nurakhmanov Данные загружены из папки temp
+16.03.2023 11:34:06 Nurakhmanov Открыты счетчики за март 2023
+16.03.2023 11:34:06 Nurakhmanov Книга сохранена
+16.03.2023 11:34:06 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:34:09 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:34:09 Nurakhmanov Книга сохранена
+16.03.2023 11:34:09 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:34:15 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:34:24 Nurakhmanov Счетчики закрыты
+
+
+16.03.2023 11:45:23 Счетчики открыты пользователем Nurakhmanov
+16.03.2023 11:45:25 Nurakhmanov Загрузка данных из папки source
+16.03.2023 11:45:32 Nurakhmanov Данные загружены из папки source
+16.03.2023 11:45:35 Nurakhmanov Изменен текст textBox1 на '15'
+16.03.2023 11:45:37 Nurakhmanov Книга сохранена
+16.03.2023 11:45:37 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:45:41 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:45:43 Nurakhmanov Книга архивирована в файл D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\temparch\16.03.2023 11.45.42.zip
+16.03.2023 11:45:59 Nurakhmanov Загрузка архива за март 2023 из файла D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\arch\2023\март.zip
+16.03.2023 11:46:03 Nurakhmanov Загрузка данных из папки temp
+16.03.2023 11:46:09 Nurakhmanov Данные загружены из папки temp
+16.03.2023 11:46:10 Nurakhmanov Открыты счетчики за март 2023
+16.03.2023 11:46:10 Nurakhmanov Книга сохранена
+16.03.2023 11:46:10 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:46:12 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:46:12 Nurakhmanov Книга сохранена
+16.03.2023 11:46:12 Nurakhmanov Сохранение данных в папку source
+16.03.2023 11:46:15 Nurakhmanov Данные сохранены в папку source
+16.03.2023 11:46:24 Nurakhmanov Счетчики закрыты
