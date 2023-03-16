@@ -14,31 +14,34 @@ namespace Meter
     {
         public static void SaveAsync()
         {
-            GlobalMethods.ToLog("Сохранение данных");
+            GlobalMethods.ToLog("Сохранение данных в папку source");
             SaveReferencesNew();
             SaveColors();
             SaveHeads();
+            GlobalMethods.ToLog("Данные сохранены в папку source");
         }
 
         public async static void LoadAsync()
         {
-            GlobalMethods.ToLog("Загрузка данных");
+            GlobalMethods.ToLog("Загрузка данных из папки source");
             Main.loading = true;
             LoadReferencesNew();
             LoadColors();
             LoadHeads();
             Main.loading = false;
+            GlobalMethods.ToLog("Данные загружены из папки source");
         }
 
         public async static void LoadAsyncFromFolder(string folder)
         {
-            GlobalMethods.ToLog("Загрузка данных");
+            GlobalMethods.ToLog("Загрузка данных из папки temp");
             Main.loading = true;
             string path = @"\" + folder;
             LoadReferencesNew(path);
             LoadColors(path);
             LoadHeads(path);
             Main.loading = false;
+            GlobalMethods.ToLog("Данные загружены из папки temp");
         }
         
         static async void SaveReferencesNew()
