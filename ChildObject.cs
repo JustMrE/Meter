@@ -453,7 +453,7 @@ namespace Meter
             }
             UpdateAllBorders();
             
-            GetFirstParent.UpdateHeads(false);
+            //GetFirstParent.UpdateHeads(false);
 
             //Marshal.ReleaseComObject(r);
             if (stopall) Main.instance.ResumeAll();

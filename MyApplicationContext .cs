@@ -566,7 +566,7 @@ namespace Meter
             string thisYear, thisMonth, selectedYear, selectedMonth, file;
 
             thisMonth = menu.lblMonth.Text;
-            thisYear = menu.lblMonth.Text;
+            thisYear = menu.lblYear.Text;
             selectedMonth = DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU"));
             selectedYear = DateTime.Today.ToString("yyyy");
             file = dir + @"\arch\" + selectedYear + @"\" + selectedMonth + @".zip";
