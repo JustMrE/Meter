@@ -147,8 +147,6 @@ namespace Meter
             {
                 ArhivateNew(thisYear, thisMonth);
             }
-            //ArhivateNew(thisYear, thisMonth);
-            // wb.Save();
             GlobalMethods.ToLog("Загрузка архива за " + selectedMonth + " " + selectedYear + " из файла " + file);
             if (menu.InvokeRequired)
             {
@@ -597,11 +595,11 @@ namespace Meter
 
             GlobalMethods.ToLog("Книга архивирована в файл " + arhiveName);
 
-            if (thisMonth != selectedMonth || thisYear != selectedYear) 
-            {
-                OpenMonth(thisYear, thisMonth, selectedYear, selectedMonth, file);
-                wb.Save();
-            }
+            // if (thisMonth != selectedMonth || thisYear != selectedYear) 
+            // {
+            //     OpenMonth(thisYear, thisMonth, selectedYear, selectedMonth, file);
+            //     wb.Save();
+            // }
         }
     
         public void ReleaseAllComObjects()
