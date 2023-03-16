@@ -607,11 +607,11 @@ namespace Meter
 
             GlobalMethods.ToLog("Книга архивирована в файл " + arhiveName);
 
-            // if (thisMonth != selectedMonth || thisYear != selectedYear) 
-            // {
-            //     OpenMonth(thisYear, thisMonth, selectedYear, selectedMonth, file);
-            //     wb.Save();
-            // }
+            if (thisMonth != selectedMonth || thisYear != selectedYear) 
+            {
+                OpenMonth(thisYear, thisMonth, selectedYear, selectedMonth, file);
+                wb.Save();
+            }
         }
     
         public void ReleaseAllComObjects()
