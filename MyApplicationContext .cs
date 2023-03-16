@@ -67,6 +67,7 @@ namespace Meter
         {
             if (System.Windows.Forms.Application.OpenForms.Count == 0)
             {
+                GlobalMethods.ToLog("Инициализация закрытия книги...");
                 // if (save == true)
                 // {
                 //     //SaveLoader.Save();
