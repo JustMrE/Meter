@@ -15,9 +15,18 @@ namespace Meter
         public static void SaveAsync()
         {
             GlobalMethods.ToLog("Сохранение данных в папку source");
-            SaveReferencesNew();
-            SaveColors();
-            SaveHeads();
+            var tasks = new List<Task>();
+
+            var task = Task.Run(() => SaveReferencesNew());
+            tasks.Add(task);
+
+            task = Task.Run(() => SaveColors());
+            tasks.Add(task);
+
+            task = Task.Run(() => SaveHeads());
+            tasks.Add(task);
+
+            Task.WaitAll(tasks.ToArray());
             GlobalMethods.ToLog("Данные сохранены в папку source");
         }
 
@@ -25,9 +34,18 @@ namespace Meter
         {
             GlobalMethods.ToLog("Загрузка данных из папки source");
             Main.loading = true;
-            LoadReferencesNew();
-            LoadColors();
-            LoadHeads();
+            var tasks = new List<Task>();
+
+            var task = Task.Run(() => LoadReferencesNew());
+            tasks.Add(task);
+
+            task = Task.Run(() => LoadColors());
+            tasks.Add(task);
+
+            task = Task.Run(() => LoadHeads());
+            tasks.Add(task);
+
+            Task.WaitAll(tasks.ToArray());
             Main.loading = false;
             GlobalMethods.ToLog("Данные загружены из папки source");
         }
