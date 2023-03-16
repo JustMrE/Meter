@@ -12,6 +12,7 @@ using Meter.Forms;
 using System.Globalization;
 using System.IO.Compression;
 using Newtonsoft.Json.Linq;
+using System.Threading.Tasks;
 
 namespace Meter
 {
@@ -68,22 +69,21 @@ namespace Meter
         {
             if (System.Windows.Forms.Application.OpenForms.Count == 0)
             {
+                var tasks = new List<Task>();
+
                 GlobalMethods.ToLog("Инициализация закрытия книги...");
-                // if (save == true)
-                // {
-                //     //SaveLoader.Save();
-                //     wb.Save();
-                // }
-                // else
-                // {
-                //     wb.Saved = true;
-                // }
-                if (dontsave == false) ArhivateNewTempFile();
+                if (dontsave == false)
+                    ArhivateNewTempFile();
+                else
+                    wb.Saved = true;
 
-                ReleaseAllComObjects();
+                var task = Task.Run(() => ReleaseAllComObjects());
+                tasks.Add(task);
 
-                ClearEvents();
+                task = Task.Run(() => ClearEvents());
+                tasks.Add(task);
 
+                Task.WaitAll(tasks.ToArray());
                 Marshal.ReleaseComObject(wb);
                 Marshal.ReleaseComObject(wsCh);
                 Marshal.ReleaseComObject(wsDb);

@@ -271,8 +271,8 @@ namespace Meter
 
         public void ClearAllDB()
         {
-            GlobalMethods.ToLog("База данных очищена");
             MessageBox.Show("Это может занять некоторое время! \nДождитесь сообщения об окончании.");
+            GlobalMethods.ToLog("Инициализация очистки базы данных...");
             var watch = Stopwatch.StartNew();
             Main.instance.StopAll();
             foreach (ReferenceObject item in references.Values)
@@ -281,6 +281,7 @@ namespace Meter
             }
             Main.instance.ResumeAll();
             watch.Stop();
+            GlobalMethods.ToLog("База данных очищена");
             MessageBox.Show("Готово!\n"+ (watch.ElapsedMilliseconds / 1000) + " sec.");
         }
 
@@ -342,10 +343,7 @@ namespace Meter
 
         public void ReleaseAllComObjects()
         {
-            foreach (ReferenceObject item in references.Values)
-            {
-                item.ReleaseAllComObjects();
-            }
+            references.Values.AsParallel().ForAll(r => r.ReleaseAllComObjects());
         }
     }
 }

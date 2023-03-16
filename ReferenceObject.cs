@@ -508,10 +508,7 @@ namespace Meter
 
         public void ReleaseAllComObjects()
         {
-            foreach (ChildObject item in childs.Values)
-            {
-                item.ReleaseAllComObjects();
-            }
+            childs.Values.AsParallel().ForAll(x => x.ReleaseAllComObjects());
         }
 
         public void RemoveSubject()

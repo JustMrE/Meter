@@ -769,6 +769,10 @@ namespace Meter
             {
                 if (_name == "счетчик")
                 {
+                    object val = ((Excel.Range)Body.Cells[Body.Cells.Count]).Value;
+                    Body.ClearContents();
+
+                    ((Excel.Range)Body.Rows[1]).Value = val;
                     ((Excel.Range)Body.Rows[12]).FormulaR1C1 = "=R[-1]C";
                     ((Excel.Range)Body.Rows[23]).FormulaR1C1 = "=R[-1]C";
                     ((Excel.Range)Body.Rows[24]).FormulaR1C1 = "=R[-1]C";
@@ -1108,9 +1112,6 @@ namespace Meter
         {
             if (_name == "счетчик")
             {
-                //string oldVal = ((double)((Excel.Range)Body.Cells[37,1]).Value).ToString();
-                Body.ClearContents();
-                //((Excel.Range)Body.Rows[1]).Value = oldVal;
                 UpdateFormulas();
             }
             else if (_name == "по счетчику")
@@ -1119,21 +1120,21 @@ namespace Meter
             }
             else if (_name == "формула")
             {
-                Body.FormulaR1C1 = "";
+                //Body.FormulaR1C1 = "";
                 
-                ((Excel.Range)Body.Rows[1]).ClearContents();;
-                ((Excel.Range)Body.Rows[12]).ClearContents();
-                ((Excel.Range)Body.Rows[23]).ClearContents();
-                ((Excel.Range)Body.Rows[24]).ClearContents(); 
-                ((Excel.Range)Body.Rows[36]).ClearContents(); 
-                ((Excel.Range)Body.Rows[37]).ClearContents();
+                //((Excel.Range)Body.Rows[1]).ClearContents();;
+                //((Excel.Range)Body.Rows[12]).ClearContents();
+                //((Excel.Range)Body.Rows[23]).ClearContents();
+                //((Excel.Range)Body.Rows[24]).ClearContents(); 
+                //((Excel.Range)Body.Rows[36]).ClearContents(); 
+                //((Excel.Range)Body.Rows[37]).ClearContents();
 
-                Marshal.ReleaseComObject(((Excel.Range)Body.Rows[1]));
-                Marshal.ReleaseComObject(((Excel.Range)Body.Rows[12]));
-                Marshal.ReleaseComObject(((Excel.Range)Body.Rows[23]));
-                Marshal.ReleaseComObject(((Excel.Range)Body.Rows[24]));
-                Marshal.ReleaseComObject(((Excel.Range)Body.Rows[36]));
-                Marshal.ReleaseComObject(((Excel.Range)Body.Rows[37]));
+                //Marshal.ReleaseComObject(((Excel.Range)Body.Rows[1]));
+                //Marshal.ReleaseComObject(((Excel.Range)Body.Rows[12]));
+                //Marshal.ReleaseComObject(((Excel.Range)Body.Rows[23]));
+                //Marshal.ReleaseComObject(((Excel.Range)Body.Rows[24]));
+                //Marshal.ReleaseComObject(((Excel.Range)Body.Rows[36]));
+                //Marshal.ReleaseComObject(((Excel.Range)Body.Rows[37]));
             }
             else if (_name == "по плану")
             {
@@ -1261,6 +1262,7 @@ namespace Meter
         }
         public void ReleaseAllComObjects()
         {
+            
             if (childs != null)
             {
                 foreach (ChildObject co in childs.Values)

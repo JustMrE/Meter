@@ -11,10 +11,7 @@ namespace Meter
 
         public void ReleaseAllComObjects()
         {
-            foreach (HeadObject ho in heads.Values)
-            {
-                ho.ReleaseAllComObjects();
-            }
+            heads.Values.AsParallel().ForAll(x => x.ReleaseAllComObjects());
         }
     }
 }
