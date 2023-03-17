@@ -11,6 +11,7 @@ using Main = Meter.MyApplicationContext;
 using Microsoft.Office.Interop.Excel;
 using System.Timers;
 using System.Diagnostics;
+using Meter.Forms;
 
 namespace Meter
 {
@@ -269,7 +270,22 @@ namespace Meter
             if (message) MessageBox.Show("Done!");
         }
 
-        public void ClearAllDB(bool message = true)
+        // public void ClearAllDB()
+        // {
+        //     MessageBox.Show("Это может занять некоторое время! \nДождитесь сообщения об окончании.");
+        //     GlobalMethods.ToLog("Инициализация очистки базы данных...");
+        //     var watch = Stopwatch.StartNew();
+        //     Main.instance.StopAll();
+        //     foreach (ReferenceObject item in references.Values)
+        //     {
+        //         item.ClearAll();
+        //     }
+        //     Main.instance.ResumeAll();
+        //     watch.Stop();
+        //     GlobalMethods.ToLog("База данных очищена за " + (watch.ElapsedMilliseconds / 1000) + " sec.");
+        //     MessageBox.Show("Готово!\n"+ (watch.ElapsedMilliseconds / 1000) + " sec.");
+        // }
+        public void ClearAllDB(bool message = true, DBClearing splashScreen = null)
         {
             if (message == true) MessageBox.Show("Это может занять некоторое время! \nДождитесь сообщения об окончании.");
             GlobalMethods.ToLog("Инициализация очистки базы данных...");
@@ -278,10 +294,12 @@ namespace Meter
             foreach (ReferenceObject item in references.Values)
             {
                 item.ClearAll();
+                if (splashScreen != null)
+                    splashScreen.UpdateText("Очистка " + item._name);
             }
             Main.instance.ResumeAll();
             watch.Stop();
-            GlobalMethods.ToLog("База данных очищена за" + (watch.ElapsedMilliseconds / 1000) + " sec.");
+            GlobalMethods.ToLog("База данных очищена за " + (watch.ElapsedMilliseconds / 1000) + " sec.");
             if (message == true) MessageBox.Show("Готово!\n"+ (watch.ElapsedMilliseconds / 1000) + " sec.");
         }
 

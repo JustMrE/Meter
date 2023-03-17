@@ -44,10 +44,15 @@
             this.Text = "NewMenuAdmin";
             this.ResumeLayout(false);
             //
+            //ColorSettings (button38)
+            //
+            this.button38.Visible = true;
+            this.button38.Text = "Новый лист";
+            //
             //ColorSettings (button39)
             //
             this.button39.Visible = true;
-            this.button39.Text = "Новый лист";
+            this.button39.Text = "Открыть логи";
             //
             //ColorSettings (button40)
             //

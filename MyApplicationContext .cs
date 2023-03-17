@@ -99,7 +99,6 @@ namespace Meter
                 GC.WaitForPendingFinalizers();
 
                 GlobalMethods.ToLog("Счетчики закрыты");
-                // Thread.Sleep(10000);
                 if (restarted == false) ExitThread();
             }
         }
@@ -385,12 +384,20 @@ namespace Meter
         }
         private void Wb_BeforeSave(bool SaveAsUI, ref bool Cancel)
         {
-            GlobalMethods.ToLog("Книга сохранена");
+            GlobalMethods.ToLog("Книга сохранена по инициативе пользователя (нажата кнопка сохранить)");
             SaveLoader.SaveAsync();
         }
         private void Wb_AfterSave(bool Success)
         {
             Arhivate(true);
+        }
+        private void SaveWB()
+        {
+            xlApp.EnableEvents = false;
+            GlobalMethods.ToLog("Книга сохранена");
+            wb.Save();
+            SaveLoader.SaveAsync();
+            xlApp.EnableEvents = true;
         }
 
         public void Application_BeforeClose(ref bool cancel)
@@ -537,11 +544,11 @@ namespace Meter
             string month, year;
             month = menu.lblMonth.Text;
             year = menu.lblYear.Text;
-            ArhivateNew(year, month);
+            ArhivateNew(year, month, withoutSave);
         }
         private void ArhivateNew(string year, string month, bool withoutSave = false)
         {
-            if (withoutSave == true) wb.Save();
+            if (withoutSave == false) SaveWB();
             string sourceFolder = dir + @"\current";
             string tempDirectory = Path.Combine(Path.GetTempPath(), DateTime.Today.ToString("MMMM", GlobalMethods.culture));
             Directory.CreateDirectory(tempDirectory);
@@ -591,7 +598,7 @@ namespace Meter
             selectedYear = DateTime.Today.ToString("yyyy");
             file = dir + @"\arch\" + selectedYear + @"\" + selectedMonth + @".zip";
 
-            wb.Save();
+            SaveWB();
             string sourceFolder = dir + @"\current";
             string tempDirectory = Path.Combine(Path.GetTempPath(), GlobalMethods.username + " " + DateTime.Today.ToString("MMMM", GlobalMethods.culture));
             Directory.CreateDirectory(tempDirectory);
@@ -631,7 +638,7 @@ namespace Meter
             if (thisMonth != selectedMonth || thisYear != selectedYear) 
             {
                 OpenMonth(thisYear, thisMonth, selectedYear, selectedMonth, file);
-                wb.Save();
+                SaveWB();
             }
         }
         private void ReleaseAllComObjects()

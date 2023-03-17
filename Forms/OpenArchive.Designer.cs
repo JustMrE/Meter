@@ -85,8 +85,8 @@
             this.button4.Location = new System.Drawing.Point(165, 32);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
-            this.button4.TabIndex = 5;
-            this.button4.Text = "апрель";
+            this.button4.TabIndex = 3;
+            this.button4.Text = "июнь";
             this.button4.UseVisualStyleBackColor = true;
             this.button4.Click += new System.EventHandler(this.btn_Click);
             // 
@@ -107,8 +107,8 @@
             this.button6.Location = new System.Drawing.Point(3, 32);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(75, 23);
-            this.button6.TabIndex = 3;
-            this.button6.Text = "июнь";
+            this.button6.TabIndex = 5;
+            this.button6.Text = "апрель";
             this.button6.UseVisualStyleBackColor = true;
             this.button6.Click += new System.EventHandler(this.btn_Click);
             // 
@@ -118,8 +118,8 @@
             this.button7.Location = new System.Drawing.Point(165, 61);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(75, 23);
-            this.button7.TabIndex = 8;
-            this.button7.Text = "июль";
+            this.button7.TabIndex = 6;
+            this.button7.Text = "сентябрь";
             this.button7.UseVisualStyleBackColor = true;
             this.button7.Click += new System.EventHandler(this.btn_Click);
             // 
@@ -140,8 +140,8 @@
             this.button9.Location = new System.Drawing.Point(3, 61);
             this.button9.Name = "button9";
             this.button9.Size = new System.Drawing.Size(75, 23);
-            this.button9.TabIndex = 6;
-            this.button9.Text = "сентябрь";
+            this.button9.TabIndex = 8;
+            this.button9.Text = "июль";
             this.button9.UseVisualStyleBackColor = true;
             this.button9.Click += new System.EventHandler(this.btn_Click);
             // 
@@ -151,8 +151,8 @@
             this.button10.Location = new System.Drawing.Point(165, 90);
             this.button10.Name = "button10";
             this.button10.Size = new System.Drawing.Size(75, 23);
-            this.button10.TabIndex = 11;
-            this.button10.Text = "октябрь";
+            this.button10.TabIndex = 9;
+            this.button10.Text = "декабрь";
             this.button10.UseVisualStyleBackColor = true;
             this.button10.Click += new System.EventHandler(this.btn_Click);
             // 
@@ -173,8 +173,8 @@
             this.button12.Location = new System.Drawing.Point(3, 90);
             this.button12.Name = "button12";
             this.button12.Size = new System.Drawing.Size(75, 23);
-            this.button12.TabIndex = 9;
-            this.button12.Text = "декабрь";
+            this.button12.TabIndex = 11;
+            this.button12.Text = "октябрь";
             this.button12.UseVisualStyleBackColor = true;
             this.button12.Click += new System.EventHandler(this.btn_Click);
             // 

@@ -613,7 +613,7 @@ namespace Meter.Forms
                 AddButtonToPopUpCommandBar(ref p, "UpdateNames", RangeReferences.activeTable.UpdateNames);
             }
             AddButtonToPopUpCommandBar(ref p, "UpdateAllNames", Main.instance.references.UpdateAllNames);
-            AddButtonToPopUpCommandBar(ref p, "ClearAllDB", Main.instance.references.ClearAllDB, true);
+            //AddButtonToPopUpCommandBar(ref p, "ClearAllDB", Main.instance.references.ClearAllDB);
             AddButtonToPopUpCommandBar(ref p, "UpdateAllColors", Main.instance.references.UpdateAllColors);
             AddButtonToPopUpCommandBar(ref p, "UpdateAllPSFormulas", Main.instance.references.UpdateAllPSFormulas);
             AddButtonToPopUpCommandBar(ref p, "UpdateAllDBFormulas", Main.instance.references.UpdateAllDBFormulas);

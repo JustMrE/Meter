@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using System.Diagnostics;
 using Main = Meter.MyApplicationContext;
 
 namespace Meter.Forms
@@ -64,20 +65,54 @@ namespace Meter.Forms
 
         #region Buttons
 
-        protected override void Button39_Click(object sender, EventArgs e)
+        protected override void Button38_Click(object sender, EventArgs e)
         {
-            base.Button39_Click(sender, e);
-            GlobalMethods.ToLog("Инициализация создания нового листа...");
-            Main.instance.Arhivate();
-            Main.instance.references.ClearAllDB();
+            base.Button38_Click(sender, e);
+            
             string monthYear = lblMonth.Text + " " + lblYear.Text;
             DateTime date = DateTime.ParseExact(monthYear, "MMMM yyyy", GlobalMethods.culture);
             DateTime newMonthDate = date.AddMonths(1);
+            string newMonthYear = newMonthDate.ToString("yyyy");
+            string newMonth = newMonthDate.ToString("MMMM", GlobalMethods.culture);
+            string file = Main.dir + @"\arch\" + newMonthYear + @"\" + newMonth + @".zip";
+
+            if (File.Exists(file))
+            {
+                MessageBox.Show("Лист за " + newMonthDate.ToString("MMMM yyyy", GlobalMethods.culture) + " уже существует! \nОткройте из архивов...");
+                return;
+            }
+
+            MessageBox.Show("Это может занять некоторое время! \nДождитесь сообщения об окончании.");
+            DBClearing splashScreen = new DBClearing();
+            splashScreen.Show();
+            GlobalMethods.ToLog("Инициализация создания нового листа...");
+            splashScreen.UpdateText("Сохранение текущего листа в архив...");
+            Main.instance.Arhivate();
+            Main.instance.references.ClearAllDB(false, splashScreen);
+            splashScreen.UpdateText("Сохранение нового листа...");
             lblMonth.Text = newMonthDate.ToString("MMMM", GlobalMethods.culture);
             lblYear.Text = newMonthDate.ToString("yyyy");
             Main.instance.Arhivate();
             GlobalMethods.ToLog("Лист нового месяца создан (" + newMonthDate.ToString("MMMM yyyy", GlobalMethods.culture) + ")");
-            //lblMonth.Text = newMonth.ToString("MMMM", GlobalMethods.culture);
+            splashScreen.Close();
+            MessageBox.Show("Лист нового месяца создан (" + newMonthDate.ToString("MMMM yyyy", GlobalMethods.culture) + ")");
+        }
+        protected override void Button39_Click(object sender, EventArgs e)
+        {
+            base.Button39_Click(sender, e);
+            try
+            {
+                Process.Start( new ProcessStartInfo()
+                {
+                    FileName = GlobalMethods.logFile,
+                    UseShellExecute = true
+                });
+            }
+            catch(Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            
         }
         protected override void Button40_Click(object sender, EventArgs e)
         {
