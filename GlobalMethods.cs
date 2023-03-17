@@ -16,6 +16,7 @@ namespace Meter
     {
         public static string logFile;
         public static string username;
+        public static CultureInfo culture = new CultureInfo("ru-RU");
 
         public static void CalculateFormsPositions()
         {

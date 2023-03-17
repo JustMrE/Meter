@@ -1,15 +1,4 @@
-﻿using Microsoft.Office.Interop.Excel;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Security;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using Excel = Microsoft.Office.Interop.Excel;
+﻿using System.Globalization;
 using Main = Meter.MyApplicationContext;
 
 namespace Meter.Forms
@@ -59,45 +48,11 @@ namespace Meter.Forms
         {
             base.FormClose();
         }
-        protected override void btnAdmin_Click(object sender, EventArgs e)
-        {
-            base.btnAdmin_Click(sender, e);
-            Main.instance.menu = Main.menues[0] as NewMenuBase;
-            Main.instance.menu.Show();
-            this.Hide();
-            GlobalMethods.CalculateFormsPositions();
-        }
-        
-        protected override void Button41_Click(object sender, EventArgs e)
-        {
-            base.Button41_Click(sender, e);
-            using (AddSubject form = new AddSubject())
-            {
-                form.ShowDialog();
-            }
-        }
-
-        protected override void Button42_Click(object sender, EventArgs e)
-        {
-            base.Button42_Click(sender, e);
-            using (ColorSettings colorSettings = new ColorSettings())
-            {
-                colorSettings.ShowDialog();
-            }
-        }
-
-        protected override void Button40_Click(object sender, EventArgs e)
-        {
-            base.Button40_Click(sender, e);
-            GlobalMethods.ClearLogs();
-        }
-
         protected override void NewMenuBase_Activated(object sender, EventArgs e)
         {
             Main.instance.menu = this;
             base.NewMenuBase_Activated(sender, e);
         }
-    
         public override void ActivateSheet(object sh)
         {
             base.ActivateSheet(sh);
@@ -107,6 +62,52 @@ namespace Meter.Forms
             base.DeactivateSheet();
         }
 
+        #region Buttons
+
+        protected override void Button39_Click(object sender, EventArgs e)
+        {
+            base.Button39_Click(sender, e);
+            GlobalMethods.ToLog("Инициализация создания нового листа...");
+            Main.instance.Arhivate();
+            Main.instance.references.ClearAllDB();
+            string monthYear = lblMonth.Text + " " + lblYear.Text;
+            DateTime date = DateTime.ParseExact(monthYear, "MMMM yyyy", GlobalMethods.culture);
+            DateTime newMonthDate = date.AddMonths(1);
+            lblMonth.Text = newMonthDate.ToString("MMMM", GlobalMethods.culture);
+            lblYear.Text = newMonthDate.ToString("yyyy");
+            Main.instance.Arhivate();
+            GlobalMethods.ToLog("Лист нового месяца создан (" + newMonthDate.ToString("MMMM yyyy", GlobalMethods.culture) + ")");
+            //lblMonth.Text = newMonth.ToString("MMMM", GlobalMethods.culture);
+        }
+        protected override void Button40_Click(object sender, EventArgs e)
+        {
+            base.Button40_Click(sender, e);
+            GlobalMethods.ClearLogs();
+        }
+        protected override void Button41_Click(object sender, EventArgs e)
+        {
+            base.Button41_Click(sender, e);
+            using (AddSubject form = new AddSubject())
+            {
+                form.ShowDialog();
+            }
+        }
+        protected override void Button42_Click(object sender, EventArgs e)
+        {
+            base.Button42_Click(sender, e);
+            using (ColorSettings colorSettings = new ColorSettings())
+            {
+                colorSettings.ShowDialog();
+            }
+        }
+        protected override void btnAdmin_Click(object sender, EventArgs e)
+        {
+            base.btnAdmin_Click(sender, e);
+            Main.instance.menu = Main.menues[0] as NewMenuBase;
+            Main.instance.menu.Show();
+            this.Hide();
+            GlobalMethods.CalculateFormsPositions();
+        }
         protected override void lblMonth_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             base.lblMonth_MouseDoubleClick(sender, e);
@@ -120,7 +121,6 @@ namespace Meter.Forms
                 }
             }
         }
-
         protected override void lblYear_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             base.lblYear_MouseDoubleClick(sender, e);
@@ -134,5 +134,7 @@ namespace Meter.Forms
                 }
             }
         }
+
+        #endregion
     }
 }

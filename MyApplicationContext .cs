@@ -62,6 +62,7 @@ namespace Meter
         public Excel.DocEvents_ChangeEventHandler Events_Change;
         public Excel.DocEvents_SelectionChangeEventHandler Events_SelectionChange;
         public Excel.WorkbookEvents_BeforeSaveEventHandler Events_BeforeSave;
+        public Excel.WorkbookEvents_AfterSaveEventHandler Events_AfterSave;
         public Excel.WorkbookEvents_SheetSelectionChangeEventHandler Events_SheetSelectionChange;
         public Excel.WorkbookEvents_SheetChangeEventHandler Events_SheetChange;
 
@@ -116,7 +117,7 @@ namespace Meter
             Start();
         }
 
-        public void Start()
+        private void Start()
         {
             restarted = false;
             string file1 = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\db.txt";
@@ -145,7 +146,7 @@ namespace Meter
         {
             if (silent) xlApp.Visible = false;
 
-            if (thisMonth == DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU")) && thisYear == DateTime.Today.ToString("yyyy"))
+            if (thisMonth == DateTime.Today.ToString("MMMM", GlobalMethods.culture) && thisYear == DateTime.Today.ToString("yyyy"))
             {
                 ArhivateNew(thisYear, thisMonth);
             }
@@ -286,7 +287,7 @@ namespace Meter
                 }
             }
             xlApp.Visible = true;
-            RestoreExcel();
+            //RestoreExcel();
 
             zoom = (double)xlApp.ActiveWindow.Zoom;
         }
@@ -339,7 +340,6 @@ namespace Meter
 
             Events_Change = new Excel.DocEvents_ChangeEventHandler(Application_Change);
             wsCh.Change += Events_Change;
-            //wsDb.Change += Events_Change;
 
             Events_SelectionChange = new Excel.DocEvents_SelectionChangeEventHandler(Application_SelectionChange);
             wsCh.SelectionChange += Events_SelectionChange;
@@ -352,6 +352,9 @@ namespace Meter
 
             Events_BeforeSave = new Excel.WorkbookEvents_BeforeSaveEventHandler(Wb_BeforeSave);
             wb.BeforeSave += Events_BeforeSave;
+
+            Events_AfterSave = new Excel.WorkbookEvents_AfterSaveEventHandler(Wb_AfterSave);
+            wb.AfterSave += Events_AfterSave;
 
             GlobalMethods.CalculateFormsPositions();
         }
@@ -368,6 +371,8 @@ namespace Meter
             try{wb.SheetSelectionChange -= Events_SheetSelectionChange;}catch{}
             try{wb.SheetChange -= Events_SheetChange;}catch{}
             try{wb.BeforeSave -= Events_BeforeSave;}catch{}
+            try{wb.AfterSave -= Events_AfterSave;}catch{}
+
             Event_BeforeClose = null;
             Event_WindowResize = null;
             Events_BeforeRightClick = null;
@@ -382,6 +387,10 @@ namespace Meter
         {
             GlobalMethods.ToLog("Книга сохранена");
             SaveLoader.SaveAsync();
+        }
+        private void Wb_AfterSave(bool Success)
+        {
+            Arhivate(true);
         }
 
         public void Application_BeforeClose(ref bool cancel)
@@ -457,7 +466,6 @@ namespace Meter
             }
             menu.CellValueChanged(range);
         }
-
         private void Application_Change(object sh, Excel.Range range)
         {
             if (((Excel.Worksheet)sh).CodeName != "PS")
@@ -472,7 +480,6 @@ namespace Meter
                 }
             }
         }
-
         private void ChagedRange(object sh, Excel.Range rng)
         {
             
@@ -493,13 +500,11 @@ namespace Meter
                 }
             }
         }
-
         private void Changed(object sh, Excel.Range rng)
         {
             GlobalMethods.ToLog("Изменено значение ячейки " + rng.Address + " на листе " + ((Excel.Worksheet)sh).Name + " с '" + oldVal + "' на '" + rng.Value + "'");
         }
-        
-        public void RestoreExcel()
+        private void RestoreExcel()
         {
             if (xlApp.WindowState == Excel.XlWindowState.xlMinimized)
             {
@@ -527,12 +532,18 @@ namespace Meter
 
             MessageBox.Show("Closed");
         }
-
-        public void ArhivateNew(string year, string month)
+        public void Arhivate(bool withoutSave = false)
         {
-            wb.Save();
+            string month, year;
+            month = menu.lblMonth.Text;
+            year = menu.lblYear.Text;
+            ArhivateNew(year, month);
+        }
+        private void ArhivateNew(string year, string month, bool withoutSave = false)
+        {
+            if (withoutSave == true) wb.Save();
             string sourceFolder = dir + @"\current";
-            string tempDirectory = Path.Combine(Path.GetTempPath(), DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU")));
+            string tempDirectory = Path.Combine(Path.GetTempPath(), DateTime.Today.ToString("MMMM", GlobalMethods.culture));
             Directory.CreateDirectory(tempDirectory);
             foreach (string dirPath in Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories))
             {
@@ -570,20 +581,19 @@ namespace Meter
             Directory.Delete(tempDirectory, true);
             GlobalMethods.ToLog("Книга архивирована (" + month + " " + year + " года) в файл " + arhiveName);
         }
-
-        public void ArhivateNewTempFile()
+        private void ArhivateNewTempFile()
         {
             string thisYear, thisMonth, selectedYear, selectedMonth, file;
 
             thisMonth = menu.lblMonth.Text;
             thisYear = menu.lblYear.Text;
-            selectedMonth = DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU"));
+            selectedMonth = DateTime.Today.ToString("MMMM", GlobalMethods.culture);
             selectedYear = DateTime.Today.ToString("yyyy");
             file = dir + @"\arch\" + selectedYear + @"\" + selectedMonth + @".zip";
 
             wb.Save();
             string sourceFolder = dir + @"\current";
-            string tempDirectory = Path.Combine(Path.GetTempPath(), GlobalMethods.username + " " + DateTime.Today.ToString("MMMM", new CultureInfo("ru-RU")));
+            string tempDirectory = Path.Combine(Path.GetTempPath(), GlobalMethods.username + " " + DateTime.Today.ToString("MMMM", GlobalMethods.culture));
             Directory.CreateDirectory(tempDirectory);
             foreach (string dirPath in Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories))
             {
@@ -624,8 +634,7 @@ namespace Meter
                 wb.Save();
             }
         }
-    
-        public void ReleaseAllComObjects()
+        private void ReleaseAllComObjects()
         {
             references.ReleaseAllComObjects();
             heads.ReleaseAllComObjects();

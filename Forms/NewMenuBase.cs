@@ -62,16 +62,6 @@ namespace Meter.Forms
             GlobalMethods.ReleseObject(_activeRange);
         }
 
-
-        protected virtual void btnAdmin_Click(object sender, EventArgs e)
-        {
-            ToLog(sender);
-        }
-        protected virtual void RepairMenu_Click(object sender, EventArgs e)
-        {
-            ToLog(sender);
-            GlobalMethods.CalculateFormsPositions();
-        }
         protected virtual void listBox1_DoubleClick(object sender, EventArgs e)
         {
             ToLog(sender, listBox1.SelectedItem);
@@ -139,7 +129,6 @@ namespace Meter.Forms
             Main.instance.wsCh.Range["B5"].Value = lblMonth.Text;
             Main.instance.ResumeAll();
         }
-
         protected virtual void lblYear_TextChanged(object sender, EventArgs e)
         {
             GlobalMethods.ToLog(this, sender, lblYear.Text);
@@ -148,6 +137,12 @@ namespace Meter.Forms
             Main.instance.ResumeAll();
         }
 
+        #region Buttons
+        protected virtual void RepairMenu_Click(object sender, EventArgs e)
+        {
+            ToLog(sender);
+            GlobalMethods.CalculateFormsPositions();
+        }
         protected virtual void Button2_Click(object sender, EventArgs e)
         {
             ToLog(sender);
@@ -312,7 +307,14 @@ namespace Meter.Forms
         {
             ToLog(sender);
         }
-    
+        protected virtual void btnAdmin_Click(object sender, EventArgs e)
+        {
+            ToLog(sender);
+        }
+
+        #endregion
+
+        #region Buttons
         protected virtual void btnToArhive_Click(object sender, EventArgs e)
         {
             ToLog(sender);
@@ -321,38 +323,24 @@ namespace Meter.Forms
                 return;
             }
 
-            Main.instance.ArhivateNew(this.lblYear.Text, this.lblMonth.Text);
+            Main.instance.Arhivate();
 
             MessageBox.Show("Готово!");
         }
-
         protected virtual void btnFromArhive_Click(object sender, EventArgs e)
         {
             ToLog(sender);
-            // Thread t = new Thread(() =>
-            // {
-            //     OpenArchive form = new OpenArchive(this.lblYear.Text, this.lblMonth.Text);
-            //     form.FormClosed += (s, args) =>
-            //     {
-            //         System.Windows.Forms.Application.ExitThread();
-            //     };
-            //     form.Show();
-            //     System.Windows.Forms.Application.Run();
-            // });
-            // t.SetApartmentState(ApartmentState.STA);
-            // t.Start();
             OpenArchive form = new OpenArchive(this.lblYear.Text, this.lblMonth.Text);
             form.ShowDialog();
         }
-
         protected virtual void lblMonth_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             ToLog(sender);
         }
-
         protected virtual void lblYear_MouseDoubleClick(object sender, MouseEventArgs e)
         {
             ToLog(sender);
         }
+        #endregion
     }
 }
