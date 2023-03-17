@@ -287,3 +287,72 @@
 16.03.2023 23:31:13 darck Изменен текст textBox1 на 'dontsave'
 16.03.2023 23:31:17 darck Инициализация закрытия книги...
 16.03.2023 23:31:21 darck Счетчики закрыты
+
+
+17.03.2023 9:09:25 Счетчики открыты пользователем Nurakhmanov
+17.03.2023 9:09:28 Nurakhmanov Загрузка данных из папки source
+17.03.2023 9:09:36 Nurakhmanov Данные загружены из папки source
+17.03.2023 9:09:38 Nurakhmanov Изменен текст textBox1 на '16'
+17.03.2023 9:10:06 Nurakhmanov Нажато btnAdmin
+17.03.2023 9:10:06 Nurakhmanov Открыта форма Password
+17.03.2023 9:10:07 Nurakhmanov Нажато btnOK на форме Password
+17.03.2023 9:10:07 Nurakhmanov Введен пароль 
+17.03.2023 9:10:07 Nurakhmanov Введен правильный пароль
+17.03.2023 9:12:37 Nurakhmanov Изменен текст textBox1 на 'd'
+17.03.2023 9:12:37 Nurakhmanov Изменен текст textBox1 на 'do'
+17.03.2023 9:12:37 Nurakhmanov Изменен текст textBox1 на 'dom'
+17.03.2023 9:12:37 Nurakhmanov Изменен текст textBox1 на 'domt'
+17.03.2023 9:12:38 Nurakhmanov Изменен текст textBox1 на 'domts'
+17.03.2023 9:12:39 Nurakhmanov Изменен текст textBox1 на 'domtsa'
+17.03.2023 9:12:39 Nurakhmanov Изменен текст textBox1 на 'domtsav'
+17.03.2023 9:12:39 Nurakhmanov Изменен текст textBox1 на 'domtsave'
+17.03.2023 9:12:43 Nurakhmanov Изменен текст textBox1 на 'dotsave'
+17.03.2023 9:12:43 Nurakhmanov Изменен текст textBox1 на 'dontsave'
+17.03.2023 9:12:45 Nurakhmanov Инициализация закрытия книги...
+17.03.2023 9:12:50 Nurakhmanov Счетчики закрыты
+
+
+17.03.2023 9:46:40 Счетчики открыты пользователем Nurakhmanov
+17.03.2023 9:46:42 Nurakhmanov Загрузка данных из папки source
+17.03.2023 9:46:48 Nurakhmanov Данные загружены из папки source
+17.03.2023 9:46:51 Nurakhmanov Изменен текст textBox1 на '16'
+17.03.2023 9:46:52 Nurakhmanov Нажато btnAdmin
+17.03.2023 9:46:52 Nurakhmanov Открыта форма Password
+17.03.2023 9:46:53 Nurakhmanov Нажато btnOK на форме Password
+17.03.2023 9:46:53 Nurakhmanov Введен пароль 
+17.03.2023 9:46:53 Nurakhmanov Введен правильный пароль
+17.03.2023 9:46:55 Nurakhmanov Изменен текст textBox1 на 'd'
+17.03.2023 9:46:55 Nurakhmanov Изменен текст textBox1 на 'do'
+17.03.2023 9:46:55 Nurakhmanov Изменен текст textBox1 на 'don'
+17.03.2023 9:46:55 Nurakhmanov Изменен текст textBox1 на 'dont'
+17.03.2023 9:46:56 Nurakhmanov Изменен текст textBox1 на 'donts'
+17.03.2023 9:46:56 Nurakhmanov Изменен текст textBox1 на 'dontsa'
+17.03.2023 9:46:56 Nurakhmanov Изменен текст textBox1 на 'dontsav'
+17.03.2023 9:46:56 Nurakhmanov Изменен текст textBox1 на 'dontsave'
+17.03.2023 9:46:59 Nurakhmanov Инициализация закрытия книги...
+17.03.2023 9:47:03 Nurakhmanov Счетчики закрыты
+
+
+17.03.2023 9:47:13 Счетчики открыты пользователем Nurakhmanov
+17.03.2023 9:47:16 Nurakhmanov Загрузка данных из папки source
+17.03.2023 9:47:22 Nurakhmanov Данные загружены из папки source
+
+
+17.03.2023 9:48:16 Счетчики открыты пользователем Nurakhmanov
+17.03.2023 9:48:18 Nurakhmanov Загрузка данных из папки source
+17.03.2023 9:48:24 Nurakhmanov Данные загружены из папки source
+17.03.2023 9:48:26 Nurakhmanov Изменен текст textBox1 на '16'
+17.03.2023 9:48:36 Nurakhmanov Нажато btnAdmin
+17.03.2023 9:48:36 Nurakhmanov Открыта форма Password
+17.03.2023 9:48:37 Nurakhmanov Нажато btnOK на форме Password
+17.03.2023 9:48:37 Nurakhmanov Введен пароль 
+17.03.2023 9:48:38 Nurakhmanov Введен правильный пароль
+17.03.2023 9:48:39 Nurakhmanov Нажато button39
+17.03.2023 9:48:43 Nurakhmanov Инициализация закрытия книги...
+17.03.2023 9:48:43 Nurakhmanov Книга сохранена
+17.03.2023 9:48:43 Nurakhmanov Сохранение данных в папку source
+17.03.2023 9:48:44 Nurakhmanov Данные сохранены в папку source
+17.03.2023 9:48:47 Nurakhmanov Книга архивирована (март 2023 года) в файл D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\arch\2023\март.zip
+17.03.2023 9:48:48 Nurakhmanov Удален временный архив D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\temparch\16.03.2023 12.21.20.zip
+17.03.2023 9:48:48 Nurakhmanov Книга архивирована в файл D:\C#\Git\Meter\bin\Debug\net6.0-windows\DB\temparch\17.03.2023 09.48.47.zip
+17.03.2023 9:48:52 Nurakhmanov Счетчики закрыты
