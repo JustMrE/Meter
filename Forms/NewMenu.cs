@@ -77,7 +77,7 @@ namespace Meter.Forms
             Login();
             string format = "dd MMMM yyyy";
             string data = "2023-02-" + this.textBox1.Text;
-            data = this.textBox1.Text + " " + this.lblMonth.Text + " " + this.lblYear.Text;
+            data = this.textBox1.Text.PadLeft(2,'0') + " " + this.lblMonth.Text + " " + this.lblYear.Text;
             DateTime result;
             DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
             data = result.ToString("yyyy-MM-dd");
@@ -142,7 +142,7 @@ namespace Meter.Forms
             }
         }
         #endregion
-        
+
         public override void ActivateSheet(object sh)
         {
             // if (((Excel.Worksheet)Main.instance.xlApp.ActiveSheet).CodeName == "PS")
