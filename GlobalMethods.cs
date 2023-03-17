@@ -41,7 +41,7 @@ namespace Meter
                 
                 double rangeSizeY = ((double)((Excel.Worksheet)Main.instance.wb.ActiveSheet).Range["B1:B6"].Height / 72f) * dpiY;
                 int height = (int)(rangeSizeY * (double)Main.instance.xlApp.ActiveWindow.Zoom / 100);
-                
+
                 Main.instance.menu.SetRects(left, top, width, height);
             }
             //Main.instance.ResumeAll();
