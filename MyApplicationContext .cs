@@ -112,6 +112,9 @@ namespace Meter
             //This means that any forms created outside of the ApplicationContext will not prevent the 
             //application close.
             dontsave = false;
+
+            GlobalMethods.dpiX = Graphics.FromHwnd(IntPtr.Zero).DpiX;
+            GlobalMethods.dpiY = Graphics.FromHwnd(IntPtr.Zero).DpiY;
             
             Start();
         }

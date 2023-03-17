@@ -37,6 +37,38 @@ namespace Meter.Forms
         {
             base.FormClose();
         }
+         protected override void TextBox1_TextChanged(object sender, EventArgs e)
+        {
+            base.TextBox1_TextChanged(sender, e);
+            string tbVal = textBox1.Text;
+            if (string.IsNullOrEmpty(tbVal) || changed)
+            {
+                return;
+            }
+
+            int val = Int32.Parse(tbVal);
+            if (val > 31)
+            {
+                changed = true;
+                textBox1.Text = "31";
+                changed = false;
+            }
+        
+        }
+        protected override void TextBox1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            char c = e.KeyChar;
+            if (!Char.IsDigit(c) && c != 8)
+            {
+                e.Handled = true;
+            }
+            if (textBox1.Text.Length > 2 && c != 8)
+            {
+                e.Handled = true;
+            }
+        }
+
+        #region  Buttons
         protected override void Button2_Click(object sender, EventArgs e)
         {
             base.Button2_Click(sender, e);
@@ -91,26 +123,6 @@ namespace Meter.Forms
             Main.instance.ResumeAll();
             MessageBox.Show("Done!");
         }
-
-        protected override void TextBox1_TextChanged(object sender, EventArgs e)
-        {
-            base.TextBox1_TextChanged(sender, e);
-            string tbVal = textBox1.Text;
-            if (string.IsNullOrEmpty(tbVal) || changed)
-            {
-                return;
-            }
-
-            int val = Int32.Parse(tbVal);
-            if (val > 31)
-            {
-                changed = true;
-                textBox1.Text = "31";
-                changed = false;
-            }
-        
-        }
-
         protected override void btnAdmin_Click(object sender, EventArgs e)
         {
             base.btnAdmin_Click(sender, e);
@@ -129,18 +141,8 @@ namespace Meter.Forms
                 }
             }
         }
-        protected override void TextBox1_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            char c = e.KeyChar;
-            if (!Char.IsDigit(c) && c != 8)
-            {
-                e.Handled = true;
-            }
-            if (textBox1.Text.Length > 2 && c != 8)
-            {
-                e.Handled = true;
-            }
-        }
+        #endregion
+        
         public override void ActivateSheet(object sh)
         {
             // if (((Excel.Worksheet)Main.instance.xlApp.ActiveSheet).CodeName == "PS")
