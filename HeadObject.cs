@@ -5,6 +5,7 @@ using System.Data.Common;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Tab;
 using Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography.Xml;
 
 namespace Meter
 {
@@ -224,7 +225,19 @@ namespace Meter
         {
             Range.BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
         }
-    
+        public void UpdateAllColors()
+        {
+            UpdateColors();
+
+            if (childs != null)
+            {
+                foreach (HeadObject c in childs.Values)
+                {
+                    c.UpdateAllColors();
+                }
+            }
+        }
+
         public void Increase(bool stopall = true)
         {
             Resize(1, false, stopall);

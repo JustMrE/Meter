@@ -143,14 +143,14 @@ namespace Meter
             }
             MessageBox.Show("Done!");
         }
-        public void UpdateAllColors1()
+        public void UpdateAllColors1(bool stopall = true)
         {
-            Main.instance.StopAll();
+            if (stopall) Main.instance.StopAll();
             foreach (ReferenceObject item in references.Values)
             {
                 item.UpdateAllColors();
             }
-            Main.instance.ResumeAll();
+            if (stopall) Main.instance.ResumeAll();
         }
         public void UpdateAllBorders()
         {

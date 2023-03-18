@@ -33,7 +33,7 @@ namespace Meter
         {
             Main.instance.colors.CreateAllColors();
             listBox1.Items.AddRange(Main.instance.colors.mainTitle.Keys.ToArray());
-            listBox1.Items.AddRange(Main.instance.colors.extraTitle.Keys.ToArray());
+            listBox1.Items.AddRange(Main.instance.colors.extraTitle.Keys.Where(n => n != "ПО ПЛАНУ").ToArray());
 
             colorUp1.BackColor = Main.instance.colors.subColors["colorUp1"];
             colorUp2.BackColor = Main.instance.colors.subColors["colorUp2"];
@@ -131,6 +131,11 @@ namespace Meter
             {
                 if (Main.instance.colors.IsColorFree(colorDialog1.Color))
                 {
+                    if (colorDialog1.Color == Color.White || colorDialog1.Color == Color.Black)
+                    {
+                        MessageBox.Show("Запрещено выбирать белый либо черный цвет!");
+                        return;
+                    }
                     // установка цвета формы
                     ((Button)sender).BackColor = colorDialog1.Color;
                 }

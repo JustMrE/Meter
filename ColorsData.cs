@@ -231,7 +231,10 @@ namespace Meter
 
             MessageBox.Show("Это займет некоторое время. Дождитесь уведомления о завершении!");
             var watch = System.Diagnostics.Stopwatch.StartNew();
-            Main.instance.references.UpdateAllColors1();
+            Main.instance.StopAll();
+            Main.instance.references.UpdateAllColors1(false);
+            Main.instance.heads.UpdateAllColors(false);
+            Main.instance.ResumeAll();
             watch.Stop();
             MessageBox.Show("Готово!\n" + (watch.ElapsedMilliseconds / 1000) + " ms");
         }

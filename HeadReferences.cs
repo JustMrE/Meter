@@ -1,3 +1,5 @@
+using Main = Meter.MyApplicationContext;
+
 namespace Meter
 {
     public class HeadReferences
@@ -7,6 +9,16 @@ namespace Meter
         public HeadReferences()
         {
             heads = new Dictionary<string, HeadObject>();
+        }
+
+        public void UpdateAllColors(bool stopall = true)
+        {
+            if (stopall) Main.instance.StopAll();
+            foreach (HeadObject item in heads.Values)
+            {
+                item.UpdateAllColors();
+            }
+            if (stopall) Main.instance.ResumeAll();
         }
 
         public void ReleaseAllComObjects()
