@@ -13,7 +13,10 @@ namespace Meter.Forms
         public AddSubject()
         {
             InitializeComponent();
-            ComboBox11.DataSource = Main.instance.heads.heads.Keys.ToList();
+            if (Main.instance.heads.heads != null)
+            {
+                ComboBox11.DataSource = Main.instance.heads.heads.Keys.ToList();
+            }
         }
 
         private void AddSubject_Shown(object sender, EventArgs e)
@@ -31,7 +34,10 @@ namespace Meter.Forms
                 ComboBox12.Visible = true;
                 if (Main.instance.heads.heads.ContainsKey(nameL0))
                 {
-                    ComboBox12.DataSource = Main.instance.heads.heads[nameL0].childs.Keys.ToList();
+                    if (Main.instance.heads.heads[nameL0].childs != null)
+                    {
+                        ComboBox12.DataSource = Main.instance.heads.heads[nameL0].childs.Keys.ToList();
+                    }
                     ComboBox12.Text = string.Empty;
                     
                 }
@@ -62,7 +68,10 @@ namespace Meter.Forms
                 ComboBox13.Visible = true;
                 if (Main.instance.heads.heads.ContainsKey(nameL0) && Main.instance.heads.heads[nameL0].childs.ContainsKey(nameL1))
                 {
-                    ComboBox13.DataSource = Main.instance.heads.heads[nameL0].childs[nameL1].childs.Keys.ToList();
+                    if (Main.instance.heads.heads[nameL0].childs[nameL1].childs != null)
+                    {
+                        ComboBox13.DataSource = Main.instance.heads.heads[nameL0].childs[nameL1].childs.Keys.ToList();
+                    }
                     ComboBox13.Text = string.Empty;
                 }
                 else
@@ -126,15 +135,37 @@ namespace Meter.Forms
             }
 
             
-            if (Main.instance.heads.heads.ContainsKey(nameL0))
+            if (Main.instance.heads.heads != null && Main.instance.heads.heads.ContainsKey(nameL0))
             {
-                if (Main.instance.heads.heads[nameL0].childs.ContainsKey(nameL1))
+                if (Main.instance.heads.heads[nameL0].childs != null && Main.instance.heads.heads[nameL0].childs.ContainsKey(nameL1))
                 {
-                    if (Main.instance.heads.heads[nameL0].childs[nameL1].childs.ContainsKey(nameL2))
+                    if (Main.instance.heads.heads[nameL0].childs[nameL1].childs != null && Main.instance.heads.heads[nameL0].childs[nameL1].childs.ContainsKey(nameL2))
                     {
                         Main.instance.StopAll();
                         adr = Main.instance.heads.heads[nameL0].childs[nameL1].childs[nameL2].LastCell.Offset[1, 1].Address[false, false];
                         CreateNew();
+                        UpdateUps(false);
+                        Main.instance.ResumeAll();
+                        Close();
+                    }
+                    else if (Main.instance.heads.heads[nameL0].childs[nameL1].childs == null)
+                    {
+                        Main.instance.heads.heads[nameL0].childs[nameL1].childs = new Dictionary<string, HeadObject> ();
+                        Main.instance.StopAll();
+                        Excel.Range r = Main.instance.heads.heads[nameL0].childs[nameL1].LastCell.Offset[1, 0].Resize[1];
+                        //string address = Main.instance.heads.heads[nameL0].childs[nameL1].LastCell.Offset[1, 0].Resize[1].Address[false, false];
+                        //r.Insert(Shift: Excel.XlInsertShiftDirection.xlShiftToRight, CopyOrigin: Excel.XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
+                        //r = Main.instance.wsCh.Range[address];
+                        r.Value = nameL2;
+                        Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, new HeadObject()
+                        {
+                            WS = Main.instance.wsCh,
+                            _name = nameL2,
+                            Range = r,
+                            _level = Level.level2,
+                        });
+                        adr = r.Offset[1].Address[false, false];
+                        CreateNew(false);
                         UpdateUps(false);
                         Main.instance.ResumeAll();
                         Close();
@@ -160,6 +191,38 @@ namespace Meter.Forms
                         Main.instance.ResumeAll();
                         Close();
                     }
+                }
+                else if (Main.instance.heads.heads[nameL0].childs == null)
+                {
+                    Main.instance.heads.heads[nameL0].childs = new Dictionary<string, HeadObject>();
+                    Main.instance.StopAll();
+                    Excel.Range r = Main.instance.heads.heads[nameL0].LastCell.Offset[1, 0].Resize[1];
+                    //string address = Main.instance.heads.heads[nameL0].LastCell.Offset[1, 1].Resize[1].Address[false, false];
+                    //r.Insert(Shift: Excel.XlInsertShiftDirection.xlShiftToRight, CopyOrigin: Excel.XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
+                    //r = Main.instance.wsCh.Range[address];
+                    r.Value = nameL1;
+                    Main.instance.heads.heads[nameL0].childs.Add(nameL1, new HeadObject()
+                    {
+                        WS = Main.instance.wsCh,
+                        _name = nameL1,
+                        Range = r,
+                        _level = Level.level1,
+                        childs = new Dictionary<string, HeadObject>(),
+                    });
+                    r = r.Offset[1];
+                    r.Value = nameL2;
+                    Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, new HeadObject()
+                    {
+                        WS = Main.instance.wsCh,
+                        _name = nameL2,
+                        Range = r,
+                        _level = Level.level2,
+                    });
+                    adr = r.Offset[1].Address[false, false];
+                    CreateNew(false);
+                    UpdateUps(false);
+                    Main.instance.ResumeAll();
+                    Close();
                 }
                 else
                 {
@@ -192,6 +255,46 @@ namespace Meter.Forms
                     Main.instance.ResumeAll();
                     Close();
                 }
+            }
+            else if (Main.instance.heads.heads == null)
+            {
+                Main.instance.heads.heads = new Dictionary<string, HeadObject>();
+                int row = 8;
+                Main.instance.StopAll();
+                Excel.Range r = (Excel.Range)Main.instance.wsCh.Cells[row, 2];
+                r.Value = nameL0;
+                Main.instance.heads.heads.Add(nameL0, new HeadObject()
+                {
+                    WS = Main.instance.wsCh,
+                    _name = nameL0,
+                    Range = r,
+                    _level = Level.level0,
+                    childs = new Dictionary<string, HeadObject>(),
+                });
+                r = r.Offset[1];
+                r.Value = nameL1;
+                Main.instance.heads.heads[nameL0].childs.Add(nameL1, new HeadObject()
+                {
+                    WS = Main.instance.wsCh,
+                    _name = nameL1,
+                    Range = r,
+                    _level = Level.level1,
+                    childs = new Dictionary<string, HeadObject>(),
+                });
+                r = r.Offset[1];
+                r.Value = nameL2;
+                Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, new HeadObject()
+                {
+                    WS = Main.instance.wsCh,
+                    _name = nameL2,
+                    Range = r,
+                    _level = Level.level2,
+                });
+                adr = r.Offset[1].Address[false, false];
+                CreateNew(false);
+                UpdateUps(false);
+                Main.instance.ResumeAll();
+                Close();
             }
             else
             {
