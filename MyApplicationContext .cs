@@ -169,14 +169,14 @@ namespace Meter
 
         private void OpenMonthMethod(string thisYear, string thisMonth, string selectedYear, string selectedMonth, string file)
         {
-            StopAll();
+            //StopAll();
             string sourceFolder = dir + @"\TEMP";
             if (Directory.Exists(sourceFolder))
             {
                 Directory.Delete(sourceFolder, true);
                 Directory.CreateDirectory(sourceFolder);
             }
-            System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder, true);
+            System.IO.Compression.ZipFile.ExtractToDirectory(file, sourceFolder, System.Text.Encoding.UTF8, true);
 
             
             xlApp.EnableEvents = false;
@@ -207,20 +207,23 @@ namespace Meter
             wsCh = null;
             wsDb = null;
 
-            wsDb1.Copy(Type.Missing, wb.Worksheets[1]);
-            wsCh1.Copy(Type.Missing, wb.Worksheets[1]);
-            
-            foreach (Excel.Worksheet ws in wb.Worksheets)
-            {
-                if (ws.CodeName == "PS")
-                {
-                    wsCh = ws;
-                }
-                if (ws.CodeName == "DB")
-                {
-                    wsDb = ws;
-                }
-            }
+            wsDb1.Copy(After: wb.Worksheets[1]);
+            wsDb = wb.Worksheets[2] as Excel.Worksheet;
+            wsCh1.Copy(After: wb.Worksheets[1]);
+            wsCh = wb.Worksheets[2] as Excel.Worksheet;
+
+
+            //foreach (Excel.Worksheet ws in wb.Worksheets)
+            //{
+            //    if (ws.CodeName == "PS")
+            //    {
+            //        wsCh = ws;
+            //    }
+            //    if (ws.CodeName == "DB")
+            //    {
+            //        wsDb = ws;
+            //    }
+            //}
 
             wsCh.Cells.Replace( What: "[" + selectedMonth + ".xlsx]", Replacement: "", LookAt: XlLookAt.xlPart, SearchOrder: XlSearchOrder.xlByRows, MatchCase: false, SearchFormat: false, ReplaceFormat: false);
             wsCh.Activate();
@@ -234,7 +237,7 @@ namespace Meter
 
             SaveLoader.LoadAsyncFromFolder("TEMP");
             Directory.Delete(sourceFolder, true);
-            ResumeAll();
+            //ResumeAll();
             ClearEvents();
             InitExcelEvents();
         }
