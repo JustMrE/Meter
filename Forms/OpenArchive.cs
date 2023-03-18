@@ -30,7 +30,7 @@ namespace Meter.Forms
         {
             GlobalMethods.ToLog(this, sender);
             Control c = sender as Control;
-            if (c.BackColor == Color.Gold)
+            if (c.BackColor == Color.GreenYellow)
             {
                 return;
             }
@@ -80,17 +80,20 @@ namespace Meter.Forms
                     item.Enabled = true;
                     if (selectedYear == thisYear && item.Text == thisMonth)
                     {
-                        item.BackColor = Color.Gold;
+                        item.BackColor = Color.GreenYellow;
+                        item.ForeColor = SystemColors.ControlDark;
                     }
                     else
                     {
-                        item.BackColor = Color.GreenYellow;
+                        item.BackColor = Color.Gold;
+                        item.ForeColor = SystemColors.ControlText;
                     }
                 }
                 else
                 {
                     item.Enabled = false;
                     item.BackColor = SystemColors.ButtonFace;
+                    item.ForeColor = SystemColors.ControlText;
                 }
             }
         }
@@ -101,6 +104,7 @@ namespace Meter.Forms
             {
                 item.Enabled = false;
                 item.BackColor = SystemColors.ButtonFace;
+                item.ForeColor = SystemColors.ControlText;
             }
         }
 

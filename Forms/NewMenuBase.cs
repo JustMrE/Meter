@@ -24,8 +24,10 @@ namespace Meter.Forms
         {
             InitializeComponent();
             this.listBox1.Size = new Size(200, 10);
-            this.lblMonth.Text = Main.instance.wsCh.Range["B5"].Value.ToString();
-            this.lblYear.Text = Main.instance.wsCh.Range["D5"].Value.ToString();
+            month = Main.instance.wsCh.Range["B5"].Value.ToString();
+            year = Main.instance.wsCh.Range["D5"].Value.ToString();
+            //this.lblMonth.Text = Main.instance.wsCh.Range["B5"].Value.ToString();
+            //this.lblYear.Text = Main.instance.wsCh.Range["D5"].Value.ToString();
         }
 
         protected virtual void NewMenuBase_Load(object sender, EventArgs e)
@@ -43,6 +45,14 @@ namespace Meter.Forms
             SetWindowLong(this.Handle, GWL_EXSTYLE, WS_EX_TOOLWINDOW);
             Main.instance.menu = this;
             GlobalMethods.CalculateFormsPositions();
+            if (lblMonth.Text != month)
+            {
+                lblMonth.Text = month;
+            }
+            if (lblYear.Text != year)
+            {
+                lblYear.Text = year;
+            }
         }
         protected virtual void NewMenuBase_Closing(object sender, EventArgs e)
         {

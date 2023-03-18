@@ -90,8 +90,10 @@ namespace Meter.Forms
             Main.instance.Arhivate();
             Main.instance.references.ClearAllDB(false, splashScreen);
             splashScreen.UpdateText("Сохранение нового листа...");
-            lblMonth.Text = newMonthDate.ToString("MMMM", GlobalMethods.culture);
-            lblYear.Text = newMonthDate.ToString("yyyy");
+            month = newMonthDate.ToString("MMMM", GlobalMethods.culture);
+            year = newMonthDate.ToString("yyyy");
+            lblMonth.Text = month;
+            lblYear.Text = year;
             Main.instance.Arhivate();
             GlobalMethods.ToLog("Лист нового месяца создан (" + newMonthDate.ToString("MMMM yyyy", GlobalMethods.culture) + ")");
             splashScreen.Close();
@@ -151,8 +153,8 @@ namespace Meter.Forms
                 form.ShowDialog();
                 if (!string.IsNullOrEmpty(form.selectedMonth))
                 {
-                    this.lblMonth.Text = form.selectedMonth;
                     month = form.selectedMonth;
+                    this.lblMonth.Text = month;
                 }
             }
         }
@@ -164,8 +166,8 @@ namespace Meter.Forms
                 form.ShowDialog();
                 if (!string.IsNullOrEmpty(form.year))
                 {
-                    this.lblYear.Text = form.year;
                     year = form.year;
+                    this.lblYear.Text = year;
                 }
             }
         }
