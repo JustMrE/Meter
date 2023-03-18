@@ -23,6 +23,7 @@ namespace Meter.Forms
         public NewMenuBase()
         {
             InitializeComponent();
+            this.listBox1.Size = new Size(200, 10);
             this.lblMonth.Text = Main.instance.wsCh.Range["B5"].Value.ToString();
             this.lblYear.Text = Main.instance.wsCh.Range["D5"].Value.ToString();
         }
@@ -318,7 +319,7 @@ namespace Meter.Forms
         protected virtual void btnToArhive_Click(object sender, EventArgs e)
         {
             ToLog(sender);
-            if (MessageBox.Show("Внимание!\nЕсли архив уже существует, он будет перезаписан! Вы хотите продолжить?", caption: "Предупреждение!", MessageBoxButtons.OKCancel ,icon: MessageBoxIcon.Exclamation) == DialogResult.Cancel)
+            if (MessageBox.Show("Внимание!\nЕсли архив уже существует, он будет перезаписан! Вы хотите продолжить?", caption: "Предупреждение!", MessageBoxButtons.OKCancel, icon: MessageBoxIcon.Exclamation) == DialogResult.Cancel)
             {
                 return;
             }

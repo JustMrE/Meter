@@ -130,12 +130,12 @@ namespace Meter
 
             // dir = Process.GetCurrentProcess().MainModule.FileName ;
             // dir = System.IO.Path.GetDirectoryName(dir) + @"\DB"; 
-            file = dir + @"\current\meter.xlsm";
+            file = dir + @"\current\meter.xlsx";
             if (!File.Exists(file))
             {
                 dir = System.Reflection.Assembly.GetExecutingAssembly().Location;
                 dir = System.IO.Path.GetDirectoryName(dir) + @"\DB"; 
-                file = dir + @"\current\meter.xlsm";
+                file = dir + @"\current\meter.xlsx";
             }
             
             InitExcel();
@@ -185,7 +185,7 @@ namespace Meter
             Excel.Worksheet wsCh1 = null, wsDb1 = null;
             Excel.Range destinationRange;
         
-            wb1 = xlApp.Workbooks.Open(Filename: sourceFolder + @"\" + selectedMonth + @".xlsm");
+            wb1 = xlApp.Workbooks.Open(Filename: sourceFolder + @"\" + selectedMonth + @".xlsx");
             wb1.Activate();
             wb1.Windows[1].Visible = false;
             foreach (Excel.Worksheet ws in wb1.Worksheets)
@@ -222,7 +222,7 @@ namespace Meter
                 }
             }
 
-            wsCh.Cells.Replace( What: "[" + selectedMonth + ".xlsm]", Replacement: "", LookAt: XlLookAt.xlPart, SearchOrder: XlSearchOrder.xlByRows, MatchCase: false, SearchFormat: false, ReplaceFormat: false);
+            wsCh.Cells.Replace( What: "[" + selectedMonth + ".xlsx]", Replacement: "", LookAt: XlLookAt.xlPart, SearchOrder: XlSearchOrder.xlByRows, MatchCase: false, SearchFormat: false, ReplaceFormat: false);
             wsCh.Activate();
             
 
