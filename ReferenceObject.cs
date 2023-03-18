@@ -528,16 +528,28 @@ namespace Meter
                     {
                         if (Main.instance.heads.heads[u0].childs[u1].childs[u2].Range.Columns.Count == PS.Head.Columns.Count)
                         {
-                            Main.instance.heads.heads[u0].childs[u1].childs.Remove(u2);
+                            if (Main.instance.heads.heads[u0].childs[u1].childs[u2].indent == true)
+                            {
+                                Main.instance.heads.heads[u0].childs[u1].childs[u2].Indent();
+                            }
+                            Main.instance.heads.heads[u0].childs[u1].childs[u2].Remove();
                         }
                     }
                     if (Main.instance.heads.heads[u0].childs[u1].Range.Columns.Count == PS.Head.Columns.Count)
                     {
-                        Main.instance.heads.heads[u0].childs.Remove(u1);
+                        if (Main.instance.heads.heads[u0].childs[u1].indent == true)
+                        {
+                            Main.instance.heads.heads[u0].childs[u1].Indent();
+                        }
+                        Main.instance.heads.heads[u0].childs[u1].Remove();
                     }
                 }
                 if (Main.instance.heads.heads[u0].Range.Columns.Count == PS.Head.Columns.Count)
                 {
+                    if (Main.instance.heads.heads[u0].indent == true)
+                    {
+                        Main.instance.heads.heads[u0].Indent();
+                    }
                     Main.instance.heads.heads.Remove(u0);
                 }
             }

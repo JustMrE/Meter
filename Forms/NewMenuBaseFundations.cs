@@ -137,6 +137,25 @@ namespace Meter.Forms
         public virtual void ContextMenu()
         {
             GlobalMethods.ToLog("Открыто контекстное меню");
+            if (Main.instance.colors.subColors.ContainsValue(activeColor))
+            {
+                HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
+                if (ho != null)
+                {
+                    if (ho.GetParent != null && ho.LastColumn.Column != ho.GetParent.LastColumn.Column)
+                    {
+                        if (ho.indent == true)
+                        {
+                            selectedButtons.Add("Удалить отступ");
+                        }
+                        else
+                        {
+                            selectedButtons.Add("Добавить отступ");
+                        }
+                    }
+                }
+                
+            }
             if (Main.instance.colors.mainTitle.ContainsValue(activeColor))
             {
                 selectedButtons.Add("Изменить main");
@@ -194,7 +213,7 @@ namespace Meter.Forms
         {
             GlobalMethods.ToLog("Нажат пункт контекстного меню '" + caption + "'");
         }
-        protected void AddButtonToCommandBar(string caption, Action action, int type = 1)
+        protected void AddButtonToCommandBar(string caption, Action action, int? faceid = null, int type = 1)
         {
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
@@ -203,6 +222,7 @@ namespace Meter.Forms
             };
             CommandBarButton b = (CommandBarButton)cb.Controls.Add(Type: type, Temporary: true);
             b.Caption = caption;
+            if (faceid != null) b.FaceId = (int)faceid;
             b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
 
             // if (!myMenuButtons.ContainsKey(Tag))
@@ -646,6 +666,8 @@ namespace Meter.Forms
                 //    MessageBox.Show(co._name + " " + RangeReferences.activeTable._name);
                 //}
             });
+            AddButtonToPopUpCommandBar(ref p, "UpdateIndents", Main.instance.heads.UpdateIndents, true);
+            AddButtonToPopUpCommandBar(ref p, "UpdateHeadParents", Main.instance.heads.UpdateParents);
         }
         protected void OpenForm()
         {
@@ -756,6 +778,23 @@ namespace Meter.Forms
                 if (selectedButtons.Contains("Special")) SpecialMenuMain();
                 if (selectedButtons.Contains("Удалить субъект"))AddButtonToCommandBar("Удалить субъект", RangeReferences.activeTable.RemoveSubject);
                 if (selectedButtons.Contains("Удалить тип"))AddButtonToCommandBar("Удалить тип", RangeReferences.activeTable._activeChild.Remove);
+
+                if (selectedButtons.Contains("Добавить отступ")) AddButtonToCommandBar("Добавить отступ", () =>
+                {
+                    HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
+                    if (ho != null)
+                    {
+                        ho.Indent();
+                    }
+                }, faceid: 374);
+                if (selectedButtons.Contains("Удалить отступ")) AddButtonToCommandBar("Удалить отступ", () =>
+                {
+                    HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
+                    if (ho != null)
+                    {
+                        ho.Indent();
+                    }
+                }, faceid: 375);
             }
         }
         public void ClearContextMenu()

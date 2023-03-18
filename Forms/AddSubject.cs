@@ -157,13 +157,16 @@ namespace Meter.Forms
                         //r.Insert(Shift: Excel.XlInsertShiftDirection.xlShiftToRight, CopyOrigin: Excel.XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
                         //r = Main.instance.wsCh.Range[address];
                         r.Value = nameL2;
-                        Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, new HeadObject()
+                        HeadObject ho = new HeadObject()
                         {
                             WS = Main.instance.wsCh,
                             _name = nameL2,
                             Range = r,
                             _level = Level.level2,
-                        });
+                            parentID = Main.instance.heads.heads[nameL0].childs[nameL1].ID,
+                        };
+                        Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, ho);
+                        if (!HeadReferences.idDictionary.ContainsKey(ho.ID)) HeadReferences.idDictionary.Add(ho.ID, ho);
                         adr = r.Offset[1].Address[false, false];
                         CreateNew(false);
                         UpdateUps(false);
@@ -178,13 +181,16 @@ namespace Meter.Forms
                         r.Insert(Shift: Excel.XlInsertShiftDirection.xlShiftToRight, CopyOrigin: Excel.XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
                         r = Main.instance.wsCh.Range[address];
                         r.Value = nameL2;
-                        Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, new HeadObject()
+                        HeadObject ho = new HeadObject()
                         {
                             WS = Main.instance.wsCh,
                             _name = nameL2,
                             Range = r,
                             _level = Level.level2,
-                        });
+                            parentID = Main.instance.heads.heads[nameL0].childs[nameL1].ID,
+                        };
+                        Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, ho);
+                        if (!HeadReferences.idDictionary.ContainsKey(ho.ID)) HeadReferences.idDictionary.Add(ho.ID, ho);
                         adr = r.Offset[1].Address[false, false];
                         CreateNew(false);
                         UpdateUps(false);
@@ -201,23 +207,29 @@ namespace Meter.Forms
                     //r.Insert(Shift: Excel.XlInsertShiftDirection.xlShiftToRight, CopyOrigin: Excel.XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
                     //r = Main.instance.wsCh.Range[address];
                     r.Value = nameL1;
-                    Main.instance.heads.heads[nameL0].childs.Add(nameL1, new HeadObject()
+                    HeadObject ho = new HeadObject()
                     {
                         WS = Main.instance.wsCh,
                         _name = nameL1,
                         Range = r,
                         _level = Level.level1,
                         childs = new Dictionary<string, HeadObject>(),
-                    });
+                        parentID = Main.instance.heads.heads[nameL0].ID,
+                    };
+                    Main.instance.heads.heads[nameL0].childs.Add(nameL1, ho);
+                    if (!HeadReferences.idDictionary.ContainsKey(ho.ID)) HeadReferences.idDictionary.Add(ho.ID, ho);
                     r = r.Offset[1];
                     r.Value = nameL2;
-                    Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, new HeadObject()
+                    ho = new HeadObject()
                     {
                         WS = Main.instance.wsCh,
                         _name = nameL2,
                         Range = r,
                         _level = Level.level2,
-                    });
+                        parentID = Main.instance.heads.heads[nameL0].childs[nameL1].ID,
+                    };
+                    Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, ho);
+                    if (!HeadReferences.idDictionary.ContainsKey(ho.ID)) HeadReferences.idDictionary.Add(ho.ID, ho);
                     adr = r.Offset[1].Address[false, false];
                     CreateNew(false);
                     UpdateUps(false);
@@ -232,23 +244,29 @@ namespace Meter.Forms
                     r.Insert(Shift: Excel.XlInsertShiftDirection.xlShiftToRight, CopyOrigin: Excel.XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
                     r = Main.instance.wsCh.Range[address];
                     r.Value = nameL1;
-                    Main.instance.heads.heads[nameL0].childs.Add(nameL1, new HeadObject()
+                    HeadObject ho = new HeadObject()
                     {
                         WS = Main.instance.wsCh,
                         _name = nameL1,
                         Range = r,
                         _level = Level.level1,
                         childs = new Dictionary<string, HeadObject>(),
-                    });
+                        parentID = Main.instance.heads.heads[nameL0].ID,
+                    };
+                    Main.instance.heads.heads[nameL0].childs.Add(nameL1, ho);
+                    if (!HeadReferences.idDictionary.ContainsKey(ho.ID)) HeadReferences.idDictionary.Add(ho.ID, ho);
                     r = r.Offset[1];
                     r.Value = nameL2;
-                    Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, new HeadObject()
+                    ho = new HeadObject()
                     {
                         WS = Main.instance.wsCh,
                         _name = nameL2,
                         Range = r,
                         _level = Level.level2,
-                    });
+                        parentID = Main.instance.heads.heads[nameL0].childs[nameL1].ID,
+                    };
+                    Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, ho);
+                    if (!HeadReferences.idDictionary.ContainsKey(ho.ID)) HeadReferences.idDictionary.Add(ho.ID, ho);
                     adr = r.Offset[1].Address[false, false];
                     CreateNew(false);
                     UpdateUps(false);
@@ -263,33 +281,42 @@ namespace Meter.Forms
                 Main.instance.StopAll();
                 Excel.Range r = (Excel.Range)Main.instance.wsCh.Cells[row, 2];
                 r.Value = nameL0;
-                Main.instance.heads.heads.Add(nameL0, new HeadObject()
+                HeadObject ho = new HeadObject()
                 {
                     WS = Main.instance.wsCh,
                     _name = nameL0,
                     Range = r,
                     _level = Level.level0,
                     childs = new Dictionary<string, HeadObject>(),
-                });
+                    parentID = null,
+                };
+                Main.instance.heads.heads.Add(nameL0, ho);
+                if (!HeadReferences.idDictionary.ContainsKey(ho.ID)) HeadReferences.idDictionary.Add(ho.ID, ho);
                 r = r.Offset[1];
                 r.Value = nameL1;
-                Main.instance.heads.heads[nameL0].childs.Add(nameL1, new HeadObject()
+                ho = new HeadObject()
                 {
                     WS = Main.instance.wsCh,
                     _name = nameL1,
                     Range = r,
                     _level = Level.level1,
                     childs = new Dictionary<string, HeadObject>(),
-                });
+                    parentID = Main.instance.heads.heads[nameL0].ID,
+                };
+                Main.instance.heads.heads[nameL0].childs.Add(nameL1, ho);
+                if (!HeadReferences.idDictionary.ContainsKey(ho.ID)) HeadReferences.idDictionary.Add(ho.ID, ho);
                 r = r.Offset[1];
                 r.Value = nameL2;
-                Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, new HeadObject()
+                ho = new HeadObject()
                 {
                     WS = Main.instance.wsCh,
                     _name = nameL2,
                     Range = r,
                     _level = Level.level2,
-                });
+                    parentID = Main.instance.heads.heads[nameL0].childs[nameL1].ID,
+                };
+                Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, ho);
+                if (!HeadReferences.idDictionary.ContainsKey(ho.ID)) HeadReferences.idDictionary.Add(ho.ID, ho);
                 adr = r.Offset[1].Address[false, false];
                 CreateNew(false);
                 UpdateUps(false);
@@ -303,33 +330,42 @@ namespace Meter.Forms
                 Main.instance.StopAll();
                 Excel.Range r = (Excel.Range)Main.instance.wsCh.Cells[row, 2];
                 r.Value = nameL0;
-                Main.instance.heads.heads.Add(nameL0, new HeadObject()
+                HeadObject ho = new HeadObject()
                 {
                     WS = Main.instance.wsCh,
                     _name = nameL0,
                     Range = r,
                     _level = Level.level0,
                     childs = new Dictionary<string, HeadObject>(),
-                });
+                    parentID = null,
+                };
+                Main.instance.heads.heads.Add(nameL0, ho);
+                if (!HeadReferences.idDictionary.ContainsKey(ho.ID)) HeadReferences.idDictionary.Add(ho.ID, ho);
                 r = r.Offset[1];
                 r.Value = nameL1;
-                Main.instance.heads.heads[nameL0].childs.Add(nameL1, new HeadObject()
+                ho = new HeadObject()
                 {
                     WS = Main.instance.wsCh,
                     _name = nameL1,
                     Range = r,
                     _level = Level.level1,
                     childs = new Dictionary<string, HeadObject>(),
-                });
+                    parentID = Main.instance.heads.heads[nameL0].ID,
+                };
+                Main.instance.heads.heads[nameL0].childs.Add(nameL1, ho);
+                if (!HeadReferences.idDictionary.ContainsKey(ho.ID)) HeadReferences.idDictionary.Add(ho.ID, ho);
                 r = r.Offset[1];
                 r.Value = nameL2;
-                Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, new HeadObject()
+                ho = new HeadObject()
                 {
                     WS = Main.instance.wsCh,
                     _name = nameL2,
                     Range = r,
                     _level = Level.level2,
-                });
+                    parentID = Main.instance.heads.heads[nameL0].childs[nameL1].ID,
+                };
+                Main.instance.heads.heads[nameL0].childs[nameL1].childs.Add(nameL2, ho);
+                if (!HeadReferences.idDictionary.ContainsKey(ho.ID)) HeadReferences.idDictionary.Add(ho.ID, ho);
                 adr = r.Offset[1].Address[false, false];
                 CreateNew(false);
                 UpdateUps(false);

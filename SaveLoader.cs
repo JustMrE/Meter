@@ -147,6 +147,8 @@ namespace Meter
 
             Main.instance.references.UpdateAllLevels();
             Main.instance.references.UpdateAllParents();
+            Main.instance.heads.UpdateParents();
+            Main.instance.heads.UpdateIndents(false);
         }
 
         static void SaveColors()

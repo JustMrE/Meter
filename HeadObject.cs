@@ -16,7 +16,13 @@ namespace Meter
         [JsonIgnore]
         public Excel.Worksheet ws;
 
+        [JsonIgnore]
+        public bool indent { get; set; }
         public string _name { get; set; }
+        [JsonIgnore]
+        public string? ID { get; set; }
+        [JsonIgnore]
+        public string? parentID { get; set; }
         public string WSName 
         {
             get
@@ -138,6 +144,35 @@ namespace Meter
                 
             }
         }
+        [JsonIgnore]
+        public HeadObject GetParent
+        {
+            get
+            {
+                if (parentID != null && HeadReferences.idDictionary.ContainsKey(parentID))
+                {
+                    return HeadReferences.idDictionary[parentID];
+                }
+                else
+                {
+                    return null;
+                }
+            }
+        }
+
+        public HeadObject()
+        {
+            if (ID == null)
+            {
+                ID = Guid.NewGuid().ToString();
+                while (HeadReferences.idDictionary.ContainsKey(ID))
+                {
+                    ID = Guid.NewGuid().ToString();
+                }
+            }
+            
+        }
+
         public Dictionary<string, HeadObject> childs { get; set; }
 
         public bool HasRange(Excel.Range range) 
@@ -151,7 +186,32 @@ namespace Meter
                 return false;
             }
         }
-    
+
+        public HeadObject HeadByRange(Excel.Range range)
+        {
+            HeadObject head;
+            if (HasRange(range))
+            {
+                head = this;
+            }
+            else
+            {
+                if (childs != null)
+                {
+                    foreach (var child in childs.Values)
+                    {
+                        head = child.HeadByRange(range);
+                        if (head != null)
+                        {
+                            return head;
+                        }
+                    }
+                }
+                head = null;
+            }
+            return head;
+        }
+
         public void CreateChilds()
         {
             if (_level == Level.level2) return;
@@ -176,7 +236,8 @@ namespace Meter
                         _name = name,
                         WS = this.WS,
                         Range = rng1.MergeArea,
-                        _level = this._level + 1
+                        _level = this._level + 1,
+                        parentID = ID,
                     });
                 }
                 rng1 = rng1.Offset[0, 1];
@@ -237,6 +298,18 @@ namespace Meter
                 }
             }
         }
+        public void UpdateParents()
+        {
+            if (!HeadReferences.idDictionary.ContainsKey(ID)) HeadReferences.idDictionary.Add(ID, this);
+            if (childs != null)
+            {
+                foreach (HeadObject item in childs.Values)
+                {
+                    item.parentID = ID;
+                    item.UpdateParents();
+                }
+            }
+        }
 
         public void Increase(bool stopall = true)
         {
@@ -261,6 +334,124 @@ namespace Meter
             GlobalMethods.ReleseObject(WS);
             GlobalMethods.ReleseObject(LastCell);
             GlobalMethods.ReleseObject(LastColumn);
+        }
+        public void UpdateIndents(HeadObject parent)
+        {
+            if (childs != null)
+            {
+                foreach (HeadObject item in childs.Values)
+                {
+                    item.UpdateIndents(this);
+                }
+            }
+
+            if (parent != null)
+            {
+                if (parent.LastColumn.Column != LastColumn.Column)
+                {
+                    if (ColorsData.GetRangeColor(LastCell.Offset[0, 1]) == Color.White)
+                    {
+                        indent = true;
+                    }
+                    else
+                    {
+                        indent = false;
+                    }
+                }
+                else
+                { 
+                    indent = false; 
+                }
+            }
+            else
+            {
+                indent = false;
+            }
+        }
+
+        public void Indent()
+        {
+            if (GetParent.LastColumn.Column == LastColumn.Column)
+            {
+                GetParent.Indent();
+                indent = GetParent.indent;
+            }
+            else
+            {
+                Excel.Range r = LastCell;
+                if (_level == Level.level0)
+                {
+                    r = r.Offset[0, 1].Resize[42, 1];
+                }
+                else if (_level == Level.level1)
+                {
+                    r = r.Offset[-1, 1].Resize[42, 1];
+                }
+                else if (_level == Level.level2)
+                {
+                    r = r.Offset[-2, 1].Resize[42, 1];
+                }
+
+                if (indent == true)
+                {
+                    indent = false;
+                    Main.instance.StopAll();
+                    r.Delete(XlDeleteShiftDirection.xlShiftToLeft);
+                    Main.instance.ResumeAll();
+                }
+                else
+                {
+                    indent = true;
+                    Main.instance.StopAll();
+                    string adr = r.Address;
+                    r.Insert(XlInsertShiftDirection.xlShiftToRight, XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
+                    r = Main.instance.wsCh.Range[adr];
+                    if (_level == Level.level0)
+                    {
+                        //r = r.Offset[0, 1].Resize[42, 1];
+                    }
+                    else if (_level == Level.level1)
+                    {
+                        r = r.Offset[1].Resize[41, 1];
+                    }
+                    else if (_level == Level.level2)
+                    {
+                        r = r.Offset[2].Resize[40, 1];
+                    }
+                    r.Borders.LineStyle = Excel.XlLineStyle.xlLineStyleNone;
+                    r.Interior.Color = Color.White;
+
+                    // Задаем толстую левую границу
+                    r.Borders[XlBordersIndex.xlEdgeLeft].LineStyle = XlLineStyle.xlContinuous;
+                    r.Borders[XlBordersIndex.xlEdgeLeft].Weight = XlBorderWeight.xlMedium;
+
+                    // Задаем толстую правую границу
+                    r.Borders[XlBordersIndex.xlEdgeRight].LineStyle = XlLineStyle.xlContinuous;
+                    r.Borders[XlBordersIndex.xlEdgeRight].Weight = XlBorderWeight.xlMedium;
+
+                    Main.instance.ResumeAll();
+                }
+            }
+        }
+
+        public void Remove()
+        {
+            if (GetParent.LastColumn.Column == LastColumn.Column)
+            {
+                HeadObject ho = GetParent.HeadByRange(((Excel.Range)Range.Cells[1, 1]).Offset[0, -1]);
+                if (ho != null)
+                {
+                    ho = GetParent.HeadByRange(((Excel.Range)Range.Cells[1, 1]).Offset[0, -2]);
+                }
+                if (ho != null)
+                {
+                    if (ho.indent == true)
+                    {
+                        ho.Indent();
+                    }
+                }
+            }
+            GetParent.childs.Remove(_name);
         }
     }
 }

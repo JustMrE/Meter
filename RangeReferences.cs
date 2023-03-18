@@ -43,9 +43,6 @@ namespace Meter
         public static Dictionary<string, ReferencesParent> idDictionary = new Dictionary<string, ReferencesParent>();
 
         [JsonIgnore]
-        public static Dictionary<string, HeadObject> headDictionary = new Dictionary<string, HeadObject>(); 
-
-        [JsonIgnore]
         public ReferenceObject this[string name]
         {
             get
