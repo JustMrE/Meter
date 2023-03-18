@@ -169,7 +169,7 @@ namespace Meter
 
         private void OpenMonthMethod(string thisYear, string thisMonth, string selectedYear, string selectedMonth, string file)
         {
-            //StopAll();
+            StopAll();
             string sourceFolder = dir + @"\TEMP";
             if (Directory.Exists(sourceFolder))
             {
@@ -200,17 +200,20 @@ namespace Meter
                 }
             }
 
-            xlApp.DisplayAlerts = false;
-            wsCh.Delete();
-            wsDb.Delete();
-            xlApp.DisplayAlerts = true;
-            wsCh = null;
-            wsDb = null;
+            wsCh1.Cells.Copy(wsCh.Cells);
+            wsDb1.Cells.Copy(wsDb.Cells);
 
-            wsDb1.Copy(After: wb.Worksheets[1]);
-            wsDb = wb.Worksheets[2] as Excel.Worksheet;
-            wsCh1.Copy(After: wb.Worksheets[1]);
-            wsCh = wb.Worksheets[2] as Excel.Worksheet;
+            //xlApp.DisplayAlerts = false;
+            //wsCh.Delete();
+            //wsDb.Delete();
+            //xlApp.DisplayAlerts = true;
+            //wsCh = null;
+            //wsDb = null;
+
+            //wsDb1.Copy(After: wb.Worksheets[1]);
+            //wsDb = wb.Worksheets[2] as Excel.Worksheet;
+            //wsCh1.Copy(After: wb.Worksheets[1]);
+            //wsCh = wb.Worksheets[2] as Excel.Worksheet;
 
 
             //foreach (Excel.Worksheet ws in wb.Worksheets)
@@ -237,7 +240,7 @@ namespace Meter
 
             SaveLoader.LoadAsyncFromFolder("TEMP");
             Directory.Delete(sourceFolder, true);
-            //ResumeAll();
+            ResumeAll();
             ClearEvents();
             InitExcelEvents();
         }
