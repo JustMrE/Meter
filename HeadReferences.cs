@@ -41,15 +41,6 @@ namespace Meter
             if (stopall) Main.instance.ResumeAll();
         }
 
-        public void UpdateIndents(bool message = true)
-        {
-            foreach (HeadObject item in heads.Values)
-            {
-                item.UpdateIndents(null);
-            }
-            if (message) MessageBox.Show("Done!");
-        }
-
         public void UpdateParents()
         {
             foreach (HeadObject item in heads.Values)

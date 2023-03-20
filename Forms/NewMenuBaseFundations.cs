@@ -144,7 +144,7 @@ namespace Meter.Forms
                 {
                     if (ho.GetParent != null && ho.LastColumn.Column != ho.GetParent.LastColumn.Column)
                     {
-                        if (ho.indent == true)
+                        if (ho.HasIndent(IndentDirection.right) == true)
                         {
                             selectedButtons.Add("Удалить отступ");
                         }
@@ -376,7 +376,8 @@ namespace Meter.Forms
         }
         public virtual void DblClick(Excel.Range range)
         {
-            RangeReferences._activeObject.Range.Select();
+            Main.instance.references.ActivateTable(range);
+            if (RangeReferences._activeObject != null) RangeReferences._activeObject.Range.Select();
         }
         public virtual void SlectionChanged(Excel.Range range)
         {
@@ -666,8 +667,14 @@ namespace Meter.Forms
                 //    MessageBox.Show(co._name + " " + RangeReferences.activeTable._name);
                 //}
             });
-            AddButtonToPopUpCommandBar(ref p, "UpdateIndents", Main.instance.heads.UpdateIndents, true);
             AddButtonToPopUpCommandBar(ref p, "UpdateHeadParents", Main.instance.heads.UpdateParents);
+            AddButtonToPopUpCommandBar(ref p, "DeleteHead", () => {
+                HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
+                if (ho != null)
+                {
+                    ho.Delete();
+                }
+            });
         }
         protected void OpenForm()
         {
@@ -784,7 +791,7 @@ namespace Meter.Forms
                     HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
                     if (ho != null)
                     {
-                        ho.Indent();
+                        ho.Indent(IndentDirection.right);
                     }
                 }, faceid: 374);
                 if (selectedButtons.Contains("Удалить отступ")) AddButtonToCommandBar("Удалить отступ", () =>
@@ -792,7 +799,7 @@ namespace Meter.Forms
                     HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
                     if (ho != null)
                     {
-                        ho.Indent();
+                        ho.Indent(IndentDirection.right);
                     }
                 }, faceid: 375);
             }

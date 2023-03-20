@@ -16,8 +16,44 @@ namespace Meter
         [JsonIgnore]
         public Excel.Worksheet ws;
 
-        [JsonIgnore]
-        public bool indent { get; set; }
+        public bool HasIndent(IndentDirection direction)
+        { 
+            Color? c1 ,c2;
+            if (direction == IndentDirection.left)
+            {
+                try 
+                {
+                    c1 = ColorsData.GetRangeColor(FirstCell.Offset[0, -1]);
+                    c2 = ColorsData.GetRangeColor(FirstCell.Offset[0, -2]);
+                }
+                catch
+                {
+                    c1 = null;
+                    c2 = null;
+                }
+                if ((c1 != null && c2 != null) && (c1 == Color.White && c2  != Color.White))
+                    return true;
+                else
+                    return false;
+            }
+            else
+            {
+                try 
+                {
+                    c1 = ColorsData.GetRangeColor(FirstCell.Offset[0, 1]);
+                    c2 = ColorsData.GetRangeColor(FirstCell.Offset[0, 2]);
+                }
+                catch
+                {
+                    c1 = null;
+                    c2 = null;
+                }
+                if ((c1 != null && c2 != null) && (c1 == Color.White && c2  != Color.White))
+                    return true;
+                else
+                    return false;
+            }
+        }
         public string _name { get; set; }
         [JsonIgnore]
         public string? ID { get; set; }
@@ -136,6 +172,22 @@ namespace Meter
                 try
                 {
                     return (Excel.Range)_range.Cells[1, _range.Columns.Count];
+                }
+                catch
+                {
+                    return null;
+                }
+                
+            }
+        }
+        [JsonIgnore]
+        public Excel.Range FirstCell
+        {
+            get
+            {
+                try
+                {
+                    return (Excel.Range)_range.Cells[1, 1];
                 }
                 catch
                 {
@@ -335,73 +387,72 @@ namespace Meter
             GlobalMethods.ReleseObject(LastCell);
             GlobalMethods.ReleseObject(LastColumn);
         }
-        public void UpdateIndents(HeadObject parent)
-        {
-            if (childs != null)
-            {
-                foreach (HeadObject item in childs.Values)
-                {
-                    item.UpdateIndents(this);
-                }
-            }
 
-            if (parent != null)
-            {
-                if (parent.LastColumn.Column != LastColumn.Column)
-                {
-                    if (ColorsData.GetRangeColor(LastCell.Offset[0, 1]) == Color.White)
-                    {
-                        indent = true;
-                    }
-                    else
-                    {
-                        indent = false;
-                    }
-                }
-                else
-                { 
-                    indent = false; 
-                }
-            }
-            else
-            {
-                indent = false;
-            }
+        public void Indent(IndentDirection direction)
+        {
+            ChangeIndent(direction);
         }
 
-        public void Indent()
+        private void ChangeIndent(IndentDirection direction)
         {
-            if (GetParent.LastColumn.Column == LastColumn.Column)
-            {
-                GetParent.Indent();
-                indent = GetParent.indent;
-            }
-            else
-            {
-                Excel.Range r = LastCell;
-                if (_level == Level.level0)
+            Excel.Range r;
+                switch (direction)
                 {
-                    r = r.Offset[0, 1].Resize[42, 1];
-                }
-                else if (_level == Level.level1)
-                {
-                    r = r.Offset[-1, 1].Resize[42, 1];
-                }
-                else if (_level == Level.level2)
-                {
-                    r = r.Offset[-2, 1].Resize[42, 1];
+                    case IndentDirection.left :
+                        r = FirstCell;
+                        if (_level == Level.level0)
+                        {
+                            r = r.Offset[0, -1].Resize[42, 1];
+                        }
+                        else if (_level == Level.level1)
+                        {
+                            r = r.Offset[-1, -1].Resize[42, 1];
+                        }
+                        else if (_level == Level.level2)
+                        {
+                            r = r.Offset[-2, -1].Resize[42, 1];
+                        }
+                        break;
+                    case IndentDirection.right :
+                        r = LastCell;
+                        if (_level == Level.level0)
+                        {
+                            r = r.Offset[0, 1].Resize[42, 1];
+                        }
+                        else if (_level == Level.level1)
+                        {
+                            r = r.Offset[-1, 1].Resize[42, 1];
+                        }
+                        else if (_level == Level.level2)
+                        {
+                            r = r.Offset[-2, 1].Resize[42, 1];
+                        }
+                        break;
+                    default:
+                        r = LastCell;
+                        if (_level == Level.level0)
+                        {
+                            r = r.Offset[0, 1].Resize[42, 1];
+                        }
+                        else if (_level == Level.level1)
+                        {
+                            r = r.Offset[-1, 1].Resize[42, 1];
+                        }
+                        else if (_level == Level.level2)
+                        {
+                            r = r.Offset[-2, 1].Resize[42, 1];
+                        }
+                        break;
                 }
 
-                if (indent == true)
+                if (HasIndent(direction) == true)
                 {
-                    indent = false;
                     Main.instance.StopAll();
                     r.Delete(XlDeleteShiftDirection.xlShiftToLeft);
                     Main.instance.ResumeAll();
                 }
                 else
                 {
-                    indent = true;
                     Main.instance.StopAll();
                     string adr = r.Address;
                     r.Insert(XlInsertShiftDirection.xlShiftToRight, XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
@@ -431,27 +482,42 @@ namespace Meter
 
                     Main.instance.ResumeAll();
                 }
-            }
+                
         }
 
         public void Remove()
         {
-            if (GetParent.LastColumn.Column == LastColumn.Column)
+            if (_level != Level.level0)
             {
-                HeadObject ho = GetParent.HeadByRange(((Excel.Range)Range.Cells[1, 1]).Offset[0, -1]);
-                if (ho != null)
+                if (GetParent.LastColumn.Column == LastColumn.Column)
                 {
-                    ho = GetParent.HeadByRange(((Excel.Range)Range.Cells[1, 1]).Offset[0, -2]);
-                }
-                if (ho != null)
-                {
-                    if (ho.indent == true)
+                    if (HasIndent(IndentDirection.right))
                     {
-                        ho.Indent();
+                        Indent(IndentDirection.right);
+                    }
+                    if (HasIndent(IndentDirection.left))
+                    {
+                        Indent(IndentDirection.left);
                     }
                 }
             }
-            GetParent.childs.Remove(_name);
+            if (_level != Level.level0)
+                GetParent.childs.Remove(_name);
+            else
+                Main.instance.heads.heads.Remove(_name);
+        }
+    
+        public void Delete()
+        {
+            int rowOffset = 3 - (int)_level;
+            Excel.Range r = LastCell.Offset[rowOffset];
+            string name = (string)((Excel.Range)r.Cells[1,1]).Value;
+            while (FirstCell.Column < r.Column)
+            {
+                Main.instance.references.references[name].RemoveSubject();
+                r = LastCell.Offset[rowOffset];
+                name = (string)((Excel.Range)r.Cells[1,1]).Value;
+            }
         }
     }
 }

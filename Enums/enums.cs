@@ -2,28 +2,6 @@
 
 namespace Meter
 {
-    public enum BorderSide
-    {
-        up,
-        left,
-        down,
-        right,
-        around,
-        all
-    }
-
-    public enum INOUT
-    {
-        priem,
-        otdacha,
-        saldo
-    }
-
-    public enum TipUzla
-    {
-
-    }
-
     public enum SymbolType
     {
         uper,
@@ -38,17 +16,17 @@ namespace Meter
         level2,
     }
 
-    public enum RecolorType
-    {
-        bycell,
-        bycolor
-    }
-
     public enum ButtonsType
     {
         subject,
         scobki,
         znaki,
         constant
+    }
+
+    public enum IndentDirection
+    {
+        left,
+        right
     }
 }
