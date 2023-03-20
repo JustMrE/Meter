@@ -68,7 +68,11 @@ namespace Meter.Forms
         }
 
         #region Buttons
-
+        protected override void Button37_Click(object sender, EventArgs e)
+        {
+            base.Button37_Click(sender, e);
+            Main.instance.ResumeAll();
+        }
         protected override void Button38_Click(object sender, EventArgs e)
         {
             base.Button38_Click(sender, e);

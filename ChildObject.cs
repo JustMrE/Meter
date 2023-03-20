@@ -254,7 +254,17 @@ namespace Meter
         {
             return (T)RangeReferences.idDictionary[parentID];
         }
-
+        
+        public void WriteValue(int day, string val)
+        {
+            if (WS.CodeName == "DB")
+            {
+                Excel.Range r = RangeByDay(day);
+                r.Value = val;
+                GlobalMethods.ToLog("Запись в Базу данных ячейка " + r.Address + " Субект {" + GetFirstParent._name + "} " + GetParent<ChildObject>()._name + " " + _name + " день " + day + " значение " + val);
+            }
+            
+        }
         public bool HasItem(string name, SymbolType symbolType = SymbolType.uperandlower)
         {
             if (childs is not null)

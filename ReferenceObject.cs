@@ -188,6 +188,7 @@ namespace Meter
         {
             return Main.instance.xlApp.Intersect(PS.Range, rng) != null;
         }
+        
         public void WriteToDB(string nameL1, string nameL2, int day, string val)
         {
             if (!string.IsNullOrEmpty(val))
@@ -199,9 +200,10 @@ namespace Meter
                     return;
                 }
             }
-            Excel.Range r = DB.childs[nameL1].childs[nameL2.ToLower()].RangeByDay(day);
-            r.Value = val;
-            GlobalMethods.ToLog("Запись в Базу данных ячейка " + r.Address + " Субект {" + _name + "} " + nameL1 + " " + nameL2 + " день " + day + " значение " + val);
+            DB.childs[nameL1].childs[nameL2.ToLower()].WriteValue(day, val);
+            // Excel.Range r = DB.childs[nameL1].childs[nameL2.ToLower()].RangeByDay(day);
+            // r.Value = val;
+            // GlobalMethods.ToLog("Запись в Базу данных ячейка " + r.Address + " Субект {" + _name + "} " + nameL1 + " " + nameL2 + " день " + day + " значение " + val);
             //Marshal.ReleaseComObject(r);
         }
         public int GetCode(string name, string? L1 = null)

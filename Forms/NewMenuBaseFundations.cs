@@ -8,6 +8,13 @@ using Excel = Microsoft.Office.Interop.Excel;
 using Main = Meter.MyApplicationContext;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using Emcos;
+using System.Net;
+using System.Data;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using System.Globalization;
+using System.Collections.Concurrent;
 //using Microsoft.Office.Interop.Excel;
 
 namespace Meter.Forms
@@ -168,6 +175,11 @@ namespace Meter.Forms
                 {
                     selectedButtons.Add("Ввести показания счетчика");
                 }
+                if (RangeReferences.activeTable.DB.HasItem("аскуэ"))
+                {
+                    selectedButtons.Add("Записать из EMCOS");
+                }
+                
             }
             if (Main.instance.colors.extraTitle.ContainsValue(activeColor))
             {
@@ -193,6 +205,10 @@ namespace Meter.Forms
             if (activeColor == Main.instance.colors.main["subject"])
             {
                 selectedButtons.Add("Выделить");
+                if (RangeReferences.activeTable.DB.HasItem("аскуэ"))
+                {
+                    selectedButtons.Add("Записать данные из EMCOS (Все дни)");
+                }
                 if (RangeReferences.activeTable.DB.HasItem("план"))
                 {
                     selectedButtons.Add("Изменить код плана");
@@ -207,6 +223,7 @@ namespace Meter.Forms
                     selectedButtons.Add("Изменить коэффициент счетчика");
                 }
             }
+
         }
     
         #region AddButtonToCommandBar
@@ -405,7 +422,7 @@ namespace Meter.Forms
             {
                 return;
             }
-            Main.instance.xlApp.EnableEvents = false;
+            Main.instance.StopAll();
             {
                 if (range.Cells.Count != _activeRange.Cells.Count)
                 {
@@ -419,6 +436,33 @@ namespace Meter.Forms
                 }
                 if (range.Cells.Count > 1) 
                 {
+                    oldValsArray = (object[,])range.Formula;
+                    foreach (Excel.Range cell in range.Cells)
+                    {
+                        Color c = ColorsData.GetRangeColor(cell);
+                        if (c == Main.instance.colors.mainSubtitle["ручное"] || 
+                            c == Main.instance.colors.mainSubtitle["корректировка"] || 
+                            c == Main.instance.colors.mainSubtitle["корректировка факт"] ||
+                            c == Main.instance.colors.mainSubtitle["счетчик"] ||
+                            c == Main.instance.colors.extraSubtitle["РУЧНОЕ"] ||
+                            c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА"] ||
+                            c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА ФАКТ"] ||
+                            c == Main.instance.colors.extraSubtitle["СЧЕТЧИК"])
+                        {
+                            _activeRange = cell;
+                            Main.instance.references.ActivateTable(_activeRange);
+                            if (RangeReferences.activeTable != null)
+                            {
+                                int? day = RangeReferences.activeTable.ActiveDay();
+                                if (day != null)
+                                {
+                                    WriteToDB(_activeRange, (int)day, false);
+                                }
+                            }
+
+                        }
+                    }
+                    _activeRange = range;
                     DontEditRange(range);
                 }
                 else
@@ -446,12 +490,12 @@ namespace Meter.Forms
                     }
                 }
             }
-            Main.instance.xlApp.EnableEvents = true;
+            Main.instance.ResumeAll();
         }
-        public void WriteToDB(Excel.Range rng, int day)
+        public void WriteToDB(Excel.Range rng, int day, bool dontedit = true)
         {
             string val = rng.Formula != null ? rng.Formula.ToString() : "";
-            DontEdit(rng, day);
+            if (dontedit) DontEdit(rng, day);
             RangeReferences.activeTable.WriteToDB(RangeReferences.ActiveL1, RangeReferences.activeL2,(int)day, val);
             
         }
@@ -464,14 +508,45 @@ namespace Meter.Forms
         private void DontEditRange(Excel.Range rng)
         {
             object[,] newValsArray = (object[,])rng.Formula;
-            for (int i = 1; i <= rng.Columns.Count; i++)
+            if (newValsArray == null || newValsArray.Length != oldValsArray.Length)
             {
-                for (int j = 1; j <= rng.Rows.Count; j++)
+                newValsArray = GetExcelRangeFromCB();
+            }
+            if (newValsArray != null && newValsArray.Length == oldValsArray.Length)
+            {
+                for (int i = 1; i <= rng.Columns.Count; i++)
                 {
-                    GlobalMethods.ToLog("Изменено значение ячейки " + ((Excel.Range)rng.Cells[j, i]).Address + " с '" + newValsArray[j, i] + "' на '" + oldValsArray[j, i] + "'");
+                    for (int j = 1; j <= rng.Rows.Count; j++)
+                    {
+                        GlobalMethods.ToLog("Изменено значение ячейки " + ((Excel.Range)rng.Cells[j, i]).Address + " с '" + newValsArray[j, i] + "' на '" + oldValsArray[j, i] + "'");
+                    }
                 }
             }
             rng.Formula = oldValsArray;
+        }
+
+        private object[,] GetExcelRangeFromCB()
+        {
+            IDataObject clipboardData = Clipboard.GetDataObject();
+            if (clipboardData != null && clipboardData.GetDataPresent(DataFormats.CommaSeparatedValue))
+            {
+                string csvText = (string)clipboardData.GetData(DataFormats.CommaSeparatedValue);
+                string[] lines = csvText.Split(new char[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
+                object[,] data = new object[lines.Length, lines[0].Split(',').Length];
+                for (int i = 0; i < lines.Length; i++)
+                {
+                    string[] values = lines[i].Split(',');
+                    for (int j = 0; j < values.Length; j++)
+                    {
+                        data[i,j] = values[j];
+                    }
+                }
+                return data;
+            }
+            else
+            {
+                return null;
+            }
         }
         private void NewMenuBase_FormClosed(object sender, FormClosedEventArgs e)
         {
@@ -700,7 +775,72 @@ namespace Meter.Forms
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
         }
+        public static void Login()
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string uri = @"http://10.0.144.11:8080/ec3api/v1/user/login";
+                string host = @"10.0.144.11:8080";
+                string jsonRequest = "{\"username\":\"a_bagdatova\",\"password\":\"z123456\"}";
+                HttpRequestMessage message = new HttpRequestMessage()
+                {
+                    RequestUri = new Uri(uri),
+                    Method = HttpMethod.Post,
+                    Headers = 
+                    {
+                        {HttpRequestHeader.Host.ToString(), host},
+                        {HttpRequestHeader.Connection.ToString(), "keep-alive"},
+                        {HttpRequestHeader.ContentLength.ToString(), jsonRequest.Length.ToString()},
+                        {HttpRequestHeader.Accept.ToString(),"appplication/json, text/plain, */*"},
+                        {"st-token", "undefined"},
+                        {HttpRequestHeader.ContentType.ToString(), "application/json;charset=UTF-8"},
+                        {HttpRequestHeader.AcceptEncoding.ToString(), "gzip, deflate"}
+                    },
+                    Content = new StringContent(jsonRequest, Encoding.UTF8, "application/json")
+                };
+                using (var responce = client.SendAsync(message).Result)
+                {
+                    var jsonResoponse = responce.Content.ReadAsStringAsync().Result;
+                    var data = (JObject)JsonConvert.DeserializeObject(jsonResoponse);
 
+                    LoginRoot loginResponce = JsonConvert.DeserializeObject<LoginRoot>(jsonResoponse);
+                    token = loginResponce.data.token;
+                }
+            }
+        }
+        public static DataRoot GetValue(string dataFrom, string dataTo, string ID)
+        {
+            using (HttpClient client = new HttpClient())
+            {
+                string uri = @"http://10.0.144.11:8080/ec3api/v1/archives/point";
+                string host = @"10.0.144.11:8080";
+                string jsonRequest = "{\"FROM\":\"" + dataFrom +"\",\"TO\":\""+ dataTo + "\",\"POINT_ID\":" + ID + ",\"ML_ID\":[385,386],\"MD_ID\":5,\"AGGS_ID\":5,\"WO_BYP\":0,\"WO_ACTS\":0,\"BILLING_HOUR\":0,\"SHOW_MAP_DATA\":0,\"FREEZED\":1}";
+                HttpRequestMessage message = new HttpRequestMessage()
+                {
+                    RequestUri = new Uri(uri),
+                    Method = HttpMethod.Post,
+                    Headers = 
+                    {
+                        {HttpRequestHeader.Host.ToString(), host},
+                        {HttpRequestHeader.Connection.ToString(), "keep-alive"},
+                        {HttpRequestHeader.ContentLength.ToString(), jsonRequest.Length.ToString()},
+                        {HttpRequestHeader.Accept.ToString(),"appplication/json, text/plain, */*"},
+                        {"st-token", token},
+                        {HttpRequestHeader.ContentType.ToString(), "application/json;charset=UTF-8"},
+                        {HttpRequestHeader.AcceptEncoding.ToString(), "gzip, deflate"}
+                    },
+                    Content = new StringContent(jsonRequest, Encoding.UTF8, "application/json")
+                };
+                DataRoot vals;
+                using (var responce = client.SendAsync(message).Result)
+                {
+                    var jsonResoponse = responce.Content.ReadAsStringAsync().Result;
+                    vals = JsonConvert.DeserializeObject<DataRoot>(jsonResoponse);
+                }
+                return vals;
+            }
+        }
+        
         public void ResetContextMenu()
         {
             foreach (int index in Main.menuIndexes)
@@ -735,6 +875,125 @@ namespace Meter.Forms
                 if (selectedButtons.Contains("Добавить новый L1")) AddNewL1();
                 if (selectedButtons.Contains("Добавить новый L2")) AddNewL2();
                 if (selectedButtons.Contains("Выбрать из EMCOS")) AddButtonToCommandBar("Выбрать из EMCOS", EmcosSelect);
+                if (selectedButtons.Contains("Записать данные из EMCOS (Все дни)")) AddButtonToCommandBar("Записать из EMCOS (Все дни)", () => 
+                {
+                    CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");
+                    Login();
+                    string format = "dd MMMM yyyy";
+                    string data = "01" + " " + this.lblMonth.Text + " " + this.lblYear.Text;
+                    DateTime result;
+                    DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
+                    
+                    List<DateTime> dates = new List<DateTime>();
+
+                    for (DateTime d = result; d.Day < DateTime.Today.Day; d = d.AddDays(1))
+                    {
+                        dates.Add(d);
+                    }
+                    
+                    Main.instance.StopAll();
+                    ConcurrentDictionary<string, ConcurrentDictionary<int, string>> emcosValues = new ConcurrentDictionary<string, ConcurrentDictionary<int, string>>();
+                    Parallel.ForEach(RangeReferences.activeTable.DB.childs.Values, v => {
+                        if (v.HasItem("аскуэ") && v.emcosID != null)
+                        {
+                            string subjectID = RangeReferences.activeTable.DB.childs[v._name].childs["аскуэ"].ID;
+                            string emcosID = v.emcosID.ToString();
+                            emcosValues.TryAdd(subjectID, new ConcurrentDictionary<int, string>());
+                            Parallel.ForEach(dates, items => {
+                                int day = items.Day;
+                                data = items.ToString("yyyy-MM-dd");
+                                int id = (int)v.emcosID;
+                                try 
+                                {
+                                    float? floatVal = GetValue(data, data, emcosID).data.Where(n => n.ML_ID == v.emcosMLID).FirstOrDefault().VAL;
+                                    string? val = null;
+                                    if (floatVal != null)
+                                    {
+                                        floatVal = floatVal / 1000f;
+                                        val = floatVal.ToString().Replace(",", ".");
+                                    }
+                                    else
+                                    {
+                                        val = "0";
+                                    }
+                                    emcosValues[subjectID].TryAdd(day, val);
+                                }
+                                catch
+                                {
+                                    GlobalMethods.ToLog("Ошибка считывания данных из EMCOS " + v.GetFirstParent._name + " " + v._name);
+                                }
+                            });
+                        }
+                    });
+
+                    foreach (string id in emcosValues.Keys)
+                    {
+                        foreach (int day in emcosValues[id].Keys)
+                        {
+                            // ((ChildObject)RangeReferences.idDictionary[id]).RangeByDay(day).Value = emcosValues[id][day];
+                            ((ChildObject)RangeReferences.idDictionary[id]).WriteValue(day, emcosValues[id][day]);
+                        }
+                    }
+                    Main.instance.ResumeAll();
+                });
+                if (selectedButtons.Contains("Записать из EMCOS")) AddButtonToCommandBar("Записать данные из EMCOS", () => 
+                {
+                    CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");
+                    Login();
+                    string format = "dd MMMM yyyy";
+                    string data = RangeReferences.activeTable.ActiveDay().ToString().PadLeft(2, '0') + " " + this.lblMonth.Text + " " + this.lblYear.Text;
+                    DateTime result;
+                    DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
+                    
+                    List<DateTime> dates = new List<DateTime>();
+
+                    dates.Add(result);
+                    
+                    Main.instance.StopAll();
+                    ConcurrentDictionary<string, ConcurrentDictionary<int, string>> emcosValues = new ConcurrentDictionary<string, ConcurrentDictionary<int, string>>();
+                    Parallel.ForEach(RangeReferences.activeTable.DB.childs.Values, v => {
+                        if (v.HasItem("аскуэ") && v.emcosID != null)
+                        {
+                            string subjectID = RangeReferences.activeTable.DB.childs[v._name].childs["аскуэ"].ID;
+                            string emcosID = v.emcosID.ToString();
+                            emcosValues.TryAdd(subjectID, new ConcurrentDictionary<int, string>());
+                            Parallel.ForEach(dates, items => {
+                                int day = items.Day;
+                                data = items.ToString("yyyy-MM-dd");
+                                int id = (int)v.emcosID;
+                                try 
+                                {
+                                    float? floatVal = GetValue(data, data, emcosID).data.Where(n => n.ML_ID == v.emcosMLID).FirstOrDefault().VAL;
+                                    string? val = null;
+                                    if (floatVal != null)
+                                    {
+                                        floatVal = floatVal / 1000f;
+                                        val = floatVal.ToString().Replace(",", ".");
+                                    }
+                                    else
+                                    {
+                                        val = "0";
+                                    }
+                                    emcosValues[subjectID].TryAdd(day, val);
+                                }
+                                catch
+                                {
+                                    GlobalMethods.ToLog("Ошибка считывания данных из EMCOS " + v.GetFirstParent._name + " " + v._name);
+                                }
+                            });
+                        }
+                    });
+
+                    foreach (string id in emcosValues.Keys)
+                    {
+                        foreach (int day in emcosValues[id].Keys)
+                        {
+                            //((ChildObject)RangeReferences.idDictionary[id]).RangeByDay(day).Value = emcosValues[id][day];
+                            ((ChildObject)RangeReferences.idDictionary[id]).WriteValue(day, emcosValues[id][day]);
+                        }
+                    }
+                    Main.instance.ResumeAll();
+                });
                 if (selectedButtons.Contains("Изменить из EMCOS")) AddButtonToCommandBar("Изменить из EMCOS", EmcosSelect);
                 if (selectedButtons.Contains("Удалить из EMCOS")) AddButtonToCommandBar("Удалить из EMCOS", EmcosRemove);
                 if (selectedButtons.Contains("Удалить")) RemoveOld();

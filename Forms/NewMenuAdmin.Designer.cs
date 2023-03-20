@@ -44,6 +44,11 @@
             this.Text = "NewMenuAdmin";
             this.ResumeLayout(false);
             //
+            //ColorSettings (button37)
+            //
+            this.button37.Visible = true;
+            this.button37.Text = "ResumeAll";
+            //
             //ColorSettings (button38)
             //
             this.button38.Visible = true;

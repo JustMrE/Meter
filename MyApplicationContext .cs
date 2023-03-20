@@ -65,6 +65,8 @@ namespace Meter
         public Excel.WorkbookEvents_AfterSaveEventHandler Events_AfterSave;
         public Excel.WorkbookEvents_SheetSelectionChangeEventHandler Events_SheetSelectionChange;
         public Excel.WorkbookEvents_SheetChangeEventHandler Events_SheetChange;
+        public _CommandBarButtonEvents_ClickEventHandler CommandBarButtonEvents_ClickEvent;
+        CommandBarButton pasteButton;
 
         private void onFormClosed(object sender, EventArgs e)
         {
@@ -343,6 +345,11 @@ namespace Meter
             Events_ActivateSheet = new Excel.WorkbookEvents_SheetActivateEventHandler(Application_ActivateSheet);
             wb.SheetActivate += Events_ActivateSheet;
 
+            pasteButton = (CommandBarButton)wb.CommandBars["WorkSheet Menu Bar"].Controls["Paste"];
+            pasteButton.Enabled = false;
+            CommandBarButtonEvents_ClickEvent= new _CommandBarButtonEvents_ClickEventHandler((CommandBarButton ctrl, ref bool cancelDefault) => {});
+            pasteButton.Click += CommandBarButtonEvents_ClickEvent;
+
             Events_BeforeDoubleClick = new Excel.DocEvents_BeforeDoubleClickEventHandler(Application_BeforeDoubleClick);
             wsCh.BeforeDoubleClick += Events_BeforeDoubleClick;
 
@@ -380,6 +387,7 @@ namespace Meter
             try{wb.SheetChange -= Events_SheetChange;}catch{}
             try{wb.BeforeSave -= Events_BeforeSave;}catch{}
             try{wb.AfterSave -= Events_AfterSave;}catch{}
+            try{pasteButton.Click -= CommandBarButtonEvents_ClickEvent;} catch {}
 
             Event_BeforeClose = null;
             Event_WindowResize = null;
@@ -439,6 +447,7 @@ namespace Meter
         }
         private void Application_BeforeDoubleClick(Excel.Range range, ref bool cancel)
         {
+
             GlobalMethods.ToLog("Двойной клик на ячейке " + range.Address);
             menu.DblClick(range);
         }
