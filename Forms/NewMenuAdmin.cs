@@ -15,6 +15,10 @@ namespace Meter.Forms
         public override void ContextMenu()
         {
             base.ContextMenu();
+            if (Main.instance.colors.subColors.ContainsValue(activeColor))
+            {
+                selectedButtons.Add("Удалить head");
+            }
             if (Main.instance.colors.main["subject"] == activeColor)
             {
                 selectedButtons.Add("GoTo DB");

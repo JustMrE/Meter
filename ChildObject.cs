@@ -541,10 +541,10 @@ namespace Meter
                 }
             }
         }
-        public void Remove()
+        public void Remove(bool stopall = true)
         {
             string nameL1 = "", nameL2 = "";
-            Main.instance.StopAll();
+            if (stopall) Main.instance.StopAll();
             int a = 0;
             int b = 0;
             int c;
@@ -571,7 +571,7 @@ namespace Meter
             r.Delete(Shift:Excel.XlDeleteShiftDirection.xlShiftToLeft); 
             RangeReferences.idDictionary[_id].UpdateBorders();
             //Marshal.ReleaseComObject(r);
-            Main.instance.ResumeAll();
+            if (stopall) Main.instance.ResumeAll();
 
         }
 

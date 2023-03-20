@@ -192,6 +192,7 @@ namespace Meter.Forms
             }
             if (activeColor == Main.instance.colors.main["subject"])
             {
+                selectedButtons.Add("Выделить");
                 if (RangeReferences.activeTable.DB.HasItem("план"))
                 {
                     selectedButtons.Add("Изменить код плана");
@@ -376,8 +377,7 @@ namespace Meter.Forms
         }
         public virtual void DblClick(Excel.Range range)
         {
-            Main.instance.references.ActivateTable(range);
-            if (RangeReferences._activeObject != null) RangeReferences._activeObject.Range.Select();
+            SelectSubject(range);
         }
         public virtual void SlectionChanged(Excel.Range range)
         {
@@ -485,6 +485,19 @@ namespace Meter.Forms
             //MessageBox.Show(RangeReferences.activeTable._name);
             Main.instance.wsDb.Activate();
             RangeReferences.activeTable.DB.Range.Select();
+        }
+        protected virtual void SelectSubject()
+        {
+            if (RangeReferences._activeObject != null) RangeReferences._activeObject.Range.Select();
+        }
+        protected virtual void SelectSubject(Excel.Range range)
+        {
+            Main.instance.references.ActivateTable(range);
+            if (RangeReferences._activeObject != null) RangeReferences._activeObject.Range.Select();
+        }
+        protected virtual void SelectSubject(string name)
+        {
+            if (Main.instance.references.references.ContainsKey(name)) Main.instance.references.references[name].PS.Range.Select();
         }
         private void ChangeTypeMenuMain()
         {
@@ -614,7 +627,10 @@ namespace Meter.Forms
                                 RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].emcosMLID = null;
                             }
                         },
-                        RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs[n].Remove,
+                        () => 
+                        { 
+                            RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs[n].Remove(false); 
+                        },
                         Main.instance.ResumeAll,
                         RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].ChangeCod
                     });
@@ -668,13 +684,6 @@ namespace Meter.Forms
                 //}
             });
             AddButtonToPopUpCommandBar(ref p, "UpdateHeadParents", Main.instance.heads.UpdateParents);
-            AddButtonToPopUpCommandBar(ref p, "DeleteHead", () => {
-                HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
-                if (ho != null)
-                {
-                    ho.Delete();
-                }
-            });
         }
         protected void OpenForm()
         {
@@ -711,14 +720,18 @@ namespace Meter.Forms
                     Marshal.ReleaseComObject(item);
                 }
 
-                if (selectedButtons.Contains("GoTo DB")) AddButtonToCommandBar("GoTo DB", GotoDB);
+                if (selectedButtons.Contains("GoTo DB")) AddButtonToCommandBar("GoTo DB", GotoDB, 2116);
+                if (selectedButtons.Contains("Выделить")) AddButtonToCommandBar("Выделить", () => 
+                {
+                    SelectSubject();
+                }, 118);
                 if (selectedButtons.Contains("Переименовать")) AddButtonToCommandBar("Переименовать", () => 
                 {
                     using (Rename form = new Rename(RangeReferences.activeTable))
                     {
                         form.ShowDialog();
                     }
-                });
+                }, 7677);
                 if (selectedButtons.Contains("Добавить новый L1")) AddNewL1();
                 if (selectedButtons.Contains("Добавить новый L2")) AddNewL2();
                 if (selectedButtons.Contains("Выбрать из EMCOS")) AddButtonToCommandBar("Выбрать из EMCOS", EmcosSelect);
@@ -735,47 +748,47 @@ namespace Meter.Forms
                     {
                         form.ShowDialog();
                     }
-                });
+                }, 387);
                 if (selectedButtons.Contains("Добавить план")) AddButtonToCommandBar("Добавить план", () => 
                 {
                     using (AddPlan form = new AddPlan(RangeReferences.activeTable))
                     {
                         form.ShowDialog();
                     }
-                });
+                }, 213);
                 if (selectedButtons.Contains("Изменить код плана")) AddButtonToCommandBar("Изменить код плана", () => 
                 {
                     using (AddPlan form = new AddPlan(RangeReferences.activeTable))
                     {
                         form.ShowDialog();
                     }
-                });
+                }, 712);
                 if (selectedButtons.Contains("Удалить план")) AddButtonToCommandBar("Удалить план", () => 
                 {
                     RangeReferences.activeTable.codPlan = null; 
                     RangeReferences.activeTable.RemovePlan();
-                });
+                }, 214);
                 if (selectedButtons.Contains("Изменить формулу")) AddButtonToCommandBar("Изменить формулу", () =>
                 {
                     OpenForm();
-                });
+                }, 385);
                 if (selectedButtons.Contains("Добавить по показаниям счетчика")) AddButtonToCommandBar("Добавить по показаниям счетчика",() => {
                     RangeReferences.activeTable.AddMeter(RangeReferences.ActiveL1);
-                    });
+                    }, 33);
                 if (selectedButtons.Contains("Ввести показания счетчика")) AddButtonToCommandBar("Ввести показания счетчика", () =>
                     {
                         using (SCH form = new SCH(RangeReferences.activeTable))
                         {
                             form.ShowDialog();
                         }
-                    });
+                    }, 205);
                 if (selectedButtons.Contains("Изменить коэффициент счетчика")) AddButtonToCommandBar("Изменить коэффициент счетчика", () =>
                     {
                         using (ChangeCoef form = new ChangeCoef(RangeReferences.activeTable))
                         {
                             form.ShowDialog();
                         }
-                    });
+                    }, 400);
                 if (selectedButtons.Contains("Удалить по показаниям счетчика")) AddButtonToCommandBar("Удалить по показаниям счетчика", () => { 
                     RangeReferences.activeTable.RemoveMeter(RangeReferences.ActiveL1); 
                     });
@@ -783,8 +796,8 @@ namespace Meter.Forms
                     RangeReferences.activeTable.Reset(RangeReferences.ActiveL1, RangeReferences.activeL2);
                 });
                 if (selectedButtons.Contains("Special")) SpecialMenuMain();
-                if (selectedButtons.Contains("Удалить субъект"))AddButtonToCommandBar("Удалить субъект", RangeReferences.activeTable.RemoveSubject);
-                if (selectedButtons.Contains("Удалить тип"))AddButtonToCommandBar("Удалить тип", RangeReferences.activeTable._activeChild.Remove);
+                if (selectedButtons.Contains("Удалить субъект"))AddButtonToCommandBar("Удалить субъект", () => RangeReferences.activeTable.RemoveSubject(), 330);
+                if (selectedButtons.Contains("Удалить тип"))AddButtonToCommandBar("Удалить тип", () => RangeReferences.activeTable._activeChild.Remove());
 
                 if (selectedButtons.Contains("Добавить отступ")) AddButtonToCommandBar("Добавить отступ", () =>
                 {
@@ -793,7 +806,7 @@ namespace Meter.Forms
                     {
                         ho.Indent(IndentDirection.right);
                     }
-                }, faceid: 374);
+                }, faceid: 137);
                 if (selectedButtons.Contains("Удалить отступ")) AddButtonToCommandBar("Удалить отступ", () =>
                 {
                     HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
@@ -801,7 +814,18 @@ namespace Meter.Forms
                     {
                         ho.Indent(IndentDirection.right);
                     }
-                }, faceid: 375);
+                }, faceid: 138);
+                if (selectedButtons.Contains("Удалить head")) AddButtonToCommandBar("Удалить", () => 
+                {
+                    HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
+                    if (ho != null)
+                    {
+                        if (MessageBox.Show("Это удалит всех субъектов входящих в " + ho._name + "\nВы Уверены?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+                        {
+                            ho.Delete();
+                        }
+                    }
+                }, 1088);
             }
         }
         public void ClearContextMenu()

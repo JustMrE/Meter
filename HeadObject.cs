@@ -388,12 +388,12 @@ namespace Meter
             GlobalMethods.ReleseObject(LastColumn);
         }
 
-        public void Indent(IndentDirection direction)
+        public void Indent(IndentDirection direction, bool stopall = true)
         {
-            ChangeIndent(direction);
+            ChangeIndent(direction, stopall);
         }
 
-        private void ChangeIndent(IndentDirection direction)
+        private void ChangeIndent(IndentDirection direction, bool stopall = true)
         {
             Excel.Range r;
                 switch (direction)
@@ -447,13 +447,13 @@ namespace Meter
 
                 if (HasIndent(direction) == true)
                 {
-                    Main.instance.StopAll();
+                    if (stopall) Main.instance.StopAll();
                     r.Delete(XlDeleteShiftDirection.xlShiftToLeft);
-                    Main.instance.ResumeAll();
+                    if (stopall) Main.instance.ResumeAll();
                 }
                 else
                 {
-                    Main.instance.StopAll();
+                    if (stopall) Main.instance.StopAll();
                     string adr = r.Address;
                     r.Insert(XlInsertShiftDirection.xlShiftToRight, XlInsertFormatOrigin.xlFormatFromLeftOrAbove);
                     r = Main.instance.wsCh.Range[adr];
@@ -480,24 +480,24 @@ namespace Meter
                     r.Borders[XlBordersIndex.xlEdgeRight].LineStyle = XlLineStyle.xlContinuous;
                     r.Borders[XlBordersIndex.xlEdgeRight].Weight = XlBorderWeight.xlMedium;
 
-                    Main.instance.ResumeAll();
+                    if (stopall) Main.instance.ResumeAll();
                 }
                 
         }
 
-        public void Remove()
+        public void Remove(bool stopall = true)
         {
             if (_level != Level.level0)
             {
-                if (GetParent.LastColumn.Column == LastColumn.Column)
+                //if (GetParent.LastColumn.Column == LastColumn.Column)
                 {
                     if (HasIndent(IndentDirection.right))
                     {
-                        Indent(IndentDirection.right);
+                        Indent(IndentDirection.right, stopall);
                     }
                     if (HasIndent(IndentDirection.left))
                     {
-                        Indent(IndentDirection.left);
+                        Indent(IndentDirection.left, stopall);
                     }
                 }
             }
@@ -507,17 +507,32 @@ namespace Meter
                 Main.instance.heads.heads.Remove(_name);
         }
     
-        public void Delete()
+        public void Delete(bool stopall = true)
         {
-            int rowOffset = 3 - (int)_level;
-            Excel.Range r = LastCell.Offset[rowOffset];
-            string name = (string)((Excel.Range)r.Cells[1,1]).Value;
-            while (FirstCell.Column < r.Column)
+            if (stopall) Main.instance.StopAll();
+            if (_level != Level.level2)
             {
-                Main.instance.references.references[name].RemoveSubject();
-                r = LastCell.Offset[rowOffset];
+                List<string> names = childs.Keys.ToList();
+                foreach (string ho in names)
+                {
+                    childs[ho].Delete(false);
+                }
+                if (stopall) Main.instance.ResumeAll();
+                return;
+            }
+
+            int rowOffset = 3 - (int)_level;
+            Excel.Range r = FirstCell.Offset[rowOffset];
+            string adr = r.Address[false, false];
+            string name = (string)((Excel.Range)r.Cells[1,1]).Value;
+            while (Range.Columns.Count > 1)
+            {
+                Main.instance.references.references[name].RemoveSubject(false);
+                r = ((Excel.Worksheet)Main.instance.wb.ActiveSheet).Range[adr];
                 name = (string)((Excel.Range)r.Cells[1,1]).Value;
             }
+            Main.instance.references.references[name].RemoveSubject(false);
+            if (stopall) Main.instance.ResumeAll();
         }
     }
 }

@@ -511,7 +511,7 @@ namespace Meter
             childs.Values.AsParallel().ForAll(x => x.ReleaseAllComObjects());
         }
 
-        public void RemoveSubject()
+        public void RemoveSubject(bool stopall = true)
         {
             GlobalMethods.ToLog("Субъект {" + _name + "} удален");
 
@@ -528,22 +528,38 @@ namespace Meter
                     {
                         if (Main.instance.heads.heads[u0].childs[u1].childs[u2].Range.Columns.Count == PS.Head.Columns.Count)
                         {
-                            Main.instance.heads.heads[u0].childs[u1].childs[u2].Remove();
+                            Main.instance.heads.heads[u0].childs[u1].childs[u2].Remove(stopall);
                         }
                     }
                     if (Main.instance.heads.heads[u0].childs[u1].Range.Columns.Count == PS.Head.Columns.Count)
                     {
-                        Main.instance.heads.heads[u0].childs[u1].Remove();
+                        Main.instance.heads.heads[u0].childs[u1].Remove(stopall);
                     }
                 }
                 if (Main.instance.heads.heads[u0].Range.Columns.Count == PS.Head.Columns.Count)
                 {
-                    Main.instance.heads.heads[u0].Remove();
+                    Main.instance.heads.heads[u0].Remove(stopall);
                 }
             }
 
-            DB.Remove();
-            PS.Remove();
+            DB.Remove(stopall);
+            PS.Remove(stopall);
+            if (stopall) Main.instance.StopAll();
+            if (Main.instance.heads.heads.ContainsKey(u0))
+            {
+                Main.instance.heads.heads[u0].FirstCell.Value = u0;
+                if (Main.instance.heads.heads[u0].childs.ContainsKey(u1))
+                {
+                    Main.instance.heads.heads[u0].childs[u1].FirstCell.Value = u1;
+                    if (Main.instance.heads.heads[u0].childs[u1].childs.ContainsKey(u2))
+                    {
+                        Main.instance.heads.heads[u0].childs[u1].childs[u2].FirstCell.Value = u2;
+                    }
+
+                }
+            }
+            if (stopall) Main.instance.ResumeAll();
+
             RangeReferences.idDictionary.Remove(ID);
             Main.instance.references.references.Remove(_name);
             ID = null;
