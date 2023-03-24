@@ -98,14 +98,18 @@ namespace Meter
                 foreach (string n in subjects)
                 {
                     ReferenceObject ro = Main.instance.references.references[n];
+                    string name = ro._name.Replace(oldName, newName);
 
                     foreach (ChildObject co in ro.childs.Values)
                     {
                         Excel.Range r1 = ((Excel.Range)co.Head.Cells[1, 1]);
-                        co._name = co._name.Replace(oldName, newName);
-                        r1.Value = co._name;
+                        co._name = name;
+                        r1.Value = name;
                         Marshal.ReleaseComObject(r);
                     }
+
+                    Main.instance.references.references.Remove(ro._name);
+                    Main.instance.references.references.Add(name, ro);
                 }
             }
             
