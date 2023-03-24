@@ -264,6 +264,31 @@ namespace Meter
             return head;
         }
 
+        public HeadObject HeadByName(string name)
+        {
+            HeadObject head;
+            if (name == _name)
+            {
+                head = this;
+            }
+            else
+            {
+                if (childs != null)
+                {
+                    foreach (var child in childs.Values)
+                    {
+                        head = child.HeadByName(name);
+                        if (head != null)
+                        {
+                            return head;
+                        }
+                    }
+                }
+                head = null;
+            }
+            return head;
+        }
+
         public void CreateChilds()
         {
             if (_level == Level.level2) return;
@@ -533,6 +558,23 @@ namespace Meter
             }
             Main.instance.references.references[name].RemoveSubject(false);
             if (stopall) Main.instance.ResumeAll();
+        }
+    
+        public bool HasHead(string name)
+        {
+            bool hasName = false;
+            if (_name == name)
+                return true;
+            if (childs != null)
+            {
+                foreach (HeadObject ho in childs.Values)
+                {
+                    hasName = ho.HasHead(name);
+                    if (hasName == true)
+                        return true;
+                }
+            }
+            return false;
         }
     }
 }

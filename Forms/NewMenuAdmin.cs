@@ -18,6 +18,7 @@ namespace Meter.Forms
             if (Main.instance.colors.subColors.ContainsValue(activeColor))
             {
                 selectedButtons.Add("Удалить head");
+                selectedButtons.Add("Переименовать head");
             }
             if (Main.instance.colors.main["subject"] == activeColor)
             {

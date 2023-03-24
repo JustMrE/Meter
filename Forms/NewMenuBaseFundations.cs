@@ -436,33 +436,33 @@ namespace Meter.Forms
                 }
                 if (range.Cells.Count > 1) 
                 {
-                    oldValsArray = (object[,])range.Formula;
-                    foreach (Excel.Range cell in range.Cells)
-                    {
-                        Color c = ColorsData.GetRangeColor(cell);
-                        if (c == Main.instance.colors.mainSubtitle["ручное"] || 
-                            c == Main.instance.colors.mainSubtitle["корректировка"] || 
-                            c == Main.instance.colors.mainSubtitle["корректировка факт"] ||
-                            c == Main.instance.colors.mainSubtitle["счетчик"] ||
-                            c == Main.instance.colors.extraSubtitle["РУЧНОЕ"] ||
-                            c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА"] ||
-                            c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА ФАКТ"] ||
-                            c == Main.instance.colors.extraSubtitle["СЧЕТЧИК"])
-                        {
-                            _activeRange = cell;
-                            Main.instance.references.ActivateTable(_activeRange);
-                            if (RangeReferences.activeTable != null)
-                            {
-                                int? day = RangeReferences.activeTable.ActiveDay();
-                                if (day != null)
-                                {
-                                    WriteToDB(_activeRange, (int)day, false);
-                                }
-                            }
+                    // oldValsArray = (object[,])range.Formula;
+                    // foreach (Excel.Range cell in range.Cells)
+                    // {
+                    //     Color c = ColorsData.GetRangeColor(cell);
+                    //     if (c == Main.instance.colors.mainSubtitle["ручное"] || 
+                    //         c == Main.instance.colors.mainSubtitle["корректировка"] || 
+                    //         c == Main.instance.colors.mainSubtitle["корректировка факт"] ||
+                    //         c == Main.instance.colors.mainSubtitle["счетчик"] ||
+                    //         c == Main.instance.colors.extraSubtitle["РУЧНОЕ"] ||
+                    //         c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА"] ||
+                    //         c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА ФАКТ"] ||
+                    //         c == Main.instance.colors.extraSubtitle["СЧЕТЧИК"])
+                    //     {
+                    //         _activeRange = cell;
+                    //         Main.instance.references.ActivateTable(_activeRange);
+                    //         if (RangeReferences.activeTable != null)
+                    //         {
+                    //             int? day = RangeReferences.activeTable.ActiveDay();
+                    //             if (day != null)
+                    //             {
+                    //                 WriteToDB(_activeRange, (int)day, false);
+                    //             }
+                    //         }
 
-                        }
-                    }
-                    _activeRange = range;
+                    //     }
+                    // }
+                    // _activeRange = range;
                     DontEditRange(range);
                 }
                 else
@@ -580,7 +580,7 @@ namespace Meter.Forms
             p.Caption = "Изменить";
             foreach (string n in RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs.Keys)
             {
-                if (n != "корректировка факт" && n != "код" && n != "основное" && !RangeReferences.activeTable._activeChild._activeChild.HasItem(n, SymbolType.lower))
+                if (n != "корректировка факт" && n != "код" && n != "основное" && n != "счетчик" && !RangeReferences.activeTable._activeChild._activeChild.HasItem(n, SymbolType.lower))
                 {
                     AddButtonToPopUpCommandBar(ref p, n, RangeReferences.activeTable.ChangeType, RangeReferences.activeL2, n);
                 }
@@ -870,6 +870,17 @@ namespace Meter.Forms
                     using (Rename form = new Rename(RangeReferences.activeTable))
                     {
                         form.ShowDialog();
+                    }
+                }, 7677);
+                if (selectedButtons.Contains("Переименовать head")) AddButtonToCommandBar("Переименовать", () => 
+                {
+                    HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
+                    if (ho != null)
+                    {
+                        using (Rename form = new Rename(ho))
+                        {
+                            form.ShowDialog();
+                        }
                     }
                 }, 7677);
                 if (selectedButtons.Contains("Добавить новый L1")) AddNewL1();

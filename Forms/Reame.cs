@@ -9,12 +9,22 @@ namespace Meter
     partial class Rename : Form
     {
         ReferenceObject referenceObject;
+        HeadObject headObject;
         string oldnameShown, oldName, newName;
         public Rename(ReferenceObject referenceObject)
         {
+            this.headObject = null;
             this.referenceObject = referenceObject;
             oldnameShown = referenceObject._name.Replace(" " + referenceObject.HeadL2._name,"");
             oldName = referenceObject._name;
+            InitializeComponent();
+        }
+        public Rename(HeadObject headObject)
+        {
+            this.referenceObject = null;
+            this.headObject = headObject;
+            oldnameShown = headObject._name;
+            oldName = headObject._name;
             InitializeComponent();
         }
 
@@ -27,6 +37,14 @@ namespace Meter
         protected void btnOk_Click(object sender, System.EventArgs e)
         {
             GlobalMethods.ToLog(this, sender);
+            if (referenceObject != null) RenameSubject();
+            else if (headObject != null) RenameHead();
+            GlobalMethods.ToLog("Изменено название субъекта с '" + oldName + "' на '" + newName + "'");
+            Close();
+        }
+
+        private void RenameSubject()
+        {
             newName = tbNewName.Text + " " + referenceObject.HeadL2._name;
 
             if (Main.instance.references.references.ContainsKey(newName))
@@ -48,10 +66,50 @@ namespace Meter
                 Marshal.ReleaseComObject(r);
             }
             Main.instance.ResumeAll();
+        }
 
-            GlobalMethods.ToLog("Изменено название субъекта с '" + oldName + "' на '" + newName + "'");
+        private void RenameHead()
+        {
+            newName = tbNewName.Text;
+            if (Main.instance.heads.HasHead(newName))
+            {
+                MessageBox.Show("Это имя уже используется! Выберите другое.");
+                return;
+            }
+            if (headObject._level != Level.level0)
+            {
+                headObject.GetParent.childs.Remove(oldName);
+                headObject.GetParent.childs.Add(newName, headObject);
+            }
+            else
+            {
+                Main.instance.heads.heads.Remove(oldName);
+                Main.instance.heads.heads.Add(newName, headObject);
+            }
 
-            Close();
+            Main.instance.StopAll();
+            headObject._name = newName;
+            Excel.Range r = ((Excel.Range)headObject.Range.Cells[1, 1]);
+            r.Value = newName;
+            Marshal.ReleaseComObject(r);
+            if (headObject._level == Level.level2)
+            {
+                List<string> subjects = Main.instance.references.references.Keys.Where(k => k.Contains(oldName)).ToList();
+                foreach (string n in subjects)
+                {
+                    ReferenceObject ro = Main.instance.references.references[n];
+
+                    foreach (ChildObject co in ro.childs.Values)
+                    {
+                        Excel.Range r1 = ((Excel.Range)co.Head.Cells[1, 1]);
+                        co._name = co._name.Replace(oldName, newName);
+                        r1.Value = co._name;
+                        Marshal.ReleaseComObject(r);
+                    }
+                }
+            }
+            
+            Main.instance.ResumeAll();
         }
 
         protected void btnCancel_Click(object sender, System.EventArgs e)

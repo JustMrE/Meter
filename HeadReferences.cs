@@ -31,6 +31,32 @@ namespace Meter
             return head;
         }
 
+        public HeadObject HeadByName(string name)
+        {
+            HeadObject head = null;
+            foreach (var item in heads.Values)
+            {
+                head = item.HeadByName(name);
+                if (head != null)
+                {
+                    return head;
+                }
+            }
+            return head;
+        }
+
+        public bool HasHead(string name)
+        {
+            bool hasHead = false;
+            foreach (HeadObject ho in heads.Values)
+            {
+                hasHead = ho.HasHead(name);
+                if (hasHead == true)
+                    return true;
+            }
+            return false;
+        }
+
         public void UpdateAllColors(bool stopall = true)
         {
             if (stopall) Main.instance.StopAll();
