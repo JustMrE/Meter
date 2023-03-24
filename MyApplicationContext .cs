@@ -68,6 +68,7 @@ namespace Meter
         // public _CommandBarButtonEvents_ClickEventHandler CommandBarButtonEvents_ClickEvent;
         // CommandBarControl pasteButton;
 
+        // dynamic ObjectAArch = Activator.CreateInstance(Type.GetTypeFromProgID("AArch.AutoArch"));
         private void onFormClosed(object sender, EventArgs e)
         {
             if (System.Windows.Forms.Application.OpenForms.Count == 0)
@@ -119,6 +120,7 @@ namespace Meter
             GlobalMethods.dpiY = Graphics.FromHwnd(IntPtr.Zero).DpiY;
             
             Start();
+
         }
 
         private void Start()
