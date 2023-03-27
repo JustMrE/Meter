@@ -717,27 +717,28 @@ namespace Meter
                 Body.Borders.LineStyle = XlLineStyle.xlContinuous;
                 
             }
-            Body.BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
+            Body.BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
+            //Body.BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
             Head.Borders.Weight = 3;
 
             if (_level == Level.level2)
             {
                 if (WS.CodeName == "PS")
                 {
-                    ((Excel.Range)Body.Rows[11]).BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
-                    ((Excel.Range)Body.Rows[22]).BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
-                    ((Excel.Range)Body.Rows[23]).BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
-                    ((Excel.Range)Body.Rows[35]).BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
-                    ((Excel.Range)Body.Rows[36]).BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
+                    ((Excel.Range)Body.Rows[11]).BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
+                    ((Excel.Range)Body.Rows[22]).BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
+                    ((Excel.Range)Body.Rows[23]).BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
+                    ((Excel.Range)Body.Rows[35]).BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
+                    ((Excel.Range)Body.Rows[36]).BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
                 }
                 else if (WS.CodeName == "DB")
                 {
-                    ((Excel.Range)Body.Rows[1]).BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
-                    ((Excel.Range)Body.Rows[12]).BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
-                    ((Excel.Range)Body.Rows[23]).BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
-                    ((Excel.Range)Body.Rows[24]).BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium); 
-                    ((Excel.Range)Body.Rows[36]).BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium); 
-                    ((Excel.Range)Body.Rows[37]).BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
+                    ((Excel.Range)Body.Rows[1]).BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
+                    ((Excel.Range)Body.Rows[12]).BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
+                    ((Excel.Range)Body.Rows[23]).BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
+                    ((Excel.Range)Body.Rows[24]).BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium); 
+                    ((Excel.Range)Body.Rows[36]).BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium); 
+                    ((Excel.Range)Body.Rows[37]).BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
                 }
             }
         }

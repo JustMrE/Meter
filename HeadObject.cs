@@ -361,7 +361,7 @@ namespace Meter
         }
         public void UpdateBorders()
         {
-            Range.BorderAround2(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
+            Range.BorderAround(XlLineStyle.xlContinuous, XlBorderWeight.xlMedium);
         }
         public void UpdateAllColors()
         {
