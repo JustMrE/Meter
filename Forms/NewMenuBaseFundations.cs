@@ -851,9 +851,10 @@ namespace Meter.Forms
         }
         public void MyContextMenu()
         {
-            // foreach (int index in Main.menuIndexes)
+            foreach (int index in Main.menuIndexes)
             {
-                cb = Main.instance.xlApp.CommandBars[Main.menuIndexes[0]];
+                //cb = Main.instance.xlApp.CommandBars[Main.menuIndexes[0]];
+                cb = Main.instance.xlApp.CommandBars[index];
                 foreach (CommandBarControl item in cb.Controls)
                 {
                     item.Delete();
@@ -1100,9 +1101,10 @@ namespace Meter.Forms
         }
         public void ClearContextMenu()
         {
-            // foreach (int index in Main.menuIndexes)
+             foreach (int index in Main.menuIndexes)
             {
-                cb = Main.instance.xlApp.CommandBars[Main.menuIndexes[0]];
+                //cb = Main.instance.xlApp.CommandBars[Main.menuIndexes[0]];
+                cb = Main.instance.xlApp.CommandBars[index];
                 foreach (CommandBarControl item in cb.Controls)
                 {
                     item.Delete();
