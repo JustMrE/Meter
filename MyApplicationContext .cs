@@ -13,6 +13,8 @@ using System.Globalization;
 using System.IO.Compression;
 using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
+using System.IO.Pipes;
+using System.Collections.Concurrent;
 
 namespace Meter
 {
@@ -51,6 +53,12 @@ namespace Meter
         public static bool loading = false;
         private static object[,] oldValsArray;
         private static string oldVal;
+        public static bool PipeServerActive = true;
+        Thread meterServer;
+        Thread meterServerWriter;
+
+        static ConcurrentQueue<string> serverMessagesQueue;
+        static EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
 
 
         public Excel.WorkbookEvents_BeforeCloseEventHandler Event_BeforeClose;
@@ -73,6 +81,12 @@ namespace Meter
         {
             if (System.Windows.Forms.Application.OpenForms.Count == 0)
             {
+                GlobalMethods.ToLog("Остановка сервера Meter...");
+                StopNamedPipe();
+                meterServer.Join();
+                meterServerWriter.Join();
+                GlobalMethods.ToLog("Cервер Meter остановлен");
+
                 var tasks = new List<Task>();
 
                 GlobalMethods.ToLog("Инициализация закрытия книги...");
@@ -108,6 +122,12 @@ namespace Meter
 
         public MyApplicationContext()
         {
+            meterServer = new Thread(StartNamedPipe);
+            meterServer.Start();
+
+            meterServerWriter = new Thread(ProcessQueue);
+            meterServerWriter.Start();
+
             instance = this;
             //If WinForms exposed a global event that fires whenever a new Form is created,
             //we could use that event to register for the form's `FormClosed` event.
@@ -121,6 +141,84 @@ namespace Meter
             
             Start();
 
+        }
+
+        void ProcessQueue()
+        {
+            while (PipeServerActive == true)
+            {
+                string? msg = null;
+                lock (serverMessagesQueue)
+                {
+                    if (serverMessagesQueue.Count == 0)
+                    {
+                        waitHandle.WaitOne();
+                        continue;
+                    }
+                    serverMessagesQueue.TryDequeue(out msg);
+                }
+                if (msg != "Stop Meter Server")
+                {
+                    try
+                    {
+                        string[] vals = msg.Split("/");
+                        int cod = int.Parse(vals[0]);
+                        string val = vals[1].Replace(",",".");
+                        ReferenceObject ro = references.references.Values.AsParallel().Where(n => n.codPlan == cod).FirstOrDefault();
+                        if (ro != null)
+                        {
+                            ro.WriteToDB("план", "утвержденный", 29, val);
+                        }
+                        else
+                        {
+                            GlobalMethods.ToLog("Не найден субъект с кодом плана " + cod);
+                        }
+                        // GlobalMethods.ToLog("Получено сообщение: " + msg);
+                        // if (msg != "Stop Meter Server") MessageBox.Show(msg);
+                        // Выполнение действий с полученными данными
+                    }
+                    catch
+                    {
+                        GlobalMethods.ToLog("Ошибка записи для полученных данных " + msg);
+                    }
+                }
+            }
+        }
+
+        private void StartNamedPipe()
+        {
+            serverMessagesQueue = new ConcurrentQueue<string>();
+            string? msg = null;
+            while (PipeServerActive == true)
+            {
+                using (NamedPipeServerStream pipeServer = new NamedPipeServerStream("MeterServer"))
+                {
+                    pipeServer.WaitForConnection();
+                    using (StreamReader sr = new StreamReader(pipeServer))
+                    {
+                        msg = sr.ReadLine();
+                        serverMessagesQueue.Enqueue(msg);
+                        waitHandle.Set();
+                    }
+                }
+            }
+            serverMessagesQueue.Clear();
+            serverMessagesQueue = null;
+        }
+
+        private void StopNamedPipe()
+        {
+            serverMessagesQueue.Enqueue("Stop Meter Server");
+            waitHandle.Set();
+            PipeServerActive = false;
+            using (NamedPipeClientStream pipeServer = new NamedPipeClientStream("MeterServer"))
+            {
+                pipeServer.Connect();
+                using (StreamWriter sw = new StreamWriter(pipeServer))
+                {
+                    sw.WriteLine("Stop Meter Server");
+                }
+            }
         }
 
         private void Start()
