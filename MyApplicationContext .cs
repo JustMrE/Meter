@@ -15,6 +15,8 @@ using Newtonsoft.Json.Linq;
 using System.Threading.Tasks;
 using System.IO.Pipes;
 using System.Collections.Concurrent;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace Meter
 {
@@ -30,7 +32,6 @@ namespace Meter
 
         public static MyApplicationContext instance;
 
-        // public static List<Form> forms;
         public static List<Form> menues;
         
         public Excel.Application xlApp;
@@ -73,10 +74,7 @@ namespace Meter
         public Excel.WorkbookEvents_AfterSaveEventHandler Events_AfterSave;
         public Excel.WorkbookEvents_SheetSelectionChangeEventHandler Events_SheetSelectionChange;
         public Excel.WorkbookEvents_SheetChangeEventHandler Events_SheetChange;
-        // public _CommandBarButtonEvents_ClickEventHandler CommandBarButtonEvents_ClickEvent;
-        // CommandBarControl pasteButton;
 
-        // dynamic ObjectAArch = Activator.CreateInstance(Type.GetTypeFromProgID("AArch.AutoArch"));
         private void onFormClosed(object sender, EventArgs e)
         {
             if (System.Windows.Forms.Application.OpenForms.Count == 0)
@@ -122,6 +120,8 @@ namespace Meter
 
         public MyApplicationContext()
         {
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
             meterServer = new Thread(StartNamedPipe);
             meterServer.Start();
 
@@ -161,26 +161,71 @@ namespace Meter
                 {
                     try
                     {
-                        string[] vals = msg.Split("/");
-                        int cod = int.Parse(vals[0]);
-                        string val = vals[1].Replace(",",".");
-                        ReferenceObject ro = references.references.Values.AsParallel().Where(n => n.codPlan == cod).FirstOrDefault();
-                        if (ro != null)
+                        PipeValue pv = JsonConvert.DeserializeObject<PipeValue>(msg);
+                        if (pv.subjectName != null && pv.level1Name != null && pv.level2Name != null && pv.day != null && pv.value != null)
                         {
-                            ro.WriteToDB("план", "утвержденный", 29, val);
+                            ReferenceObject ro = null;
+                            if (references.references.TryGetValue(pv.subjectName, out ro))
+                            {
+                                if (ro != null)
+                                {
+                                    if (ro.DB.childs.ContainsKey(pv.level1Name) && ro.DB.childs[pv.level1Name].childs.ContainsKey(pv.level2Name))
+                                    {
+                                        ro.WriteToDB(pv.level1Name, pv.level2Name, (int)pv.day, pv.value.Replace(",", "."));
+                                    }
+                                }
+                                else
+                                {
+                                    GlobalMethods.ToLog("Не найден субъект " + pv.subjectName);
+                                }
+                            }
+                            else
+                            {
+                                GlobalMethods.ToLog("Не найден субъект " + pv.subjectName);
+                            }
+                        }
+                        else if (pv != null)
+                        {
+                            if (pv.cod != null && pv.day != null && pv.value != null)
+                            {
+                                ReferenceObject ro = references.references.Values.AsParallel().Where(n => n.codPlan == pv.cod).FirstOrDefault();
+                                if (ro != null)
+                                {
+                                    ro.WriteToDB("план", "утвержденный", (int)pv.day, pv.value.Replace(",","."));
+                                }
+                                else
+                                {
+                                    GlobalMethods.ToLog("Не найден субъект с кодом плана " + pv.cod);
+                                }
+                            }
                         }
                         else
                         {
-                            GlobalMethods.ToLog("Не найден субъект с кодом плана " + cod);
+                            GlobalMethods.ToLog("Не достаточно данных для записи");
                         }
-                        // GlobalMethods.ToLog("Получено сообщение: " + msg);
-                        // if (msg != "Stop Meter Server") MessageBox.Show(msg);
-                        // Выполнение действий с полученными данными
+                        //string[] vals = msg.Split("/");
+                        //int cod = int.Parse(vals[0]);
+                        //string val = vals[1].Replace(",",".");
+                        //ReferenceObject ro = references.references.Values.AsParallel().Where(n => n.codPlan == cod).FirstOrDefault();
+                        //if (ro != null)
+                        //{
+                        //    ro.WriteToDB("план", "утвержденный", 29, val);
+                        //}
+                        //else
+                        //{
+                        //    GlobalMethods.ToLog("Не найден субъект с кодом плана " + cod);
+                        //}
                     }
                     catch
                     {
                         GlobalMethods.ToLog("Ошибка записи для полученных данных " + msg);
                     }
+                }
+                else
+                {
+                    GlobalMethods.ToLog("Stopping meterServerWriter");
+                    serverMessagesQueue.Clear();
+                    serverMessagesQueue = null;
                 }
             }
         }
@@ -194,22 +239,27 @@ namespace Meter
                 using (NamedPipeServerStream pipeServer = new NamedPipeServerStream("MeterServer"))
                 {
                     pipeServer.WaitForConnection();
-                    using (StreamReader sr = new StreamReader(pipeServer))
+                    using (StreamReader sr = new StreamReader(pipeServer, Encoding.GetEncoding("windows-1251")))
                     {
                         msg = sr.ReadLine();
                         serverMessagesQueue.Enqueue(msg);
                         waitHandle.Set();
+                        msg = null;
                     }
                 }
             }
-            serverMessagesQueue.Clear();
-            serverMessagesQueue = null;
+            serverMessagesQueue.Enqueue("Stop Meter Server");
+            waitHandle.Set();
+            GlobalMethods.ToLog("Stopping meterServer");
+        }
+
+        private void EnqueueNewMsg(string msg)
+        {
+            
         }
 
         private void StopNamedPipe()
         {
-            serverMessagesQueue.Enqueue("Stop Meter Server");
-            waitHandle.Set();
             PipeServerActive = false;
             using (NamedPipeClientStream pipeServer = new NamedPipeClientStream("MeterServer"))
             {
@@ -217,6 +267,7 @@ namespace Meter
                 using (StreamWriter sw = new StreamWriter(pipeServer))
                 {
                     sw.WriteLine("Stop Meter Server");
+
                 }
             }
         }
