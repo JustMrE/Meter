@@ -16,7 +16,7 @@ namespace Meter
         public Level _level;
         public string? parentID, firstParentID;
         [JsonIgnore]
-        int? _emcosID, _emcosMLID, _codTEP;
+        int? _emcosID, _emcosMLID, _codMaketTEP, _codTEP;
         public int? emcosID
         {
             get
@@ -41,6 +41,18 @@ namespace Meter
                 _emcosMLID = value;
             }
         }
+        public int? codMaketTEP
+        {
+            get
+            {
+                return _codMaketTEP;
+            }
+            set
+            {
+                if (Main.loading == false) GlobalMethods.ToLog("Изменен _codMaketTEP для субъекта {" + GetFirstParent._name + "} " + _name + " с '" + _codMaketTEP + "' на '" + value + "'");
+                _codMaketTEP = value;
+            }
+        }
         public int? codTEP
         {
             get
@@ -53,7 +65,6 @@ namespace Meter
                 _codTEP = value;
             }
         }
-
         public string WSName 
         {
             get
@@ -1292,7 +1303,7 @@ namespace Meter
         public void WriteToTEP(int day, int? cod = null)
         {
             if (cod == null)
-                cod = codTEP;
+                cod = codMaketTEP;
             if (_level == Level.level2)
             {
                 var val = RangeByDay(day).Value;
@@ -1301,7 +1312,7 @@ namespace Meter
             }
             else if (_level == Level.level1)
             {
-                GetFirstParent.DB.childs[_name].childs["основное"].WriteToTEP(day, codTEP);
+                GetFirstParent.DB.childs[_name].childs["основное"].WriteToTEP(day, codMaketTEP);
             }
         }
     }

@@ -201,7 +201,7 @@ namespace Meter.Forms
                 {
                     selectedButtons.Add("Удалить по показаниям счетчика");
                 }
-                if (RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codTEP == null)
+                if (RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codMaketTEP == null)
                 {
                     selectedButtons.Add("Добавить код для ТЭП");
                 }
@@ -911,10 +911,10 @@ namespace Meter.Forms
                 });
                 if (selectedButtons.Contains("Удалить код для ТЭП")) AddButtonToCommandBar("Удалить из ТЭП", () => 
                 {
-                    int cod = (int)RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codTEP;
+                    int cod = (int)RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codMaketTEP;
                     Main.instance.wsMTEP.Range["A:A"].Find(cod).Interior.ColorIndex = 0;
                     Main.instance.wsMTEP.Range["A:A"].Find(cod).Offset[0, 2].Value = "";
-                    RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codTEP = null;
+                    RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codMaketTEP = null;
                 });
                 if (selectedButtons.Contains("Добавить новый L1")) AddNewL1();
                 if (selectedButtons.Contains("Добавить новый L2")) AddNewL2();

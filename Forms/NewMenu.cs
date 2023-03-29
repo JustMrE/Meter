@@ -132,7 +132,7 @@ namespace Meter.Forms
             Main.instance.ResumeAll();
             Main.instance.wsMTEP.Range["B1"].Value = date.ToString("dd.MM.yy");
             int day = int.Parse(this.textBox1.Text);
-            List<ChildObject> coList = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codTEP != null).ToList();
+            List<ChildObject> coList = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codMaketTEP != null).ToList();
             foreach (ChildObject co in coList)
             {
                 co.WriteToTEP(day);

@@ -642,7 +642,7 @@ namespace Meter
                         cod = Convert.ToInt32(((double)val));
                         if (cod != null)
                         {
-                            ChildObject co = references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codTEP == cod).FirstOrDefault();
+                            ChildObject co = references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codMaketTEP == cod).FirstOrDefault();
                             if (co != null)
                             {
                                 co.ws.Activate();

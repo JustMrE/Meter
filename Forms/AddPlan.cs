@@ -28,9 +28,9 @@ namespace Meter.Forms
             referenceObject= null;
             childObject = co;
             InitializeComponent();
-            this.Text = "Код для ТЭП";
-            this.tbCod.PlaceholderText = "Введите код для ТЭП";
-            this.label3.Text = "Введите код для ТЭП:";
+            this.Text = "Код для макетТЭП";
+            this.tbCod.PlaceholderText = "Введите код для макетТЭП";
+            this.label3.Text = "Введите код для макетТЭП:";
         }
 
         private void tbCod_KeyPress(object sender, KeyPressEventArgs e)
@@ -68,13 +68,13 @@ namespace Meter.Forms
                     }
                     else
                     {
-                        if (childObject.codTEP == null)
+                        if (childObject.codMaketTEP == null)
                         {
-                            AddNewCodTEP(cod);
+                            AddNewCodMaketTEP(cod);
                         }
                         else
                         {
-                            ChangeCodTEP(cod);
+                            ChangeCodMaketTEP(cod);
                         }
                     }
                 }
@@ -153,15 +153,15 @@ namespace Meter.Forms
             }
         }
 
-        private void AddNewCodTEP(int? cod)
+        private void AddNewCodMaketTEP(int? cod)
         {
             if (cod != 0)
             {
-                ChildObject co = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codTEP == cod).FirstOrDefault();
+                ChildObject co = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codMaketTEP == cod).FirstOrDefault();
 
                 if (co == null)
                 {
-                    childObject.codTEP = cod;
+                    childObject.codMaketTEP = cod;
                     Main.instance.wsMTEP.Range["A:A"].Find(cod).Interior.Color = Color.GreenYellow;
                     Main.instance.wsMTEP.Range["A:A"].Find(cod).Offset[0, 2].Value = childObject.GetFirstParent._name + " " + childObject._name;
                     Close();
@@ -170,8 +170,8 @@ namespace Meter.Forms
                 {
                     if (MessageBox.Show(text: "Код " + cod + " уже используется для \"" + co.GetFirstParent._name + " " + co._name + "\". \nХотите заменить?", caption: "", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        co.codTEP = null;
-                        childObject.codTEP = cod;
+                        co.codMaketTEP = null;
+                        childObject.codMaketTEP = cod;
                         Main.instance.wsMTEP.Range["A:A"].Find(cod).Interior.Color = Color.GreenYellow;
                         Main.instance.wsMTEP.Range["A:A"].Find(cod).Offset[0, 2].Value = childObject.GetFirstParent._name + " " + childObject._name;
                         Close();
@@ -179,17 +179,17 @@ namespace Meter.Forms
                 }
             }
         }
-        private void ChangeCodTEP(int? cod)
+        private void ChangeCodMaketTEP(int? cod)
         {
             if (cod != 0)
             {
-                ChildObject co = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codTEP == cod).FirstOrDefault();
+                ChildObject co = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codMaketTEP == cod).FirstOrDefault();
 
                 if (co == null)
                 {
-                    Main.instance.wsMTEP.Range["A:A"].Find(childObject.codTEP).Interior.ColorIndex = 0;
-                    Main.instance.wsMTEP.Range["A:A"].Find(childObject.codTEP).Offset[0, 2].Value = "";
-                    childObject.codTEP = cod;
+                    Main.instance.wsMTEP.Range["A:A"].Find(childObject.codMaketTEP).Interior.ColorIndex = 0;
+                    Main.instance.wsMTEP.Range["A:A"].Find(childObject.codMaketTEP).Offset[0, 2].Value = "";
+                    childObject.codMaketTEP = cod;
                     Main.instance.wsMTEP.Range["A:A"].Find(cod).Interior.Color = Color.GreenYellow;
                     Main.instance.wsMTEP.Range["A:A"].Find(cod).Offset[0, 2].Value = childObject.GetFirstParent._name + " " + childObject._name;
                     Close();
@@ -198,10 +198,10 @@ namespace Meter.Forms
                 {
                     if (MessageBox.Show(text: "Код " + cod + " уже используется для \"" + co.GetFirstParent._name + " " + co._name + "\". \nХотите заменить?", caption: "", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        Main.instance.wsMTEP.Range["A:A"].Find(childObject.codTEP).Interior.ColorIndex = 0;
-                        Main.instance.wsMTEP.Range["A:A"].Find(childObject.codTEP).Offset[0, 2].Value = "";
-                        co.codTEP = null;
-                        childObject.codTEP = cod;
+                        Main.instance.wsMTEP.Range["A:A"].Find(childObject.codMaketTEP).Interior.ColorIndex = 0;
+                        Main.instance.wsMTEP.Range["A:A"].Find(childObject.codMaketTEP).Offset[0, 2].Value = "";
+                        co.codMaketTEP = null;
+                        childObject.codMaketTEP = cod;
                         Main.instance.wsMTEP.Range["A:A"].Find(cod).Interior.Color = Color.GreenYellow;
                         Main.instance.wsMTEP.Range["A:A"].Find(cod).Offset[0, 2].Value = childObject.GetFirstParent._name + " " + childObject._name;
                         Close();
@@ -213,9 +213,9 @@ namespace Meter.Forms
                 DialogResult result = MessageBox.Show(text: "Хотите удалить код для \"" + childObject.GetFirstParent._name + " " + childObject._name + "\"?", caption: "", buttons: MessageBoxButtons.YesNo);
                 if (result == DialogResult.Yes)
                 {
-                    Main.instance.wsMTEP.Range["A:A"].Find(childObject.codTEP).Interior.ColorIndex = 0;
-                    Main.instance.wsMTEP.Range["A:A"].Find(childObject.codTEP).Offset[0, 2].Value = "";
-                    childObject.codTEP = null;
+                    Main.instance.wsMTEP.Range["A:A"].Find(childObject.codMaketTEP).Interior.ColorIndex = 0;
+                    Main.instance.wsMTEP.Range["A:A"].Find(childObject.codMaketTEP).Offset[0, 2].Value = "";
+                    childObject.codMaketTEP = null;
                     Close();
                 }
             }
@@ -240,11 +240,11 @@ namespace Meter.Forms
             }
             else if (childObject != null)
             {
-                if (childObject.codTEP != null)
+                if (childObject.codMaketTEP != null)
                 {
                     label1.Visible = true;
                     label2.Visible = true;
-                    label2.Text = childObject.codTEP.ToString();
+                    label2.Text = childObject.codMaketTEP.ToString();
                 }
             }
         }
