@@ -16,7 +16,7 @@ namespace Meter
         public Level _level;
         public string? parentID, firstParentID;
         [JsonIgnore]
-        int? _emcosID, _emcosMLID;
+        int? _emcosID, _emcosMLID, _codTEP;
         public int? emcosID
         {
             get
@@ -29,11 +29,6 @@ namespace Meter
                 _emcosID = value;
             }
         }
-        //public int? emcosID
-        //{
-        //    get;
-        //    set;
-        //}
         public int? emcosMLID
         {
             get
@@ -46,11 +41,18 @@ namespace Meter
                 _emcosMLID = value;
             }
         }
-        //public int? emcosMLID
-        //{
-        //    get;
-        //    set;
-        //}
+        public int? codTEP
+        {
+            get
+            {
+                return _codTEP;
+            }
+            set
+            {
+                if (Main.loading == false) GlobalMethods.ToLog("Изменен _codTEP для субъекта {" + GetFirstParent._name + "} " + _name + " с '" + _codTEP + "' на '" + value + "'");
+                _codTEP = value;
+            }
+        }
 
         public string WSName 
         {
@@ -261,7 +263,7 @@ namespace Meter
             {
                 Excel.Range r = RangeByDay(day);
                 r.Value = val;
-                GlobalMethods.ToLog("Запись в Базу данных ячейка " + r.Address + " Субект {" + GetFirstParent._name + "} " + GetParent<ChildObject>()._name + " " + _name + " день " + day + " значение " + val);
+                GlobalMethods.ToLog("Запись в Базу данных ячейка " + r.Address + " Субект {" + GetFirstParent._name + "} " + GetParent<ChildObject>()._name + " " + _name + " день " + day + " значение '" + val + "'");
             }
             
         }
@@ -1286,6 +1288,21 @@ namespace Meter
             GlobalMethods.ReleseObject(Head);
             GlobalMethods.ReleseObject(WS);
             GlobalMethods.ReleseObject(_activeChild);
+        }
+        public void WriteToTEP(int day, int? cod = null)
+        {
+            if (cod == null)
+                cod = codTEP;
+            if (_level == Level.level2)
+            {
+                var val = RangeByDay(day).Value;
+                GlobalMethods.ToLog("Записано значение " + val + " в тэп для " + GetFirstParent._name + " " + GetParent<ChildObject>()._name + " по коду " + cod);
+                Main.instance.wsMTEP.Range["A:A"].Find(What: cod, LookAt: XlLookAt.xlWhole).Offset[0, 1].Value = val;
+            }
+            else if (_level == Level.level1)
+            {
+                GetFirstParent.DB.childs[_name].childs["основное"].WriteToTEP(day, codTEP);
+            }
         }
     }
 }

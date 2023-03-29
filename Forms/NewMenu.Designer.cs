@@ -44,6 +44,11 @@
             //
             this.button2.Visible = true;
             this.button2.Text = "EMCOS";
+            //
+            //button 3
+            //
+            this.button3.Visible = true;
+            this.button3.Text = "записать ТЭП";
         }
 
         #endregion

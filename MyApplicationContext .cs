@@ -36,7 +36,7 @@ namespace Meter
         
         public Excel.Application xlApp;
         public Excel.Workbook wb;
-        public Excel.Worksheet wsCh, wsDb;
+        public Excel.Worksheet wsCh, wsDb, wsMTEP, wsTEPm, wsTEPn;
         public bool closed, excelClosed;
         public IntPtr xlAppHwnd;
         public Rect xlAppRect;
@@ -68,6 +68,7 @@ namespace Meter
         public Excel.DocEvents_DeactivateEventHandler Events_DeactivateSheet;
         public Excel.WorkbookEvents_SheetActivateEventHandler Events_ActivateSheet;
         public Excel.DocEvents_BeforeDoubleClickEventHandler Events_BeforeDoubleClick;
+        public Excel.DocEvents_BeforeDoubleClickEventHandler Events_BeforeDoubleClick_wsMTEP;
         public Excel.DocEvents_ChangeEventHandler Events_Change;
         public Excel.DocEvents_SelectionChangeEventHandler Events_SelectionChange;
         public Excel.WorkbookEvents_BeforeSaveEventHandler Events_BeforeSave;
@@ -103,9 +104,15 @@ namespace Meter
                 Marshal.ReleaseComObject(wb);
                 Marshal.ReleaseComObject(wsCh);
                 Marshal.ReleaseComObject(wsDb);
+                Marshal.ReleaseComObject(wsMTEP);
+                Marshal.ReleaseComObject(wsTEPm);
+                Marshal.ReleaseComObject(wsTEPn);
                 wb = null;
                 wsCh = null;
                 wsDb = null;
+                wsMTEP = null;
+                wsTEPm = null;
+                wsTEPn = null;
 
                 xlApp.Quit();
                 Marshal.ReleaseComObject(xlApp);
@@ -242,9 +249,12 @@ namespace Meter
                     using (StreamReader sr = new StreamReader(pipeServer, Encoding.GetEncoding("windows-1251")))
                     {
                         msg = sr.ReadLine();
-                        serverMessagesQueue.Enqueue(msg);
-                        waitHandle.Set();
-                        msg = null;
+                        if (msg != "check")
+                        {
+                            serverMessagesQueue.Enqueue(msg);
+                            waitHandle.Set();
+                            msg = null;
+                        }
                     }
                 }
             }
@@ -429,6 +439,18 @@ namespace Meter
                 {
                     wsDb = ws;
                 }
+                if (ws.CodeName == "WS_MTEP")
+                {
+                    wsMTEP = ws;
+                }
+                if (ws.CodeName == "WS_TEPM")
+                {
+                    wsTEPm = ws;
+                }
+                if (ws.CodeName == "WS_TEPN")
+                {
+                    wsTEPn = ws;
+                }
             }
 
             xlAppHwnd = (IntPtr)xlApp.ActiveWindow.Hwnd;
@@ -504,6 +526,9 @@ namespace Meter
             Events_BeforeDoubleClick = new Excel.DocEvents_BeforeDoubleClickEventHandler(Application_BeforeDoubleClick);
             wsCh.BeforeDoubleClick += Events_BeforeDoubleClick;
 
+            Events_BeforeDoubleClick_wsMTEP = new Excel.DocEvents_BeforeDoubleClickEventHandler(Application_BeforeDoubleClick_wsMTEP);
+            wsMTEP.BeforeDoubleClick += Events_BeforeDoubleClick_wsMTEP;
+
             Events_Change = new Excel.DocEvents_ChangeEventHandler(Application_Change);
             wsCh.Change += Events_Change;
 
@@ -532,6 +557,7 @@ namespace Meter
             try{wsCh.Deactivate -= Events_DeactivateSheet;}catch{}
             try{wb.SheetActivate -= Events_ActivateSheet;}catch{}
             try{wsCh.BeforeDoubleClick -= Events_BeforeDoubleClick;}catch{}
+            try{wsMTEP.BeforeDoubleClick -= Events_BeforeDoubleClick_wsMTEP;}catch{}
             try{wsCh.Change -= Events_Change;}catch{}
             try{wsCh.SelectionChange -= Events_SelectionChange;}catch{}
             try{wb.SheetSelectionChange -= Events_SheetSelectionChange;}catch{}
@@ -599,9 +625,39 @@ namespace Meter
         private void Application_BeforeDoubleClick(Excel.Range range, ref bool cancel)
         {
 
-            GlobalMethods.ToLog("Двойной клик на ячейке " + range.Address);
+            GlobalMethods.ToLog("Двойной клик на ячейке " + range.Address + " листа " + wsCh.Name);
             menu.DblClick(range);
         }
+        private void Application_BeforeDoubleClick_wsMTEP(Excel.Range range, ref bool cancel)
+        {
+            GlobalMethods.ToLog("Двойной клик на ячейке " + range.Address + " листа " + wsMTEP.Name);
+            if (range.Column == 1)
+            {
+                if (ColorsData.GetRangeColor(range) == Color.GreenYellow)
+                {
+                    try
+                    {
+                        double val = (double)range.Value;
+                        int? cod = null;
+                        cod = Convert.ToInt32(((double)val));
+                        if (cod != null)
+                        {
+                            ChildObject co = references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codTEP == cod).FirstOrDefault();
+                            if (co != null)
+                            {
+                                co.ws.Activate();
+                                co.Range.Select();
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        
+                    }
+                }
+            }
+        }
+        
         private void Application_SelectionChange(Excel.Range range)
         {
             GlobalMethods.ToLog("Выделены ячейки " + range.Address);
@@ -619,14 +675,21 @@ namespace Meter
         {
             if (((Excel.Worksheet)sh).CodeName != "PS")
             {
-                GlobalMethods.ToLog("Выделены ячейки " + range.Address);
-                if (range.Formula is string)
+                try
                 {
-                    oldVal = (string)range.Formula;
+                    GlobalMethods.ToLog("Выделены ячейки " + range.Address);
+                    if (range.Formula is string)
+                    {
+                        oldVal = (string)range.Formula;
+                    }
+                    else if (range.Formula is object[,])
+                    {
+                        oldValsArray = (object[,])range.Formula;
+                    }
                 }
-                else if (range.Formula is object[,])
+                catch
                 {
-                    oldValsArray = (object[,])range.Formula;
+
                 }
             }
         }

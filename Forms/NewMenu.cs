@@ -122,6 +122,24 @@ namespace Meter.Forms
             Main.instance.ResumeAll();
             MessageBox.Show("Done!");
         }
+        protected override void Button3_Click(object sender, EventArgs e)
+        {
+            DateTime date;
+            DateTime.TryParseExact(textBox1.Text + " " + lblMonth.Text + " " + lblYear.Text, "dd MMMM yyyy", GlobalMethods.culture, DateTimeStyles.None, out date);
+            base.Button3_Click(sender, e);
+            Main.instance.StopAll();
+            Main.instance.wsMTEP.Range["B:B"].ClearContents();
+            Main.instance.ResumeAll();
+            Main.instance.wsMTEP.Range["B1"].Value = date.ToString("dd.MM.yy");
+            int day = int.Parse(this.textBox1.Text);
+            List<ChildObject> coList = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codTEP != null).ToList();
+            foreach (ChildObject co in coList)
+            {
+                co.WriteToTEP(day);
+            }
+
+            MessageBox.Show("Done!");
+        }
         protected override void btnAdmin_Click(object sender, EventArgs e)
         {
             base.btnAdmin_Click(sender, e);

@@ -157,6 +157,7 @@
             textBox1.Size = new Size(120, 23);
             textBox1.TabIndex = 6;
             textBox1.TextChanged += TextBox1_TextChanged;
+            textBox1.LostFocus += TextBox1_LostFocus;
             textBox1.KeyPress += TextBox1_KeyPress;
             // 
             // RepairMenu

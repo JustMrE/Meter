@@ -120,6 +120,15 @@ namespace Meter.Forms
             }
         }
 
+        protected virtual void TextBox1_LostFocus(object sender, EventArgs e)
+        {
+            int day;
+            if (int.TryParse(textBox1.Text, out day) == true && day > 0 && day < 10)
+            {
+                textBox1.Text = textBox1.Text.PadLeft(2, '0');
+            }
+        }
+
         protected virtual void ToLog(object sender)
         {
             GlobalMethods.ToLog("Нажато " + ((Control)sender).Name);

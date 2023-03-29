@@ -15,10 +15,22 @@ namespace Meter.Forms
     public partial class AddPlan : Form
     {
         public ReferenceObject referenceObject;
+        public ChildObject childObject;
         public AddPlan(ReferenceObject ro)
         {
+            childObject = null;
             referenceObject= ro;
             InitializeComponent();
+        }
+
+        public AddPlan(ChildObject co)
+        {
+            referenceObject= null;
+            childObject = co;
+            InitializeComponent();
+            this.Text = "Код для ТЭП";
+            this.tbCod.PlaceholderText = "Введите код для ТЭП";
+            this.label3.Text = "Введите код для ТЭП:";
         }
 
         private void tbCod_KeyPress(object sender, KeyPressEventArgs e)
@@ -36,24 +48,44 @@ namespace Meter.Forms
             if (!string.IsNullOrEmpty(tbCod.Text))
             {
                 int cod = Convert.ToInt32(tbCod.Text);
-
-                if (referenceObject.codPlan == null)
+                if (referenceObject != null)
                 {
-                    AddNewCod(cod);
+                    if (referenceObject.codPlan == null)
+                    {
+                        AddNewCodPlan(cod);
+                    }
+                    else
+                    {
+                        ChangeCodPlan(cod);
+                    }
                 }
-                else
+                else if (childObject != null)
                 {
-                    ChangeCod(cod);
+                    if (/*cod < 1301 || cod > 1499*/Main.instance.wsMTEP.Range["A:A"].Find(cod) == null) 
+                    {
+                        MessageBox.Show("На листе макетТЭПн отсутствует код " + cod + "!\nДобавте код на лист макетТЭПн");
+                        return;
+                    }
+                    else
+                    {
+                        if (childObject.codTEP == null)
+                        {
+                            AddNewCodTEP(cod);
+                        }
+                        else
+                        {
+                            ChangeCodTEP(cod);
+                        }
+                    }
                 }
             }
             else
             {
                 Close();
             }
-            
         }
 
-        private void AddNewCod(int? cod)
+        private void AddNewCodPlan(int? cod)
         {
             if (cod != 0)
             {
@@ -89,7 +121,7 @@ namespace Meter.Forms
             }
         }
 
-        private void ChangeCod(int? cod)
+        private void ChangeCodPlan(int? cod)
         {
             if (cod != 0)
             {
@@ -121,6 +153,73 @@ namespace Meter.Forms
             }
         }
 
+        private void AddNewCodTEP(int? cod)
+        {
+            if (cod != 0)
+            {
+                ChildObject co = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codTEP == cod).FirstOrDefault();
+
+                if (co == null)
+                {
+                    childObject.codTEP = cod;
+                    Main.instance.wsMTEP.Range["A:A"].Find(cod).Interior.Color = Color.GreenYellow;
+                    Main.instance.wsMTEP.Range["A:A"].Find(cod).Offset[0, 2].Value = childObject.GetFirstParent._name + " " + childObject._name;
+                    Close();
+                }
+                else
+                {
+                    if (MessageBox.Show(text: "Код " + cod + " уже используется для \"" + co.GetFirstParent._name + " " + co._name + "\". \nХотите заменить?", caption: "", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        co.codTEP = null;
+                        childObject.codTEP = cod;
+                        Main.instance.wsMTEP.Range["A:A"].Find(cod).Interior.Color = Color.GreenYellow;
+                        Main.instance.wsMTEP.Range["A:A"].Find(cod).Offset[0, 2].Value = childObject.GetFirstParent._name + " " + childObject._name;
+                        Close();
+                    }
+                }
+            }
+        }
+        private void ChangeCodTEP(int? cod)
+        {
+            if (cod != 0)
+            {
+                ChildObject co = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codTEP == cod).FirstOrDefault();
+
+                if (co == null)
+                {
+                    Main.instance.wsMTEP.Range["A:A"].Find(childObject.codTEP).Interior.ColorIndex = 0;
+                    Main.instance.wsMTEP.Range["A:A"].Find(childObject.codTEP).Offset[0, 2].Value = "";
+                    childObject.codTEP = cod;
+                    Main.instance.wsMTEP.Range["A:A"].Find(cod).Interior.Color = Color.GreenYellow;
+                    Main.instance.wsMTEP.Range["A:A"].Find(cod).Offset[0, 2].Value = childObject.GetFirstParent._name + " " + childObject._name;
+                    Close();
+                }
+                else
+                {
+                    if (MessageBox.Show(text: "Код " + cod + " уже используется для \"" + co.GetFirstParent._name + " " + co._name + "\". \nХотите заменить?", caption: "", buttons: MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        Main.instance.wsMTEP.Range["A:A"].Find(childObject.codTEP).Interior.ColorIndex = 0;
+                        Main.instance.wsMTEP.Range["A:A"].Find(childObject.codTEP).Offset[0, 2].Value = "";
+                        co.codTEP = null;
+                        childObject.codTEP = cod;
+                        Main.instance.wsMTEP.Range["A:A"].Find(cod).Interior.Color = Color.GreenYellow;
+                        Main.instance.wsMTEP.Range["A:A"].Find(cod).Offset[0, 2].Value = childObject.GetFirstParent._name + " " + childObject._name;
+                        Close();
+                    }
+                }
+            }
+            else
+            {
+                DialogResult result = MessageBox.Show(text: "Хотите удалить код для \"" + childObject.GetFirstParent._name + " " + childObject._name + "\"?", caption: "", buttons: MessageBoxButtons.YesNo);
+                if (result == DialogResult.Yes)
+                {
+                    Main.instance.wsMTEP.Range["A:A"].Find(childObject.codTEP).Interior.ColorIndex = 0;
+                    Main.instance.wsMTEP.Range["A:A"].Find(childObject.codTEP).Offset[0, 2].Value = "";
+                    childObject.codTEP = null;
+                    Close();
+                }
+            }
+        }
         private void btnCancel_Click(object sender, EventArgs e)
         {
             GlobalMethods.ToLog(this, sender);
@@ -130,11 +229,23 @@ namespace Meter.Forms
         private void AddPlan_Shown(object sender, EventArgs e)
         {
             GlobalMethods.ToLog(this);
-            if (referenceObject.codPlan != null)
+            if (referenceObject != null)
             {
-                label1.Visible = true;
-                label2.Visible = true;
-                label2.Text = referenceObject.codPlan.ToString();
+                if (referenceObject.codPlan != null)
+                {
+                    label1.Visible = true;
+                    label2.Visible = true;
+                    label2.Text = referenceObject.codPlan.ToString();
+                }
+            }
+            else if (childObject != null)
+            {
+                if (childObject.codTEP != null)
+                {
+                    label1.Visible = true;
+                    label2.Visible = true;
+                    label2.Text = childObject.codTEP.ToString();
+                }
             }
         }
     }

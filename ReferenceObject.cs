@@ -191,6 +191,7 @@ namespace Meter
         
         public void WriteToDB(string nameL1, string nameL2, int day, string val)
         {
+
             if (!string.IsNullOrEmpty(val))
             {
                 double doubleVal;
