@@ -73,11 +73,10 @@ namespace Meter
                 }
             }
 
-            //MessageBox.Show(dir);
-
             string file1 = db + @"\opened.txt";
             string logFile = db + @"\log.txt";
             string username = Environment.UserName;
+            #if !DEBUG
             if (File.Exists(file1))
             {
                 string newUserName = File.ReadAllText(file1);
@@ -87,15 +86,18 @@ namespace Meter
                     return;
                 }
             }
+            #endif
 
             GlobalMethods.username = username;
             GlobalMethods.logFile = logFile;
 
+            #if !DEBUG
             using (StreamWriter writer = File.CreateText(file1))
             {
                 writer.Write(username);
                 File.SetAttributes(file1, File.GetAttributes(file1) | FileAttributes.Hidden);
             }
+            #endif
 
             using (StreamWriter writer = new StreamWriter(logFile, true)) 
             {
@@ -107,8 +109,10 @@ namespace Meter
 
             MyApplicationContext myAppContext = new MyApplicationContext();
             Application.Run(myAppContext);
-            
+
+            #if !DEBUG
             File.Delete(file1);
+            #endif
         }    
     }
 }
