@@ -15,7 +15,6 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Globalization;
 using System.Collections.Concurrent;
-//using Microsoft.Office.Interop.Excel;
 
 namespace Meter.Forms
 {
@@ -200,15 +199,6 @@ namespace Meter.Forms
                 else
                 {
                     selectedButtons.Add("Удалить по показаниям счетчика");
-                }
-                if (RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codMaketTEP == null)
-                {
-                    selectedButtons.Add("Добавить код для ТЭП");
-                }
-                else
-                {
-                    selectedButtons.Add("Изменить код для ТЭП");
-                    selectedButtons.Add("Удалить код для ТЭП");
                 }
             }
             if (activeColor == Main.instance.colors.main["subject"])
@@ -893,7 +883,7 @@ namespace Meter.Forms
                         }
                     }
                 }, 7677);
-                if (selectedButtons.Contains("Добавить код для ТЭП")) AddButtonToCommandBar("Добавить в ТЭП", () => 
+                if (selectedButtons.Contains("Добавить код для макетТЭП")) AddButtonToCommandBar("Добавить в макетТЭП", () => 
                 {
                     ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
                     using (AddPlan form = new AddPlan(co))
@@ -901,7 +891,7 @@ namespace Meter.Forms
                         form.ShowDialog();
                     }
                 });
-                if (selectedButtons.Contains("Изменить код для ТЭП")) AddButtonToCommandBar("Изменить код ТЭП", () => 
+                if (selectedButtons.Contains("Изменить код для макетТЭП")) AddButtonToCommandBar("Изменить код макетТЭП", () => 
                 {
                     ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
                     using (AddPlan form = new AddPlan(co))
@@ -909,13 +899,45 @@ namespace Meter.Forms
                         form.ShowDialog();
                     }
                 });
-                if (selectedButtons.Contains("Удалить код для ТЭП")) AddButtonToCommandBar("Удалить из ТЭП", () => 
+                if (selectedButtons.Contains("Удалить код для макетТЭП")) AddButtonToCommandBar("Удалить из макетТЭП", () => 
                 {
                     int cod = (int)RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codMaketTEP;
                     Main.instance.wsMTEP.Range["A:A"].Find(cod).Interior.ColorIndex = 0;
                     Main.instance.wsMTEP.Range["A:A"].Find(cod).Offset[0, 2].Value = "";
                     RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codMaketTEP = null;
                 });
+
+                if (selectedButtons.Contains("Добавить код для ТЭП")) AddButtonToCommandBar("Добавить в ТЭП", () =>
+                {
+                    ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
+                    using (AddTEP form = new AddTEP(co))
+                    {
+                        form.ShowDialog();
+                    }
+                });
+                if (selectedButtons.Contains("Изменить код для ТЭП")) AddButtonToCommandBar("Изменить код ТЭП", () =>
+                {
+                    ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
+                    using (AddTEP form = new AddTEP(co))
+                    {
+                        form.ShowDialog();
+                    }
+                });
+                if (selectedButtons.Contains("Удалить код для ТЭП")) AddButtonToCommandBar("Удалить из ТЭП", () =>
+                {
+                    int cod = (int)RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codTEP;
+                    string adr1 = Main.instance.wsTEPm.Range["5:5"].Find(What: cod, LookAt: Excel.XlLookAt.xlWhole).Address[false, false];
+                    string adr2 = Main.instance.wsTEPm.Range["5:5"].Find(What: cod, LookAt: Excel.XlLookAt.xlWhole).Offset[0, 1].Address[false, false];
+                    string adr = Regex.Replace(adr1, @"[^A-Z]+", String.Empty) + ":" + Regex.Replace(adr2, @"[^A-Z]+", String.Empty);
+
+                    Main.instance.StopAll();
+                    Main.instance.wsTEPn.Range[adr].Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+                    Main.instance.wsTEPm.Range[adr].Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+                    Main.instance.ResumeAll();
+
+                    RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codTEP = null;
+                });
+
                 if (selectedButtons.Contains("Добавить новый L1")) AddNewL1();
                 if (selectedButtons.Contains("Добавить новый L2")) AddNewL2();
                 if (selectedButtons.Contains("Выбрать из EMCOS")) AddButtonToCommandBar("Выбрать из EMCOS", EmcosSelect);

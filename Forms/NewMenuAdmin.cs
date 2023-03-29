@@ -20,6 +20,31 @@ namespace Meter.Forms
                 selectedButtons.Add("Удалить head");
                 selectedButtons.Add("Переименовать head");
             }
+            if (Main.instance.colors.main.ContainsValue(activeColor) && Main.instance.colors.main["subject"] != activeColor)
+            {
+                if (RangeReferences.ActiveL1 != "план")
+                {
+                    if (RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codMaketTEP == null)
+                    {
+                        selectedButtons.Add("Добавить код для макетТЭП");
+                    }
+                    else
+                    {
+                        selectedButtons.Add("Изменить код для макетТЭП");
+                        selectedButtons.Add("Удалить код для макетТЭП");
+                    }
+
+                    if (RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codTEP == null)
+                    {
+                        selectedButtons.Add("Добавить код для ТЭП");
+                    }
+                    else
+                    {
+                        selectedButtons.Add("Изменить код для ТЭП");
+                        selectedButtons.Add("Удалить код для ТЭП");
+                    }
+                }
+            }
             if (Main.instance.colors.main["subject"] == activeColor)
             {
                 selectedButtons.Add("GoTo DB");

@@ -1300,19 +1300,47 @@ namespace Meter
             GlobalMethods.ReleseObject(WS);
             GlobalMethods.ReleseObject(_activeChild);
         }
-        public void WriteToTEP(int day, int? cod = null)
+        public void WriteToMaketTEP(int day, int? cod = null)
         {
             if (cod == null)
                 cod = codMaketTEP;
             if (_level == Level.level2)
             {
                 var val = RangeByDay(day).Value;
-                GlobalMethods.ToLog("Записано значение " + val + " в тэп для " + GetFirstParent._name + " " + GetParent<ChildObject>()._name + " по коду " + cod);
+                GlobalMethods.ToLog("Записано значение " + val + " в макетТЭП для " + GetFirstParent._name + " " + GetParent<ChildObject>()._name + " по коду " + cod);
                 Main.instance.wsMTEP.Range["A:A"].Find(What: cod, LookAt: XlLookAt.xlWhole).Offset[0, 1].Value = val;
             }
             else if (_level == Level.level1)
             {
-                GetFirstParent.DB.childs[_name].childs["основное"].WriteToTEP(day, codMaketTEP);
+                GetFirstParent.DB.childs[_name].childs["основное"].WriteToMaketTEP(day, codMaketTEP);
+            }
+        }
+        public void WriteToTEP(int day, int row, int? cod = null, bool rewrite = false)
+        {
+            if (cod == null)
+                cod = codTEP;
+            if (_level == Level.level2)
+            {
+                var val = RangeByDay(day).Value;
+                int column;
+                GlobalMethods.ToLog("Записано значение " + val + " в ТЭП для " + GetFirstParent._name + " " + GetParent<ChildObject>()._name + " по коду " + cod);
+                if (GetParent<ChildObject>()._name != "план") 
+                    column = Main.instance.wsTEPm.Range["5:5"].Find(What: cod, LookAt: XlLookAt.xlWhole).Offset[0, 1].Column;
+                else
+                    column = Main.instance.wsTEPm.Range["5:5"].Find(What: cod, LookAt: XlLookAt.xlWhole).Column;
+
+                ((Excel.Range)Main.instance.wsTEPm.Cells[row, column]).Value = val;
+
+                if (rewrite == false)
+                {
+                    ((Excel.Range)Main.instance.wsTEPn.Cells[row, column]).Value = "=INDIRECT(ADDRESS(ROW(RC)+1,COLUMN(RC),4,1))+INDIRECT(CONCATENATE(\"" + Main.instance.wsTEPm.Name + "!\",ADDRESS(ROW(RC),COLUMN(RC),4,1)))";
+                }
+            }
+            else if (_level == Level.level1)
+            {
+                GetFirstParent.DB.childs[_name].childs["основное"].WriteToTEP(day, row, codTEP, rewrite);
+                if (GetFirstParent.DB.childs.ContainsKey("план"))
+                    GetFirstParent.DB.childs["план"].childs["заявка"].WriteToTEP(day, row, codTEP, rewrite);
             }
         }
     }

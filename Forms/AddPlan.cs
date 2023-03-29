@@ -19,17 +19,16 @@ namespace Meter.Forms
         public AddPlan(ReferenceObject ro)
         {
             childObject = null;
-            referenceObject= ro;
+            referenceObject = ro;
             InitializeComponent();
         }
 
         public AddPlan(ChildObject co)
         {
-            referenceObject= null;
+            referenceObject = null;
             childObject = co;
             InitializeComponent();
             this.Text = "Код для макетТЭП";
-            this.tbCod.PlaceholderText = "Введите код для макетТЭП";
             this.label3.Text = "Введите код для макетТЭП:";
         }
 
@@ -61,7 +60,7 @@ namespace Meter.Forms
                 }
                 else if (childObject != null)
                 {
-                    if (/*cod < 1301 || cod > 1499*/Main.instance.wsMTEP.Range["A:A"].Find(cod) == null) 
+                    if (/*cod < 1301 || cod > 1499*/Main.instance.wsMTEP.Range["A:A"].Find(cod) == null)
                     {
                         MessageBox.Show("На листе макетТЭПн отсутствует код " + cod + "!\nДобавте код на лист макетТЭПн");
                         return;
@@ -93,7 +92,7 @@ namespace Meter.Forms
 
                 if (ro == null)
                 {
-                    
+
                     if (!referenceObject.DB.HasItem("план"))
                     {
                         Main.instance.StopAll();
@@ -220,6 +219,7 @@ namespace Meter.Forms
                 }
             }
         }
+
         private void btnCancel_Click(object sender, EventArgs e)
         {
             GlobalMethods.ToLog(this, sender);

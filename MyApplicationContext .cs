@@ -721,7 +721,8 @@ namespace Meter
         }
         private void ChagedRange(object sh, Excel.Range rng)
         {
-            
+            if (rng.Cells.Count > 1000)
+                return;
             object[,] newValsArray = (object[,])rng.Formula;
             for (int i = 1; i <= rng.Columns.Count; i++)
             {

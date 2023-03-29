@@ -1,6 +1,6 @@
 ﻿namespace Meter.Forms
 {
-    partial class AddPlan
+    partial class AddTEP
     {
         /// <summary>
         /// Required designer variable.
@@ -34,14 +34,14 @@
             label1 = new Label();
             label2 = new Label();
             label3 = new Label();
-            flowLayoutPanel1 = new FlowLayoutPanel();
             tableLayoutPanel1 = new TableLayoutPanel();
             tableLayoutPanel2 = new TableLayoutPanel();
             tableLayoutPanel3 = new TableLayoutPanel();
-            flowLayoutPanel1.SuspendLayout();
+            flowLayoutPanel1 = new FlowLayoutPanel();
             tableLayoutPanel1.SuspendLayout();
             tableLayoutPanel2.SuspendLayout();
             tableLayoutPanel3.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // tbCod
@@ -102,21 +102,8 @@
             label3.Name = "label3";
             label3.Size = new Size(142, 29);
             label3.TabIndex = 5;
-            label3.Text = "Введите код для плана:";
+            label3.Text = "Hello";
             label3.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // flowLayoutPanel1
-            // 
-            flowLayoutPanel1.AutoSize = true;
-            flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            flowLayoutPanel1.Controls.Add(tableLayoutPanel1);
-            flowLayoutPanel1.Controls.Add(tableLayoutPanel2);
-            flowLayoutPanel1.Controls.Add(tableLayoutPanel3);
-            flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
-            flowLayoutPanel1.Location = new Point(0, 0);
-            flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(302, 91);
-            flowLayoutPanel1.TabIndex = 6;
             // 
             // tableLayoutPanel1
             // 
@@ -126,14 +113,14 @@
             tableLayoutPanel1.ColumnCount = 2;
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Controls.Add(label1, 0, 0);
-            tableLayoutPanel1.Controls.Add(label2, 1, 0);
-            tableLayoutPanel1.Location = new Point(71, 3);
+            tableLayoutPanel1.Controls.Add(label3, 0, 0);
+            tableLayoutPanel1.Controls.Add(tbCod, 1, 0);
+            tableLayoutPanel1.Location = new Point(3, 24);
             tableLayoutPanel1.Name = "tableLayoutPanel1";
             tableLayoutPanel1.RowCount = 1;
             tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel1.Size = new Size(160, 15);
-            tableLayoutPanel1.TabIndex = 7;
+            tableLayoutPanel1.Size = new Size(296, 29);
+            tableLayoutPanel1.TabIndex = 6;
             // 
             // tableLayoutPanel2
             // 
@@ -143,14 +130,14 @@
             tableLayoutPanel2.ColumnCount = 2;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.Controls.Add(label3, 0, 0);
-            tableLayoutPanel2.Controls.Add(tbCod, 1, 0);
-            tableLayoutPanel2.Location = new Point(3, 24);
+            tableLayoutPanel2.Controls.Add(label1, 0, 0);
+            tableLayoutPanel2.Controls.Add(label2, 1, 0);
+            tableLayoutPanel2.Location = new Point(71, 3);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 1;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            tableLayoutPanel2.Size = new Size(296, 29);
-            tableLayoutPanel2.TabIndex = 8;
+            tableLayoutPanel2.Size = new Size(160, 15);
+            tableLayoutPanel2.TabIndex = 7;
             // 
             // tableLayoutPanel3
             // 
@@ -167,9 +154,22 @@
             tableLayoutPanel3.RowCount = 1;
             tableLayoutPanel3.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
             tableLayoutPanel3.Size = new Size(162, 29);
-            tableLayoutPanel3.TabIndex = 7;
+            tableLayoutPanel3.TabIndex = 8;
             // 
-            // AddPlan
+            // flowLayoutPanel1
+            // 
+            flowLayoutPanel1.AutoSize = true;
+            flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            flowLayoutPanel1.Controls.Add(tableLayoutPanel2);
+            flowLayoutPanel1.Controls.Add(tableLayoutPanel1);
+            flowLayoutPanel1.Controls.Add(tableLayoutPanel3);
+            flowLayoutPanel1.FlowDirection = FlowDirection.TopDown;
+            flowLayoutPanel1.Location = new Point(0, 0);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new Size(302, 91);
+            flowLayoutPanel1.TabIndex = 9;
+            // 
+            // AddTEP
             // 
             AcceptButton = btnOk;
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -177,21 +177,20 @@
             AutoSize = true;
             AutoSizeMode = AutoSizeMode.GrowAndShrink;
             CancelButton = btnCancel;
-            ClientSize = new Size(363, 121);
+            ClientSize = new Size(367, 121);
             Controls.Add(flowLayoutPanel1);
             FormBorderStyle = FormBorderStyle.Fixed3D;
-            Name = "AddPlan";
+            Name = "AddTEP";
             StartPosition = FormStartPosition.CenterScreen;
-            Text = "Код плана";
             TopMost = true;
             Shown += AddPlan_Shown;
-            flowLayoutPanel1.ResumeLayout(false);
-            flowLayoutPanel1.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             tableLayoutPanel2.ResumeLayout(false);
             tableLayoutPanel2.PerformLayout();
             tableLayoutPanel3.ResumeLayout(false);
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -204,9 +203,9 @@
         private Label label1;
         private Label label2;
         private Label label3;
-        private FlowLayoutPanel flowLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel1;
         private TableLayoutPanel tableLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel3;
+        private FlowLayoutPanel flowLayoutPanel1;
     }
 }

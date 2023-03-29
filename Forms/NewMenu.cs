@@ -126,18 +126,43 @@ namespace Meter.Forms
         {
             DateTime date;
             DateTime.TryParseExact(textBox1.Text + " " + lblMonth.Text + " " + lblYear.Text, "dd MMMM yyyy", GlobalMethods.culture, DateTimeStyles.None, out date);
+            string datstr = date.ToString("dd.MM.yy");
             base.Button3_Click(sender, e);
-            Main.instance.StopAll();
-            Main.instance.wsMTEP.Range["B:B"].ClearContents();
-            Main.instance.ResumeAll();
-            Main.instance.wsMTEP.Range["B1"].Value = date.ToString("dd.MM.yy");
-            int day = int.Parse(this.textBox1.Text);
-            List<ChildObject> coList = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codMaketTEP != null).ToList();
-            foreach (ChildObject co in coList)
-            {
-                co.WriteToTEP(day);
-            }
 
+            if (Main.instance.wsTEPm.Range["A6"].Value == "")
+            {
+                WriteMaketTEP(date);
+                WriteTEP(date);
+            }
+            else
+            {
+                string lastDateStr = (string)Main.instance.wsTEPm.Range["A6"].Value;
+                DateTime lastDate;
+                DateTime.TryParseExact(lastDateStr, "dd.MM.yy", GlobalMethods.culture, DateTimeStyles.None, out lastDate);
+                if (lastDate != date && lastDate < date && (date - lastDate).TotalDays == 1)
+                {
+                    WriteMaketTEP(date);
+                    WriteTEP(date);
+                }
+                else if (lastDate == date || lastDate > date)
+                {
+                    if (MessageBox.Show("Запись на дату " + date.ToString("dd.MM.yy") + " уже существует!\nВы хотите произвести повторную запись?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
+                    {
+                        WriteMaketTEP(date);
+                        WriteTEP(date, true);
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+                else if (lastDate < date && (date - lastDate).TotalDays > 1)
+                {
+                    MessageBox.Show("Нет записи за прошлые дни!\nВы Пытаетесь записать на " + date.ToString("dd.MM.yy") + " а последняя запись производилась на " + lastDate.ToString("dd.MM.yy"));
+                    return;
+                }
+
+            }
             MessageBox.Show("Done!");
         }
         protected override void btnAdmin_Click(object sender, EventArgs e)
@@ -175,70 +200,52 @@ namespace Meter.Forms
             Main.instance.menu = this;
             base.NewMenuBase_Activated(sender, e);
         }
-        // public static void Login()
-        // {
-        //     using (HttpClient client = new HttpClient())
-        //     {
-        //         string uri = @"http://10.0.144.11:8080/ec3api/v1/user/login";
-        //         string host = @"10.0.144.11:8080";
-        //         string jsonRequest = "{\"username\":\"a_bagdatova\",\"password\":\"z123456\"}";
-        //         HttpRequestMessage message = new HttpRequestMessage()
-        //         {
-        //             RequestUri = new Uri(uri),
-        //             Method = HttpMethod.Post,
-        //             Headers = 
-        //             {
-        //                 {HttpRequestHeader.Host.ToString(), host},
-        //                 {HttpRequestHeader.Connection.ToString(), "keep-alive"},
-        //                 {HttpRequestHeader.ContentLength.ToString(), jsonRequest.Length.ToString()},
-        //                 {HttpRequestHeader.Accept.ToString(),"appplication/json, text/plain, */*"},
-        //                 {"st-token", "undefined"},
-        //                 {HttpRequestHeader.ContentType.ToString(), "application/json;charset=UTF-8"},
-        //                 {HttpRequestHeader.AcceptEncoding.ToString(), "gzip, deflate"}
-        //             },
-        //             Content = new StringContent(jsonRequest, Encoding.UTF8, "application/json")
-        //         };
-        //         using (var responce = client.SendAsync(message).Result)
-        //         {
-        //             var jsonResoponse = responce.Content.ReadAsStringAsync().Result;
-        //             var data = (JObject)JsonConvert.DeserializeObject(jsonResoponse);
+        
 
-        //             LoginRoot loginResponce = JsonConvert.DeserializeObject<LoginRoot>(jsonResoponse);
-        //             token = loginResponce.data.token;
-        //         }
-        //     }
-        // }
-        // public static DataRoot GetValue(string dataFrom, string dataTo, string ID)
-        // {
-        //     using (HttpClient client = new HttpClient())
-        //     {
-        //         string uri = @"http://10.0.144.11:8080/ec3api/v1/archives/point";
-        //         string host = @"10.0.144.11:8080";
-        //         string jsonRequest = "{\"FROM\":\"" + dataFrom +"\",\"TO\":\""+ dataTo + "\",\"POINT_ID\":" + ID + ",\"ML_ID\":[385,386],\"MD_ID\":5,\"AGGS_ID\":5,\"WO_BYP\":0,\"WO_ACTS\":0,\"BILLING_HOUR\":0,\"SHOW_MAP_DATA\":0,\"FREEZED\":1}";
-        //         HttpRequestMessage message = new HttpRequestMessage()
-        //         {
-        //             RequestUri = new Uri(uri),
-        //             Method = HttpMethod.Post,
-        //             Headers = 
-        //             {
-        //                 {HttpRequestHeader.Host.ToString(), host},
-        //                 {HttpRequestHeader.Connection.ToString(), "keep-alive"},
-        //                 {HttpRequestHeader.ContentLength.ToString(), jsonRequest.Length.ToString()},
-        //                 {HttpRequestHeader.Accept.ToString(),"appplication/json, text/plain, */*"},
-        //                 {"st-token", token},
-        //                 {HttpRequestHeader.ContentType.ToString(), "application/json;charset=UTF-8"},
-        //                 {HttpRequestHeader.AcceptEncoding.ToString(), "gzip, deflate"}
-        //             },
-        //             Content = new StringContent(jsonRequest, Encoding.UTF8, "application/json")
-        //         };
-        //         DataRoot vals;
-        //         using (var responce = client.SendAsync(message).Result)
-        //         {
-        //             var jsonResoponse = responce.Content.ReadAsStringAsync().Result;
-        //             vals = JsonConvert.DeserializeObject<DataRoot>(jsonResoponse);
-        //         }
-        //         return vals;
-        //     }
-        // }
+        private void WriteTEP(DateTime date, bool rewrite = false)
+        {
+            Main.instance.StopAll();
+            string datstr = date.ToString("dd.MM.yy");
+            int row;
+            GlobalMethods.ToLog("Зписываются ТЭПм и ТЭПн на " + datstr);
+
+            if (rewrite == false)
+            {
+                Main.instance.wsTEPm.Range["6:6"].Insert(Excel.XlInsertShiftDirection.xlShiftDown);
+                Main.instance.wsTEPm.Range["A6"].Value = datstr;
+                Main.instance.wsTEPn.Range["6:6"].Insert(Excel.XlInsertShiftDirection.xlShiftDown);
+                Main.instance.wsTEPn.Range["A6"].Value = datstr;
+                row = 6;
+            }
+            else
+            {
+                row = Main.instance.wsTEPn.Range["A:A"].Find(What: datstr, LookAt: Excel.XlLookAt.xlWhole).Row;
+            }
+
+            int day = int.Parse(this.textBox1.Text);
+            List<ChildObject> coList = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codTEP != null).ToList();
+            foreach (ChildObject co in coList)
+            {
+                co.WriteToTEP(day, row, rewrite: rewrite);
+            }
+            Main.instance.ResumeAll();
+        }
+
+        private void WriteMaketTEP(DateTime date)
+        {
+            string datstr = date.ToString("dd.MM.yy");
+            GlobalMethods.ToLog("Зписываются ТЭПм и ТЭПн на " + datstr);
+
+            Main.instance.StopAll();
+            Main.instance.wsMTEP.Range["B:B"].ClearContents();
+            Main.instance.ResumeAll();
+            Main.instance.wsMTEP.Range["B1"].Value = datstr;
+            int day = int.Parse(this.textBox1.Text);
+            List<ChildObject> coList = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codMaketTEP != null).ToList();
+            foreach (ChildObject co in coList)
+            {
+                co.WriteToMaketTEP(day);
+            }
+        }
     }
 }
