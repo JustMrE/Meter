@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 DB/opened.txt
 DB/temparch
+DB/log.txt
