@@ -15,7 +15,7 @@ namespace Meter
 {
     public static class GlobalMethods
     {
-        public static string logFile;
+        public static string logFile, errLogFile;
         public static string username;
         public static CultureInfo culture = new CultureInfo("ru-RU");
         public static float dpiX, dpiY;
@@ -28,7 +28,7 @@ namespace Meter
                 Main.GetWindowRect(Main.instance.xlAppHwnd, ref Main.instance.xlAppRect);
                 Main.instance.xlAppRect.Top = Main.instance.xlAppRect.Top < 0 ? 0 : Main.instance.xlAppRect.Top;
                 Main.instance.xlAppRect.Left = Main.instance.xlAppRect.Left < 0 ? 0 : Main.instance.xlAppRect.Left;
-
+                
                 int yCorrect = Convert.ToInt32((double)((Excel.Range)Main.instance.xlApp.ActiveWindow.ActivePane.VisibleRange.Cells[1,1]).Top - (double)((Excel.Worksheet)Main.instance.wb.ActiveSheet).Range["B7"].Top);
                 int xCorrect = Convert.ToInt32((double)((Excel.Range)Main.instance.xlApp.ActiveWindow.ActivePane.VisibleRange.Cells[1,1]).Left - (double)((Excel.Worksheet)Main.instance.wb.ActiveSheet).Range["B7"].Left);
 
@@ -59,6 +59,14 @@ namespace Meter
                 {
                     
                 }
+            }
+        }
+        
+        public static void Err(string msg)
+        {
+            using (StreamWriter writer = new StreamWriter(errLogFile, true))
+            {
+                writer.WriteLine(DateTime.Now + " " + username + " " + msg);
             }
         }
 
@@ -110,6 +118,10 @@ namespace Meter
             if (File.Exists(logFile))
             {
                 using (File.CreateText(logFile));
+            }
+            if (File.Exists(errLogFile))
+            {
+                using (File.CreateText(errLogFile));
             }
             ToLog("Логи очищены");
         }
