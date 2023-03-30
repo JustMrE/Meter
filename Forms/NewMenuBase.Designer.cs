@@ -77,6 +77,7 @@
             tableLayoutPanel4 = new TableLayoutPanel();
             btnL3 = new Button();
             checkBox1 = new CheckBox();
+            checkBox2 = new CheckBox();
             tableLayoutPanel3 = new TableLayoutPanel();
             tbSearch = new TextBox();
             listBox1 = new ListBox();
@@ -702,6 +703,7 @@
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             tableLayoutPanel4.Controls.Add(btnL3, 0, 0);
             tableLayoutPanel4.Controls.Add(checkBox1, 0, 1);
+            tableLayoutPanel4.Controls.Add(checkBox2, 0, 2);
             tableLayoutPanel4.Location = new Point(305, 0);
             tableLayoutPanel4.Margin = new Padding(0);
             tableLayoutPanel4.Name = "tableLayoutPanel4";
@@ -729,6 +731,15 @@
             checkBox1.Size = new Size(69, 19);
             checkBox1.TabIndex = 57;
             checkBox1.Text = "Регистр";
+            // 
+            // checkBox2
+            // 
+            checkBox2.AutoSize = true;
+            checkBox2.Location = new Point(3, 34);
+            checkBox2.Name = "checkBox2";
+            checkBox2.Size = new Size(69, 19);
+            checkBox2.TabIndex = 57;
+            checkBox2.Text = "Heads";
             // 
             // tableLayoutPanel3
             // 
@@ -899,6 +910,7 @@
         protected TextBox tbSearch;
 
         protected CheckBox checkBox1;
+        protected CheckBox checkBox2;
         protected Button btnAdmin;
         protected Button button42;
         protected Button button41;

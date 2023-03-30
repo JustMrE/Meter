@@ -647,6 +647,7 @@ namespace Meter
                             {
                                 co.ws.Activate();
                                 co.Range.Select();
+                                NewMenuBase.SetForegroundWindow(xlAppHwnd);
                             }
                         }
                     }

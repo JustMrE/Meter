@@ -364,3 +364,4 @@ FodyWeavers.xsd
 DB/opened.txt
 DB/temparch
 DB/log.txt
+DB/errlog.txt

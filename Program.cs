@@ -75,6 +75,7 @@ namespace Meter
 
             string file1 = db + @"\opened.txt";
             string logFile = db + @"\log.txt";
+            string errLogFile = db + @"\errlog.txt";
             string username = Environment.UserName;
             #if !DEBUG
             if (File.Exists(file1))
@@ -90,6 +91,7 @@ namespace Meter
 
             GlobalMethods.username = username;
             GlobalMethods.logFile = logFile;
+            GlobalMethods.errLogFile = errLogFile;
 
             #if !DEBUG
             using (StreamWriter writer = File.CreateText(file1))
@@ -100,6 +102,12 @@ namespace Meter
             #endif
 
             using (StreamWriter writer = new StreamWriter(logFile, true)) 
+            {
+                writer.WriteLine();
+                writer.WriteLine();
+                writer.WriteLine(DateTime.Now +  " Счетчики открыты пользователем " + username);
+            }
+            using (StreamWriter writer = new StreamWriter(errLogFile, true)) 
             {
                 writer.WriteLine();
                 writer.WriteLine();

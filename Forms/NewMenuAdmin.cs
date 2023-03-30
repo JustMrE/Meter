@@ -143,6 +143,11 @@ namespace Meter.Forms
                     FileName = GlobalMethods.logFile,
                     UseShellExecute = true
                 });
+                Process.Start( new ProcessStartInfo()
+                {
+                    FileName = GlobalMethods.errLogFile,
+                    UseShellExecute = true
+                });
             }
             catch(Exception ex)
             {

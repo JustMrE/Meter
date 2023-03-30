@@ -39,6 +39,7 @@ namespace Meter.Forms
             listBox1.DoubleClick += new EventHandler(listBox1_DoubleClick);
             tbSearch.TextChanged += new EventHandler(searchTextBox_Changed);
             checkBox1.CheckedChanged += new EventHandler(searchTextBox_Changed);
+            checkBox2.CheckedChanged += new EventHandler(searchTextBox_Changed);
         }
         protected virtual void NewMenuBase_Shown(object sender, EventArgs e)
         {
@@ -77,16 +78,27 @@ namespace Meter.Forms
         {
             ToLog(sender, listBox1.SelectedItem);
             string codeName = ((Excel.Worksheet)Main.instance.xlApp.ActiveSheet).CodeName;
-            if (codeName == "PS")
+            if (checkBox2.Checked == false)
             {
-                Main.instance.references[(string)listBox1.SelectedItem].PS.Range.Select();
-                SetForegroundWindow(Main.instance.xlAppHwnd);
+                if (codeName == "PS")
+                {
+                    Main.instance.references[(string)listBox1.SelectedItem].PS.Range.Select();
+                    SetForegroundWindow(Main.instance.xlAppHwnd);
 
+                }
+                else if (codeName == "DB")
+                {
+                    Main.instance.references[(string)listBox1.SelectedItem].DB.Range.Select();
+                    SetForegroundWindow(Main.instance.xlAppHwnd);
+                }
             }
-            else if (codeName == "DB")
+            else
             {
-                Main.instance.references[(string)listBox1.SelectedItem].DB.Range.Select();
-                SetForegroundWindow(Main.instance.xlAppHwnd);
+                if (codeName == "PS")
+                {
+                    Main.instance.heads.HeadByName((string)listBox1.SelectedItem).Range.Select();
+                    SetForegroundWindow(Main.instance.xlAppHwnd);
+                }
             }
         }
         protected virtual void TextBox1_KeyPress(object sender, KeyPressEventArgs e)
@@ -96,7 +108,14 @@ namespace Meter.Forms
         protected virtual void searchTextBox_Changed(object sender, EventArgs e)
         {
             ToLog(sender, this.tbSearch.Text);
-            RegexSearch();
+            if (checkBox2.Checked == false)
+            {
+                RegexSearch();
+            }
+            else
+            {
+                RegexSearchHeads();
+            }
         }
         protected virtual void TextBox1_TextChanged(object sender, EventArgs e)
         {

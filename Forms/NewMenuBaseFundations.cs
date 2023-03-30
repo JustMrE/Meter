@@ -27,7 +27,7 @@ namespace Meter.Forms
         protected static extern IntPtr GetForegroundWindow();
 
         [DllImport("user32.dll")]
-        static extern bool SetForegroundWindow(IntPtr hWnd);
+        public static extern bool SetForegroundWindow(IntPtr hWnd);
 
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
@@ -83,6 +83,44 @@ namespace Meter.Forms
                 {
                     listBox1.Items.Clear();
                     listBox1.Items.AddRange(Main.instance.references.references.Keys.OrderBy(m => m).ToArray());
+                }));
+            }
+
+        }
+        private void RegexSearchHeads()
+        {
+            RegexOptions ro = checkBox1.Checked ? RegexOptions.None : RegexOptions.IgnoreCase;
+            if (this.tbSearch.Text != "")
+            {
+                this.Invoke((MethodInvoker)(() =>
+                {
+                    try
+                    {
+                        listBox1.Items.Clear();
+                        string search = this.tbSearch.Text;
+                        search = search.Replace("*", @".*");
+
+                        var deviceIds = HeadReferences.idDictionary.Values.ToList();
+                        var matchingIds = deviceIds.Where(id => Regex.IsMatch(id._name, pattern: search, ro)).Select(n => n._name).ToArray();
+                        listBox1.Items.AddRange(matchingIds.ToArray());
+                    }
+                    catch (ArgumentException)
+                    {
+                        this.Invoke((MethodInvoker)(() =>
+                        {
+                            listBox1.Items.Clear();
+                            listBox1.Items.AddRange(HeadReferences.idDictionary.Values.Select(n => n._name).OrderBy(m => m).ToArray());
+                        }));
+                    }
+
+                }));
+            }
+            else
+            {
+                this.Invoke((MethodInvoker)(() =>
+                {
+                    listBox1.Items.Clear();
+                    listBox1.Items.AddRange(HeadReferences.idDictionary.Values.Select(n => n._name).OrderBy(m => m).ToArray());
                 }));
             }
 
@@ -758,6 +796,15 @@ namespace Meter.Forms
                 //}
             });
             AddButtonToPopUpCommandBar(ref p, "UpdateHeadParents", Main.instance.heads.UpdateParents);
+            AddButtonToPopUpCommandBar(ref p, "CheckFormulas", () => {
+                foreach (string s in Main.instance.formulas.formulas.Keys)
+                {
+                    if (!RangeReferences.idDictionary.ContainsKey(s))
+                    {
+                        GlobalMethods.Err("idDictionary not found: " + s);
+                    }
+                }
+            });
         }
         protected void OpenForm()
         {

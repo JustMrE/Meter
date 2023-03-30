@@ -26,10 +26,17 @@ namespace Meter.Forms
             int i;
             foreach (string id in Main.instance.formulas.formulas.Keys)
             {
-                string name = ((ChildObject)RangeReferences.idDictionary[id]).GetFirstParent._name + " " + RangeReferences.idDictionary[id]._name;
-                i = listBox0.Items.Add(name);
-                list.Add(name);
-                idByName.Add(name, id);
+                try 
+                {
+                    string name = ((ChildObject)RangeReferences.idDictionary[id]).GetFirstParent._name + " " + RangeReferences.idDictionary[id]._name;
+                    i = listBox0.Items.Add(name);
+                    list.Add(name);
+                    idByName.Add(name, id);
+                }
+                catch (Exception e)
+                {
+                    GlobalMethods.Err(e.Message);
+                }
             }
         }
 
@@ -64,7 +71,7 @@ namespace Meter.Forms
 
         private void RegexSearch()
         {
-            RegexOptions ro = RegexOptions.None; //checkBox1.Checked ? RegexOptions.None : RegexOptions.IgnoreCase;
+            RegexOptions ro = this.сheckBox1.Checked ? RegexOptions.None : RegexOptions.IgnoreCase;
             if (this.tbSearch.Text != "")
             {
                 this.Invoke((MethodInvoker)(() =>
