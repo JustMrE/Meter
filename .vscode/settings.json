@@ -1,0 +1,4 @@
+{
+    "csharp.inlayHints.parameters.forObjectCreationParameters": false,
+    "csharp.inlayHints.types.forLambdaParameterTypes": true
+}

@@ -72,7 +72,6 @@ namespace Meter
 
         public static void ToLog(string msg)
         {
-            
             using (StreamWriter writer = new StreamWriter(logFile, true))
             {
                 writer.WriteLine(DateTime.Now + " " + username + " " + msg);

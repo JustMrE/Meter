@@ -37,7 +37,7 @@ namespace Meter.Forms
         {
             base.FormClose();
         }
-         protected override void TextBox1_TextChanged(object sender, EventArgs e)
+        protected override void TextBox1_TextChanged(object sender, EventArgs e)
         {
             base.TextBox1_TextChanged(sender, e);
             string tbVal = textBox1.Text;
@@ -131,8 +131,7 @@ namespace Meter.Forms
 
             if (Main.instance.wsTEPm.Range["A6"].Value == "")
             {
-                WriteMaketTEP(date);
-                WriteTEP(date);
+                WriteTEPs(date);
             }
             else
             {
@@ -148,8 +147,7 @@ namespace Meter.Forms
                 {
                     if (MessageBox.Show("Запись на дату " + date.ToString("dd.MM.yy") + " уже существует!\nВы хотите произвести повторную запись?", "", MessageBoxButtons.YesNo) == DialogResult.Yes)
                     {
-                        WriteMaketTEP(date);
-                        WriteTEP(date, true);
+                        WriteTEPs(date, true);
                     }
                     else
                     {
@@ -201,12 +199,17 @@ namespace Meter.Forms
             base.NewMenuBase_Activated(sender, e);
         }
         
-
+        private void WriteTEPs(DateTime date, bool rewrite = false)
+        {
+            WriteMaketTEP(date);
+            WriteTEP(date, rewrite);
+            CreateTXTforCDU();
+        }
         private void WriteTEP(DateTime date, bool rewrite = false)
         {
             Main.instance.StopAll();
             string datstr = date.ToString("dd.MM.yy");
-            int row;
+            int? row;
             GlobalMethods.ToLog("Зписываются ТЭПм и ТЭПн на " + datstr);
 
             if (rewrite == false)
@@ -219,18 +222,26 @@ namespace Meter.Forms
             }
             else
             {
-                row = Main.instance.wsTEPn.Range["A:A"].Find(What: datstr, LookAt: Excel.XlLookAt.xlWhole).Row;
+                try
+                {
+                    row = Main.instance.wsTEPn.Range["A:A"].Find(What: datstr, LookAt: Excel.XlLookAt.xlWhole).Row;
+                }
+                catch
+                {
+                    row = null;
+                }
             }
-
-            int day = int.Parse(this.textBox1.Text);
-            List<ChildObject> coList = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codTEP != null).ToList();
-            foreach (ChildObject co in coList)
+            if (row != null)
             {
-                co.WriteToTEP(day, row, rewrite: rewrite);
+                int day = int.Parse(this.textBox1.Text);
+                List<ChildObject> coList = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codTEP != null).ToList();
+                foreach (ChildObject co in coList)
+                {
+                    co.WriteToTEP(day, (int)row, rewrite: rewrite);
+                }
             }
             Main.instance.ResumeAll();
         }
-
         private void WriteMaketTEP(DateTime date)
         {
             string datstr = date.ToString("dd.MM.yy");
@@ -245,6 +256,29 @@ namespace Meter.Forms
             foreach (ChildObject co in coList)
             {
                 co.WriteToMaketTEP(day);
+            }
+        }
+        private void CreateTXTforCDU()
+        {
+            string txtForCDU = "";
+            txtForCDU += Main.instance.wsMTEP.Range["B1"].Value + "\n";
+
+            Excel.Range r1 = Main.instance.wsMTEP.Range["A2"];
+            Excel.Range r2 = r1.End[Excel.XlDirection.xlDown];
+            Excel.Range r = Main.instance.wsMTEP.Range[r1, r2];
+            r = r.Resize[r.Rows.Count, 2];
+            object[,] tep = (object[,])r.Value;
+            var dict = Enumerable.Range(1, tep.GetLength(0)).ToDictionary(i => tep[i, 1], i => tep[i, 2]);
+            var dict1 = dict.Where(n => n.Value != null).ToDictionary(kv => kv.Key, kv => kv.Value);
+            foreach (var item in dict1.Keys)
+            {
+
+                txtForCDU += item + "\t" + Math.Round((double)dict[item], 3) + "\n";
+            }
+            
+            using (StreamWriter sw = new StreamWriter(Main.dir + "\\Рапорт.txt"))
+            {
+                sw.Write(txtForCDU);
             }
         }
     }
