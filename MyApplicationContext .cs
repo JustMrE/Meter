@@ -169,7 +169,7 @@ namespace Meter
                     try
                     {
                         PipeValue pv = JsonConvert.DeserializeObject<PipeValue>(msg);
-                        if (pv.subjectName != null && pv.level1Name != null && pv.level2Name != null && pv.day != null && pv.value != null)
+                        if (!string.IsNullOrEmpty(pv.subjectName) && !string.IsNullOrEmpty(pv.level1Name) && !string.IsNullOrEmpty(pv.level2Name) && pv.day != null && !string.IsNullOrEmpty(pv.value))
                         {
                             ReferenceObject ro = null;
                             if (references.references.TryGetValue(pv.subjectName, out ro))
