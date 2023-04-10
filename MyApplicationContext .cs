@@ -470,7 +470,7 @@ namespace Meter
                 }
             }
             xlApp.Visible = true;
-            //RestoreExcel();
+            RestoreExcel();
 
             zoom = (double)xlApp.ActiveWindow.Zoom;
         }
