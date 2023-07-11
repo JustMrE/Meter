@@ -49,6 +49,11 @@
             //
             this.button3.Visible = true;
             this.button3.Text = "записать ТЭП";
+            //
+            //button 4
+            //
+            this.button4.Visible = true;
+            this.button4.Text = "записать планы";
         }
 
         #endregion

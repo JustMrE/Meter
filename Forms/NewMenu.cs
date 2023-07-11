@@ -163,6 +163,10 @@ namespace Meter.Forms
             }
             MessageBox.Show("Done!");
         }
+        protected override void Button4_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Запись формы W89");
+        }
         protected override void btnAdmin_Click(object sender, EventArgs e)
         {
             base.btnAdmin_Click(sender, e);
