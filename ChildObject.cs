@@ -661,6 +661,15 @@ namespace Meter
                 }
             }
         }
+        public void ChangeColorCell()
+        {
+            if (_level != Level.level2) return;
+        }
+        public void UpdateFormulaCell()
+        {
+            if (_level != Level.level2) return;
+
+        }
         public void UpdateColors()
         {
             if (WS.CodeName == "DB") return;
@@ -680,7 +689,6 @@ namespace Meter
                 }
                 if (cT != null && cS != null)
                 {
-
                     _head.Interior.Color = cT;
                     _body.Interior.Color = cS;
 
@@ -1131,6 +1139,14 @@ namespace Meter
                     item.ResetCode();
                 }
             }
+        }
+
+        public void ResetCodeCell(int day)
+        {
+            Excel.Range r = ((Excel.Range)((ReferenceObject)RangeReferences.idDictionary[firstParentID]).DB.childs[GetParent<ChildObject>()._name].childs["код"].Body.Cells[1, 1]);
+            ((ReferenceObject)RangeReferences.idDictionary[firstParentID]).DB.childs[GetParent<ChildObject>()._name].childs["код"].RangeByDay(day).Value = "=" + r.Address;
+            ((ReferenceObject)RangeReferences.idDictionary[firstParentID]).DB.childs[GetParent<ChildObject>()._name].childs["код"].RangeByDay(day).Replace("$", "", LookAt: Excel.XlLookAt.xlPart);
+            Marshal.ReleaseComObject(r);
         }
         public void Clear()
         {

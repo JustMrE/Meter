@@ -85,35 +85,35 @@ Function NamedPipeExists() As Boolean
 End Function
 
 Sub SendMsgToMeter(Optional subjectName As String = "", Optional level1Name As String = "", Optional level2Name As String = "", Optional cod As String = "", Optional day As String = "", Optional val As String = "")
-    Dim fso As Object
-    Dim file As Object
-    Dim pipePath As String
-    Dim i%, msg$
+Dim fso As Object
+Dim file As Object
+Dim pipePath As String
+Dim i%, msg$
 
-    Dim json As Object
-    Set json = CreateObject("Scripting.Dictionary")
+Dim json As Object
+Set json = CreateObject("Scripting.Dictionary")
 
-    json.Add "subjectName", subjectName
-    json.Add "level1Name", level1Name
-    json.Add "level2Name", level2Name
-    json.Add "cod", cod
-    json.Add "day", day
-    json.Add "value", val
-    msg = ToJson(json)
+json.Add "subjectName", subjectName
+json.Add "level1Name", level1Name
+json.Add "level2Name", level2Name
+json.Add "cod", cod
+json.Add "day", day
+json.Add "value", val
+msg = ToJson(json)
 
-    i = 0
-    pipePath = "\\.\pipe\MeterServer"
+i = 0
+pipePath = "\\.\pipe\MeterServer"
 
-    Do
-    i = i + 1
-        On Error Resume Next
-        Set file = CreateObject("Scripting.FileSystemObject").CreateTextFile(pipePath)
-        On Error GoTo 0
-    If i > 50 Then Exit Sub
-    Loop Until Not file Is Nothing
+Do
+i = i + 1
+    On Error Resume Next
+    Set file = CreateObject("Scripting.FileSystemObject").CreateTextFile(pipePath)
+    On Error GoTo 0
+If i > 50 Then Exit Sub
+Loop Until Not file Is Nothing
 
-    file.WriteLine msg
-    file.Close
+file.WriteLine msg
+file.Close
 End Sub
 
 Function ToJson(ByVal dict As Object) As String
@@ -121,7 +121,7 @@ Function ToJson(ByVal dict As Object) As String
 
     result = "{"
     For Each key In dict.Keys
-        result = result & call IIf(Len(result) > 1, ",", "")
+        result = result & IIf(Len(result) > 1, ",", "")
 
         If TypeName(dict(key)) = "Dictionary" Then
             value = ToJson(dict(key))
@@ -137,7 +137,4 @@ Function ToJson(ByVal dict As Object) As String
     ToJson = result
 End Function
 
-Function IIf(expr, truepart, falsepart)
-IIf = falsepart
-if expr then IIf = truepart
-End Function
+

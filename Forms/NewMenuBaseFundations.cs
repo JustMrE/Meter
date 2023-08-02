@@ -207,6 +207,8 @@ namespace Meter.Forms
             }
             if (Main.instance.colors.mainSubtitle.ContainsValue(activeColor))
             {
+                selectedButtons.Add("Изменить mainSubtitle");
+                selectedButtons.Add("Сбросить mainSubtitle");
                 selectedButtons.Add("Ввести корректировку");
                 if (RangeReferences.activeTable.DB.HasItem("по счетчику"))
                 {
@@ -517,8 +519,8 @@ namespace Meter.Forms
                         int? day = RangeReferences.activeTable.ActiveDay();
                         if (day != null)
                         {
-                            
-                            WriteToDB(_activeRange, (int)day);
+                            string? name = Main.instance.colors.NameByColor(c);
+                            WriteToDB(_activeRange, (int)day, true, L2: name);
                         }
                     }
                     else
@@ -529,11 +531,12 @@ namespace Meter.Forms
             }
             Main.instance.ResumeAll();
         }
-        public void WriteToDB(Excel.Range rng, int day, bool dontedit = true)
+        public void WriteToDB(Excel.Range rng, int day, bool dontedit = true, string? L2 = null)
         {
+            string nameL2 = L2 == null ? RangeReferences.activeL2 : (string)L2;
             string val = rng.Formula != null ? rng.Formula.ToString() : "";
             if (dontedit) DontEdit(rng, day);
-            RangeReferences.activeTable.WriteToDB(RangeReferences.ActiveL1, RangeReferences.activeL2,(int)day, val);
+            RangeReferences.activeTable.WriteToDB(RangeReferences.ActiveL1, nameL2,(int)day, val);
             
         }
         private void DontEdit(Excel.Range rng, int? day = null)
@@ -620,6 +623,21 @@ namespace Meter.Forms
                 if (n != "корректировка факт" && n != "код" && n != "основное" && n != "счетчик" && !RangeReferences.activeTable._activeChild._activeChild.HasItem(n, SymbolType.lower))
                 {
                     AddButtonToPopUpCommandBar(ref p, n, RangeReferences.activeTable.ChangeType, RangeReferences.activeL2, n);
+                }
+            }
+
+            if (p.accChildCount == 0)
+                p.Delete();
+        }
+        private void ChangeTypeCellMenuMain()
+        {
+            CommandBarPopup p = (CommandBarPopup)cb.Controls.Add(Type: MsoControlType.msoControlPopup, Temporary: true);
+            p.Caption = "Изменить";
+            foreach (string n in RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs.Keys)
+            {
+                if (n != "корректировка факт" && n != "код" && n != "основное" && n != "счетчик" && !RangeReferences.activeTable._activeChild._activeChild.HasItem(n, SymbolType.lower))
+                {
+                    AddButtonToPopUpCommandBar(ref p, n, RangeReferences.activeTable.ChangeTypeCell, RangeReferences.activeL2, n);
                 }
             }
 
@@ -1113,6 +1131,7 @@ namespace Meter.Forms
                 if (selectedButtons.Contains("Показать")) ShowTypeMenu();
                 if (selectedButtons.Contains("Скрыть")) AddButtonToCommandBar("Скрыть", HideType);
                 if (selectedButtons.Contains("Изменить main")) ChangeTypeMenuMain();
+                if (selectedButtons.Contains("Изменить mainSubtitle")) ChangeTypeCellMenuMain();
                 if (selectedButtons.Contains("Изменить extra")) ChangeTypeMenuExtra();
                 if (selectedButtons.Contains("Ввести корректировку")) AddButtonToCommandBar("Ввести корректировку", () =>
                 {
@@ -1166,6 +1185,9 @@ namespace Meter.Forms
                     });
                 if (selectedButtons.Contains("Сбросить")) AddButtonToCommandBar("Сбросить", () => {
                     RangeReferences.activeTable.Reset(RangeReferences.ActiveL1, RangeReferences.activeL2);
+                });
+                if (selectedButtons.Contains("Сбросить mainSubtitle")) AddButtonToCommandBar("Сбросить", () => {
+                    RangeReferences.activeTable.ResetCell(RangeReferences.ActiveL1, RangeReferences.activeL2);
                 });
                 if (selectedButtons.Contains("Special")) SpecialMenuMain();
                 if (selectedButtons.Contains("Удалить субъект"))AddButtonToCommandBar("Удалить субъект", () => RangeReferences.activeTable.RemoveSubject(), 330);

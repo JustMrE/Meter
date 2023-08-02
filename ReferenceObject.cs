@@ -259,15 +259,27 @@ namespace Meter
             PS.childs[L1].childs[newName].UpdateFormulas();
             PS.childs[L1].childs[newName].UpdateColors();
         }
-        public void ChangeTypeCell(string newName, string? L1 = null)
+        public void ChangeTypeCell(string oldName, string newName, string? L1 = null)
         {
-            //if (L1 == null) L1 = 
+            if (L1 == null)
+            {
+                L1 = PS._activeChild._name;
+            }
+            Main.instance.StopAll();
+            DB.childs[L1].childs["код"].RangeByDay((int)this.ActiveDay()).Value = GetCode(newName, L1);
+            Main.instance.ResumeAll();
+            PS.childs[L1].childs[oldName].RangeByDay((int)this.ActiveDay()).Interior.Color = Main.instance.colors.mainSubtitle[newName];
         }
         public void Reset(string nameL1, string nameL2)
         {
             PS.childs[nameL1].childs[nameL2].UpdateFormulas();
             PS.childs[nameL1].childs[nameL2].UpdateColors();
             PS.childs[nameL1].childs[nameL2].ResetCode();
+        }
+        public void ResetCell(string nameL1, string nameL2)
+        {
+            PS.childs[nameL1].childs[nameL2].ResetCodeCell((int)this.ActiveDay());
+            PS.childs[nameL1].childs[nameL2].RangeByDay((int)this.ActiveDay()).Interior.Color = Main.instance.colors.mainSubtitle[nameL2];
         }
         public void UpdateNames()
         {

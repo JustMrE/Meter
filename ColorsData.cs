@@ -24,6 +24,35 @@ namespace Meter
         public static Dictionary <string, Color> colorsForSettings = new Dictionary<string, Color>();
         public static Dictionary <string, Color> oldColorsForSettings;
 
+        public string NameByColor(Color c)
+        {
+            string? name = null;
+            if (subColors.ContainsValue(c))
+            {
+                name = subColors.Where(n => n.Value == c).Select(n => n.Key).FirstOrDefault();
+            }
+            if (main.ContainsValue(c))
+            {
+                name = main.Where(n => n.Value == c).Select(n => n.Key).FirstOrDefault();
+            }
+            if (mainTitle.ContainsValue(c))
+            {
+                name = mainTitle.Where(n => n.Value == c).Select(n => n.Key).FirstOrDefault();
+            }
+            if (mainSubtitle.ContainsValue(c))
+            {
+                name = mainSubtitle.Where(n => n.Value == c).Select(n => n.Key).FirstOrDefault();
+            }
+            if (extraTitle.ContainsValue(c))
+            {
+                name = extraTitle.Where(n => n.Value == c).Select(n => n.Key).FirstOrDefault();
+            }
+            if (extraSubtitle.ContainsValue(c))
+            {
+                name = extraSubtitle.Where(n => n.Value == c).Select(n => n.Key).FirstOrDefault();
+            }
+            return name == null ? "" : (string)name;
+        }
         public ColorsData()
         {
             if (instatnce == null) instatnce = this;
@@ -225,7 +254,7 @@ namespace Meter
             colorsForSettings.Add("корректировка", ColorTranslator.FromHtml("#99FF33"));
             colorsForSettings.Add("заявка", ColorTranslator.FromHtml("#CCFF33")); 
         }*/
-
+        
         public static void UpdateColors()
         {
 
