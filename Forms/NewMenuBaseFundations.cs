@@ -1224,7 +1224,7 @@ namespace Meter.Forms
         }
         public void ClearContextMenu()
         {
-             foreach (int index in Main.menuIndexes)
+            foreach (int index in Main.menuIndexes)
             {
                 //cb = Main.instance.xlApp.CommandBars[Main.menuIndexes[0]];
                 cb = Main.instance.xlApp.CommandBars[index];

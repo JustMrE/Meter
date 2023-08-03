@@ -60,7 +60,7 @@ namespace Meter
             referenceObject._name = newName;
             foreach (ChildObject co in referenceObject.childs.Values)
             {
-                Excel.Range r = ((Excel.Range)co.Head.Cells[1, 1]);
+                Excel.Range r = (Excel.Range)co.Head.Cells[1, 1];
                 co._name = newName;
                 r.Value = newName;
                 Marshal.ReleaseComObject(r);
@@ -89,7 +89,7 @@ namespace Meter
 
             Main.instance.StopAll();
             headObject._name = newName;
-            Excel.Range r = ((Excel.Range)headObject.Range.Cells[1, 1]);
+            Excel.Range r = (Excel.Range)headObject.Range.Cells[1, 1];
             r.Value = newName;
             Marshal.ReleaseComObject(r);
             if (headObject._level == Level.level2)
@@ -102,7 +102,7 @@ namespace Meter
 
                     foreach (ChildObject co in ro.childs.Values)
                     {
-                        Excel.Range r1 = ((Excel.Range)co.Head.Cells[1, 1]);
+                        Excel.Range r1 = (Excel.Range)co.Head.Cells[1, 1];
                         co._name = name;
                         r1.Value = name;
                         Marshal.ReleaseComObject(r);
@@ -110,6 +110,7 @@ namespace Meter
 
                     Main.instance.references.references.Remove(ro._name);
                     Main.instance.references.references.Add(name, ro);
+                    Main.instance.references.references[name]._name = name;
                 }
             }
             
