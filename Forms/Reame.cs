@@ -56,6 +56,8 @@ namespace Meter
             Main.instance.references.references.Remove(oldName);
             Main.instance.references.references.Add(newName, referenceObject);
 
+            Main.instance.formulas.formulas.Values.SelectMany(f => f).Where(t => t.text.Contains(oldName)).ToList().ForEach(t => t.text = t.text.Replace(oldName, newName));
+
             Main.instance.StopAll();
             referenceObject._name = newName;
             foreach (ChildObject co in referenceObject.childs.Values)
@@ -98,19 +100,23 @@ namespace Meter
                 foreach (string n in subjects)
                 {
                     ReferenceObject ro = Main.instance.references.references[n];
-                    string name = ro._name.Replace(oldName, newName);
+                    string subjectName = ro._name.Replace(oldName, newName);
+                    string subjectOldName = ro._name;
+
+                    Main.instance.formulas.formulas.Values.SelectMany(f => f).Where(t => t.text.Contains(subjectOldName)).ToList().ForEach(t => t.text = t.text.Replace(subjectOldName, subjectName));
 
                     foreach (ChildObject co in ro.childs.Values)
                     {
                         Excel.Range r1 = (Excel.Range)co.Head.Cells[1, 1];
-                        co._name = name;
-                        r1.Value = name;
+                        co._name = subjectName;
+                        r1.Value = subjectName;
                         Marshal.ReleaseComObject(r);
                     }
 
                     Main.instance.references.references.Remove(ro._name);
-                    Main.instance.references.references.Add(name, ro);
-                    Main.instance.references.references[name]._name = name;
+                    Main.instance.references.references.Add(subjectName, ro);
+                    Main.instance.references.references[subjectName]._name = subjectName;
+
                 }
             }
             

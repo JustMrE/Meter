@@ -721,5 +721,11 @@ namespace Meter.Forms
             }
             b.ContextMenuStrip = menu;
         }
+    
+        private void Test(object sender, EventArgs e) 
+        {
+            Control b = (Control)sender;
+            MessageBox.Show(b.SpecialTag().ID);
+        }
     }
 }

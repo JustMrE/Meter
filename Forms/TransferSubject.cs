@@ -161,6 +161,7 @@ namespace Meter.Forms
             else if (RBzone.Checked)
             {
                 string newName = referenceObject._name.Replace(nameL2old, nameL2);
+                string oldName = referenceObject._name;
                 if (string.IsNullOrEmpty(nameL0) || string.IsNullOrEmpty(nameL1) || string.IsNullOrEmpty(nameL2))
                 {
                     MessageBox.Show("Введите расположение субъекта в таблице!");
@@ -210,6 +211,8 @@ namespace Meter.Forms
                 Main.instance.heads.heads[nameL0].Increase(cols, false);
                 Main.instance.heads.heads[nameL0].childs[nameL1].Increase(cols, false);
                 Main.instance.heads.heads[nameL0].childs[nameL1].childs[nameL2].Increase(cols, false);
+
+                Main.instance.formulas.formulas.Values.SelectMany(f => f).Where(t => t.text.Contains(oldName)).ToList().ForEach(t => t.text = t.text.Replace(oldName, newName));
 
                 foreach (ChildObject co in referenceObject.childs.Values)
                 {
