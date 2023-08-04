@@ -329,6 +329,26 @@ namespace Meter
             }
         }
 
+        public void Increase(int column, bool stopall = true)
+        {
+            if (stopall == true) Main.instance.StopAll();
+            for (int i = 0; i < column; i++)
+            {
+                LastCell.Insert(Shift: Excel.XlInsertShiftDirection.xlShiftToRight);
+            }
+            if (stopall == true) Main.instance.ResumeAll();
+        }
+
+        public void Decrease(int column, bool stopall = true)
+        {
+            if (stopall == true) Main.instance.StopAll();
+            for (int i = 0; i < column; i++)
+            {
+                LastCell.Delete(Shift: Excel.XlDeleteShiftDirection.xlShiftToLeft);
+            }
+            if (stopall == true) Main.instance.ResumeAll();
+        }
+
         public void Resize(int column, bool newColumn = true, bool stopall = true)
         {
             if (newColumn)
@@ -497,11 +517,11 @@ namespace Meter
                     r.Borders.LineStyle = Excel.XlLineStyle.xlLineStyleNone;
                     r.Interior.Color = Color.White;
 
-                    // Задаем толстую левую границу
+                    // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                     r.Borders[XlBordersIndex.xlEdgeLeft].LineStyle = XlLineStyle.xlContinuous;
                     r.Borders[XlBordersIndex.xlEdgeLeft].Weight = XlBorderWeight.xlMedium;
 
-                    // Задаем толстую правую границу
+                    // пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
                     r.Borders[XlBordersIndex.xlEdgeRight].LineStyle = XlLineStyle.xlContinuous;
                     r.Borders[XlBordersIndex.xlEdgeRight].Weight = XlBorderWeight.xlMedium;
 

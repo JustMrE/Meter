@@ -450,8 +450,8 @@ namespace Meter.Forms
             
             if (Main.instance.zoom != (double)Main.instance.xlApp.ActiveWindow.Zoom)
             {
-               Main.instance.zoom = (double)Main.instance.xlApp.ActiveWindow.Zoom;
-               GlobalMethods.CalculateFormsPositions();
+                Main.instance.zoom = (double)Main.instance.xlApp.ActiveWindow.Zoom;
+                GlobalMethods.CalculateFormsPositions();
             }
             restartFlag = false;
         }
@@ -930,6 +930,13 @@ namespace Meter.Forms
                 {
                     SelectSubject();
                 }, 118);
+                if (selectedButtons.Contains("Переместить субъект")) AddButtonToCommandBar("Переместить субъект", () => 
+                {
+                    using (TransferSubject form = new TransferSubject())
+                    {
+                        form.ShowDialog();
+                    }
+                });
                 if (selectedButtons.Contains("Переименовать")) AddButtonToCommandBar("Переименовать", () => 
                 {
                     using (Rename form = new Rename(RangeReferences.activeTable))

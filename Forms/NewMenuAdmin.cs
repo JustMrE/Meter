@@ -47,6 +47,7 @@ namespace Meter.Forms
             }
             if (Main.instance.colors.main["subject"] == activeColor)
             {
+                selectedButtons.Add("Переместить субъект");
                 selectedButtons.Add("GoTo DB");
                 selectedButtons.Add("Переименовать");
                 selectedButtons.Add("Добавить новый L1");

@@ -176,8 +176,8 @@ namespace Meter
 
             CreateNewDBL1StandartOther(nameL1, stopall);
             CreateNewPS(nameL1, "ручное", stopall);
-
-             if (stopall == true) Main.instance.ResumeAll();
+            
+            if (stopall == true) Main.instance.ResumeAll();
         }
 
         public int? ActiveDay()
@@ -577,6 +577,10 @@ namespace Meter
 
             RangeReferences.idDictionary.Remove(ID);
             Main.instance.references.references.Remove(_name);
+            if (File.Exists(Main.dir + @"\current\references\" + ID + ".json"))
+            {
+                File.Delete(Main.dir + @"\current\references\" + ID + ".json");
+            }
             ID = null;
 
             if (Main.instance.heads.heads.ContainsKey(u0))
