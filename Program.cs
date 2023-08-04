@@ -35,8 +35,10 @@ namespace Meter
             if (!pathExists)
             {
                 string? selectionPath = null;
-                OpenFileDialog folderBrowserDialog = new OpenFileDialog();
-                folderBrowserDialog.Title = "Выберите запускаемый файл счетчиков (Meter.exe)";
+                OpenFileDialog folderBrowserDialog = new()
+                {
+                    Title = "Выберите запускаемый файл счетчиков (Meter.exe)"
+                };
 
                 DialogResult result = folderBrowserDialog.ShowDialog();
 
@@ -101,13 +103,13 @@ namespace Meter
             }
             #endif
 
-            using (StreamWriter writer = new StreamWriter(logFile, true)) 
+            using (StreamWriter writer = new (logFile, true)) 
             {
                 writer.WriteLine();
                 writer.WriteLine();
                 writer.WriteLine(DateTime.Now +  " Счетчики открыты пользователем " + username);
             }
-            using (StreamWriter writer = new StreamWriter(errLogFile, true)) 
+            using (StreamWriter writer = new (errLogFile, true)) 
             {
                 writer.WriteLine();
                 writer.WriteLine();
@@ -115,7 +117,7 @@ namespace Meter
             }
 
 
-            MyApplicationContext myAppContext = new MyApplicationContext();
+            MyApplicationContext myAppContext = new ();
             Application.Run(myAppContext);
 
             #if !DEBUG
