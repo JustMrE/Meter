@@ -166,19 +166,26 @@ namespace Meter
                 }
                 if (msg != "Stop Meter Server")
                 {
-                    try
-                    {
-                        PipeValue pv = JsonConvert.DeserializeObject<PipeValue>(msg);
-                        if (!string.IsNullOrEmpty(pv.subjectName) && !string.IsNullOrEmpty(pv.level1Name) && !string.IsNullOrEmpty(pv.level2Name) && pv.day != null && !string.IsNullOrEmpty(pv.value))
+                    //DataWriter.Write(msg);
+                    #region Old
+                        try
                         {
-                            ReferenceObject ro = null;
-                            if (references.references.TryGetValue(pv.subjectName, out ro))
+                            PipeValue pv = JsonConvert.DeserializeObject<PipeValue>(msg);
+                            if (!string.IsNullOrEmpty(pv.subjectName) && !string.IsNullOrEmpty(pv.level1Name) && !string.IsNullOrEmpty(pv.level2Name) && pv.day != null && !string.IsNullOrEmpty(pv.value))
                             {
-                                if (ro != null)
+                                ReferenceObject ro = null;
+                                if (references.references.TryGetValue(pv.subjectName, out ro))
                                 {
-                                    if (ro.DB.childs.ContainsKey(pv.level1Name) && ro.DB.childs[pv.level1Name].childs.ContainsKey(pv.level2Name))
+                                    if (ro != null)
                                     {
-                                        ro.WriteToDB(pv.level1Name, pv.level2Name, (int)pv.day, pv.value.Replace(",", "."));
+                                        if (ro.DB.childs.ContainsKey(pv.level1Name) && ro.DB.childs[pv.level1Name].childs.ContainsKey(pv.level2Name))
+                                        {
+                                            ro.WriteToDB(pv.level1Name, pv.level2Name, (int)pv.day, pv.value.Replace(",", "."));
+                                        }
+                                    }
+                                    else
+                                    {
+                                        GlobalMethods.ToLog("Не найден субъект " + pv.subjectName);
                                     }
                                 }
                                 else
@@ -186,47 +193,31 @@ namespace Meter
                                     GlobalMethods.ToLog("Не найден субъект " + pv.subjectName);
                                 }
                             }
+                            else if (pv != null)
+                            {
+                                if (pv.cod != null && pv.day != null && pv.value != null)
+                                {
+                                    ReferenceObject ro = references.references.Values.AsParallel().Where(n => n.codPlan == pv.cod).FirstOrDefault();
+                                    if (ro != null)
+                                    {
+                                        ro.WriteToDB("план", "утвержденный", (int)pv.day, pv.value.Replace(",","."));
+                                    }
+                                    else
+                                    {
+                                        GlobalMethods.ToLog("Не найден субъект с кодом плана " + pv.cod);
+                                    }
+                                }
+                            }
                             else
                             {
-                                GlobalMethods.ToLog("Не найден субъект " + pv.subjectName);
+                                GlobalMethods.ToLog("Не достаточно данных для записи");
                             }
                         }
-                        else if (pv != null)
+                        catch
                         {
-                            if (pv.cod != null && pv.day != null && pv.value != null)
-                            {
-                                ReferenceObject ro = references.references.Values.AsParallel().Where(n => n.codPlan == pv.cod).FirstOrDefault();
-                                if (ro != null)
-                                {
-                                    ro.WriteToDB("план", "утвержденный", (int)pv.day, pv.value.Replace(",","."));
-                                }
-                                else
-                                {
-                                    GlobalMethods.ToLog("Не найден субъект с кодом плана " + pv.cod);
-                                }
-                            }
+                            GlobalMethods.ToLog("Ошибка записи для полученных данных " + msg);
                         }
-                        else
-                        {
-                            GlobalMethods.ToLog("Не достаточно данных для записи");
-                        }
-                        //string[] vals = msg.Split("/");
-                        //int cod = int.Parse(vals[0]);
-                        //string val = vals[1].Replace(",",".");
-                        //ReferenceObject ro = references.references.Values.AsParallel().Where(n => n.codPlan == cod).FirstOrDefault();
-                        //if (ro != null)
-                        //{
-                        //    ro.WriteToDB("план", "утвержденный", 29, val);
-                        //}
-                        //else
-                        //{
-                        //    GlobalMethods.ToLog("Не найден субъект с кодом плана " + cod);
-                        //}
-                    }
-                    catch
-                    {
-                        GlobalMethods.ToLog("Ошибка записи для полученных данных " + msg);
-                    }
+                    #endregion
                 }
                 else
                 {
