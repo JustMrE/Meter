@@ -142,7 +142,7 @@ namespace Meter
             Main.instance.StopAll();
             foreach (ReferenceObject item in references.Values)
             {
-                item.UpdateAllPSFormulas();
+                item.UpdateAllPSFormulas(false);
             }
             Main.instance.ResumeAll();
             watch.Stop();
@@ -155,7 +155,7 @@ namespace Meter
             Main.instance.StopAll();
             foreach (ReferenceObject item in references.Values)
             {
-                item.UpdateAllDBFormulas();
+                item.UpdateAllDBFormulas(false);
             }
             Main.instance.ResumeAll();
             watch.Stop();

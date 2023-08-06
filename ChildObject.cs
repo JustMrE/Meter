@@ -668,7 +668,6 @@ namespace Meter
         public void UpdateFormulaCell()
         {
             if (_level != Level.level2) return;
-
         }
         public void UpdateColors()
         {
@@ -783,11 +782,17 @@ namespace Meter
                 if (stopall == true) Main.instance.StopAll();
                 if (Main.instance.colors.mainTitle.ContainsKey(_name))
                 {
-                    Body.Formula = "=" + GetFirstParent.DB.WS.Name + "!" + ((Excel.Range)GetFirstParent.DB.childs[GetParent<ChildObject>()._name].childs["основное"]._body.Cells[2, 1]).Address[false, false];
+                    string ad = GetFirstParent.DB.WS.Name + "!" + ((Excel.Range)GetFirstParent.DB.childs[GetParent<ChildObject>()._name].childs["основное"]._body.Cells[2, 1]).Address[false, false];
+                    
+                    Body.Formula = "=IF(OR(" + ad + @"="""",ISERROR(" + ad + @")),""""," + ad + ")";
+                    // Body.Formula = "=" + GetFirstParent.DB.WS.Name + "!" + ((Excel.Range)GetFirstParent.DB.childs[GetParent<ChildObject>()._name].childs["основное"]._body.Cells[2, 1]).Address[false, false];
                 }
                 else if (Main.instance.colors.extraTitle.ContainsKey(_name))
                 {
-                    Body.Formula = "=" + GetFirstParent.DB.WS.Name + "!" + ((Excel.Range)GetFirstParent.DB.childs[GetParent<ChildObject>()._name].childs[_name.ToLower()]._body.Cells[2, 1]).Address[false, false];
+                    string ad = GetFirstParent.DB.WS.Name + "!" + ((Excel.Range)GetFirstParent.DB.childs[GetParent<ChildObject>()._name].childs[_name.ToLower()]._body.Cells[2, 1]).Address[false, false];
+                    
+                    Body.Formula = "=IF(OR(" + ad + @"="""",ISERROR(" + ad + @")),""""," + ad + ")";
+                    // Body.Formula = "=" + GetFirstParent.DB.WS.Name + "!" + ((Excel.Range)GetFirstParent.DB.childs[GetParent<ChildObject>()._name].childs[_name.ToLower()]._body.Cells[2, 1]).Address[false, false];
                 }
                 ((Excel.Range)Body.Rows[11]).FormulaR1C1 = "=SUM(R[-10]C:R[-1]C)";
                 ((Excel.Range)Body.Rows[22]).FormulaR1C1 = "=SUM(R[-10]C:R[-1]C)";
@@ -817,12 +822,17 @@ namespace Meter
                     //Marshal.ReleaseComObject(((Excel.Range)Body.Rows[36]).FormulaR1C1);
                     //Marshal.ReleaseComObject(((Excel.Range)Body.Rows[37]).FormulaR1C1);
                 }
+                if (_name == "формула")
+                {
+                    // object val = ((Excel.Range)Body.Cells[Body.Cells.Count]).Value;
+                    // Body.ClearContents();
+                }
                 else if (_name == "по счетчику")
                 {
                     string? coef = GetFirstParent.meterCoef;
                     string address = ((Excel.Range)Body.Cells[1, 1]).Address[ReferenceStyle: XlReferenceStyle.xlR1C1];
 
-                    Body.FormulaR1C1 = "=IF(OR(ISBLANK(RC[-1]),ISBLANK(" + address + ")),,(RC[-1]-R[-1]C[-1])*" + address + ")";
+                    Body.FormulaR1C1 = "=IF(OR(ISBLANK(RC[-1]),ISBLANK(" + address + @")),"""",(RC[-1]-R[-1]C[-1])*" + address + ")";
                     Body.Replace("$", "", LookAt: XlLookAt.xlPart);
                     
                     ((Excel.Range)Body.Rows[1]).Value = coef != null ? coef : "";
@@ -872,10 +882,12 @@ namespace Meter
                     if (GetParent<ChildObject>()._name == "план")
                     {
                         Body.FormulaR1C1 = "=@INDIRECT(ADDRESS(ROW(RC),COLUMN(RC) + RC[-1],4,1),TRUE)";
+                        // Body.FormulaR1C1 = "=IF(OR(ISERROR(INDIRECT(ADDRESS(ROW(RC),COLUMN(RC) + RC[-1],4,1),TRUE) + RC[1]),ISBLANK(INDIRECT(ADDRESS(ROW(RC),COLUMN(RC) + RC[-1],4,1),TRUE))),"""",INDIRECT(ADDRESS(ROW(RC),COLUMN(RC) + RC[-1],4,1),TRUE) + RC[1])"
                     }
                     else
                     {
-                        Body.FormulaR1C1 = "=@INDIRECT(ADDRESS(ROW(RC),COLUMN(RC) + RC[-1],4,1),TRUE) + RC[1]";
+                        // Body.FormulaR1C1 = "=@INDIRECT(ADDRESS(ROW(RC),COLUMN(RC) + RC[-1],4,1),TRUE) + RC[1]";
+                        Body.FormulaR1C1 = @"=IF(OR(ISERROR(INDIRECT(ADDRESS(ROW(RC),COLUMN(RC) + RC[-1],4,1),TRUE) + RC[1]),ISBLANK(INDIRECT(ADDRESS(ROW(RC),COLUMN(RC) + RC[-1],4,1),TRUE))),"""",INDIRECT(ADDRESS(ROW(RC),COLUMN(RC) + RC[-1],4,1),TRUE) + RC[1])";
                     }
                     ((Excel.Range)Body.Rows[1]).ClearContents();;
                     ((Excel.Range)Body.Rows[12]).ClearContents();
@@ -910,7 +922,8 @@ namespace Meter
                 }
                 else if (_name == "заявка")
                 {
-                    Body.FormulaR1C1 = "=SUM(RC[1],RC[2])";
+                    // Body.FormulaR1C1 = "=SUM(RC[1],RC[2])";
+                    Body.FormulaR1C1 = @"=IF(AND(ISBLANK(RC[1]),ISBLANK(RC[2])),"""",SUM(RC[1],RC[2]))";
                     ((Excel.Range)Body.Rows[1]).ClearContents();;
                     ((Excel.Range)Body.Rows[12]).ClearContents();
                     ((Excel.Range)Body.Rows[23]).ClearContents();
@@ -1279,7 +1292,14 @@ namespace Meter
         {
             if (_level == Level.level2)
             {
-                Body.Formula = formula;
+                if (formula != "")
+                {
+                    Body.Formula = "=IFERROR(" + formula + @","""")";
+                }
+                else
+                {
+                    Body.Formula = "";
+                }
 
                 ((Excel.Range)Body.Rows[1]).ClearContents();
                 ((Excel.Range)Body.Rows[12]).ClearContents();
@@ -1288,12 +1308,12 @@ namespace Meter
                 ((Excel.Range)Body.Rows[36]).ClearContents();
                 ((Excel.Range)Body.Rows[37]).ClearContents();
 
-                Marshal.ReleaseComObject(((Excel.Range)Body.Rows[1]));
-                Marshal.ReleaseComObject(((Excel.Range)Body.Rows[12]));
-                Marshal.ReleaseComObject(((Excel.Range)Body.Rows[23]));
-                Marshal.ReleaseComObject(((Excel.Range)Body.Rows[24]));
-                Marshal.ReleaseComObject(((Excel.Range)Body.Rows[36]));
-                Marshal.ReleaseComObject(((Excel.Range)Body.Rows[37]));
+                Marshal.ReleaseComObject((Excel.Range)Body.Rows[1]);
+                Marshal.ReleaseComObject((Excel.Range)Body.Rows[12]);
+                Marshal.ReleaseComObject((Excel.Range)Body.Rows[23]);
+                Marshal.ReleaseComObject((Excel.Range)Body.Rows[24]);
+                Marshal.ReleaseComObject((Excel.Range)Body.Rows[36]);
+                Marshal.ReleaseComObject((Excel.Range)Body.Rows[37]);
             }
             else if (_level== Level.level1)
             {

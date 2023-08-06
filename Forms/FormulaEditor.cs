@@ -610,7 +610,7 @@ namespace Meter.Forms
             GlobalMethods.ToLog(this, sender);
             List<ForTags> formulaIDs = new List<ForTags>();
             //List<string> formula = new List<string>();
-            string formula = "=";
+            string formula = "";
             List<ForTags> formulaForArch = new List<ForTags>();
 
             foreach (Control item in flowLayoutPanel1.Controls)
@@ -645,10 +645,10 @@ namespace Meter.Forms
                 newFormula += "{" + item.Text + "} ";
             }
             formula = formula.Replace(",",".");
-            if (formula == "=")
-            {
-                formula = "";
-            }
+            // if (formula == "=")
+            // {
+            //     formula = "";
+            // }
             if (Main.instance.formulas.formulas.ContainsKey(myID))
             {
                 Main.instance.formulas.formulas[myID].Clear();

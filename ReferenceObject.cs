@@ -299,13 +299,13 @@ namespace Meter
             if (DB != null)
                 DB.UpdateAllBorders();
         }
-        public void UpdateAllPSFormulas()
+        public void UpdateAllPSFormulas(bool stopall = true)
         {
-            PS.UpdateFormulas();
+            PS.UpdateFormulas(stopall);
         }
-        public void UpdateAllDBFormulas()
+        public void UpdateAllDBFormulas(bool stopall = true)
         {
-            DB.UpdateFormulas();
+            DB.UpdateFormulas(stopall);
         }
         public void UpdateReferencesPS()
         {

@@ -64,7 +64,7 @@
             this.listView1.Location = new System.Drawing.Point(12, 334);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(252, 97);
+            this.listView1.Size = new System.Drawing.Size(660,110);
             this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listView1.TabIndex = 3;
             this.listView1.TileSize = new System.Drawing.Size(10, 10);
@@ -77,25 +77,25 @@
             this.tbSearch.Location = new System.Drawing.Point(12, 305);
             this.tbSearch.Name = "tbSearch";
             this.tbSearch.PlaceholderText = "Поиск...";
-            this.tbSearch.Size = new System.Drawing.Size(345, 23);
+            this.tbSearch.Size = new System.Drawing.Size(492, 23);
             this.tbSearch.TabIndex = 4;
             this.tbSearch.TextChanged += new System.EventHandler(this.tbSearch_TextChanged);
             // 
             // checkBox1
             // 
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(270, 334);
+            this.checkBox1.Location = new System.Drawing.Point(518,306);
             this.checkBox1.Name = "checkBox1";
-            this.checkBox1.Size = new System.Drawing.Size(87, 34);
+            this.checkBox1.Size = new System.Drawing.Size(151,19);
             this.checkBox1.TabIndex = 5;
-            this.checkBox1.Text = "Учитывать \r\nрегистр";
+            this.checkBox1.Text = "Учитывать регистр";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(390, 305);
             this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(37, 23);
+            this.button1.Location = new System.Drawing.Point(686,317);
+            this.button1.Size = new System.Drawing.Size(37,23);
             this.button1.TabIndex = 6;
             this.button1.Text = "+";
             this.button1.UseVisualStyleBackColor = true;
@@ -103,9 +103,9 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(390, 334);
             this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(37, 23);
+            this.button2.Location = new System.Drawing.Point(686,342);
+            this.button2.Size = new System.Drawing.Size(37,23);
             this.button2.TabIndex = 7;
             this.button2.Text = "*";
             this.button2.UseVisualStyleBackColor = true;
@@ -113,9 +113,9 @@
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(433, 305);
             this.button3.Name = "button3";
-            this.button3.Size = new System.Drawing.Size(37, 23);
+            this.button3.Location = new System.Drawing.Point(729,317);
+            this.button3.Size = new System.Drawing.Size(37,23);
             this.button3.TabIndex = 8;
             this.button3.Text = "-";
             this.button3.UseVisualStyleBackColor = true;
@@ -123,9 +123,9 @@
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(433, 334);
             this.button4.Name = "button4";
-            this.button4.Size = new System.Drawing.Size(37, 23);
+            this.button4.Location = new System.Drawing.Point(729,342);
+            this.button4.Size = new System.Drawing.Size(37,23);
             this.button4.TabIndex = 9;
             this.button4.Text = "/";
             this.button4.UseVisualStyleBackColor = true;
@@ -134,9 +134,9 @@
             // button5
             // 
             this.button5.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.button5.Location = new System.Drawing.Point(390, 363);
             this.button5.Name = "button5";
-            this.button5.Size = new System.Drawing.Size(37, 23);
+            this.button5.Location = new System.Drawing.Point(686,367);
+            this.button5.Size = new System.Drawing.Size(37,23);
             this.button5.TabIndex = 10;
             this.button5.Text = "(";
             this.button5.UseVisualStyleBackColor = true;
@@ -144,9 +144,9 @@
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(433, 363);
             this.button6.Name = "button6";
-            this.button6.Size = new System.Drawing.Size(37, 23);
+            this.button6.Location = new System.Drawing.Point(729,367);
+            this.button6.Size = new System.Drawing.Size(37,23);
             this.button6.TabIndex = 11;
             this.button6.Text = ")";
             this.button6.UseVisualStyleBackColor = true;
@@ -177,9 +177,9 @@
             // 
             // btnClear
             // 
-            this.btnClear.Location = new System.Drawing.Point(390, 421);
             this.btnClear.Name = "btnClear";
-            this.btnClear.Size = new System.Drawing.Size(80, 23);
+            this.btnClear.Location = new System.Drawing.Point(686,421);
+            this.btnClear.Size = new System.Drawing.Size(80,23);
             this.btnClear.TabIndex = 17;
             this.btnClear.Text = "Очистить";
             this.btnClear.UseVisualStyleBackColor = true;
@@ -187,9 +187,9 @@
             // 
             // btnConst
             // 
-            this.btnConst.Location = new System.Drawing.Point(390, 393);
             this.btnConst.Name = "btnConst";
-            this.btnConst.Size = new System.Drawing.Size(80, 23);
+            this.btnConst.Location = new System.Drawing.Point(686,393);
+            this.btnConst.Size = new System.Drawing.Size(80,23);
             this.btnConst.TabIndex = 16;
             this.btnConst.Text = "Константа";
             this.btnConst.UseVisualStyleBackColor = true;
