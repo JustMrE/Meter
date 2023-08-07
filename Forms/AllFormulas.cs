@@ -17,24 +17,36 @@ namespace Meter.Forms
 {
     public partial class AllFormulas : Form
     {
-        private List<string> list = new List<string>();
+        private List<ListViewItem> list = new List<ListViewItem>();
         private Dictionary<string, string> idByName = new Dictionary<string, string>();
 
         public AllFormulas()
         {
             InitializeComponent();
-            int i;
+            // int i;
             foreach (string id in Main.instance.formulas.formulas.Keys)
             {
                 try 
                 {
                     string name = ((ChildObject)RangeReferences.idDictionary[id]).GetFirstParent._name + " " + RangeReferences.idDictionary[id]._name;
-                    i = listBox0.Items.Add(name);
-                    list.Add(name);
+                    // i = listBox0.Items.Add(name);
+                    ListViewItem item = new ListViewItem()
+                    {
+                        Text = name,
+                    };
+                    listView0.Items.Add(item);
+                    list.Add(item);
                     idByName.Add(name, id);
                 }
                 catch (Exception e)
                 {
+                    ListViewItem item = new ListViewItem()
+                    {
+                        Text = id,
+                        BackColor = Color.Red,
+                    };
+                    listView0.Items.Add(item);
+                    list.Add(item);
                     GlobalMethods.Err(e.Message);
                 }
             }
@@ -63,10 +75,33 @@ namespace Meter.Forms
 
         private void listBox0_DoubleClick(object? sender, System.EventArgs e)
         {
-            GlobalMethods.ToLog(this, sender, listBox0.SelectedItem);
-            string name = listBox0.SelectedItem as string;
-            string id = idByName[name];
-            OpenFormula(id);
+            ListViewItem item = listView0.SelectedItems[0];
+            GlobalMethods.ToLog(this, sender, item.Text);
+            if (item.BackColor != Color.Red)
+            {
+                string name = listView0.SelectedItems[0].Text;
+                string id = idByName[name];
+                OpenFormula(id);
+            }
+            else
+            {
+                DialogResult ans = MessageBox.Show("Ошибка! Отсутствует формула или субъект!\nУдалить эту формулу?","", MessageBoxButtons.YesNo);
+                if (ans == DialogResult.Yes)
+                {
+                    if (File.Exists(Main.dir + @"\current\formulas\" + item.Text + ".json"))
+                    {
+                        Main.filesToDelete.Add(Main.dir + @"\current\formulas\" + item.Text + ".json");
+                        listView0.Items.Remove(item);
+                        list.Remove(item);
+                        Main.instance.formulas.formulas.Remove(item.Text);
+                        MessageBox.Show("Удалено!");
+                    }
+                    else
+                    {
+                        MessageBox.Show("Не удалось удалить! Удалите вручную.");
+                    }
+                }
+            }
         }
 
         private void RegexSearch()
@@ -78,20 +113,20 @@ namespace Meter.Forms
                 {
                     try
                     {
-                        listBox0.Items.Clear();
+                        listView0.Items.Clear();
                         string search = this.tbSearch.Text;
                         search = search.Replace("*", @".*");
 
                         var deviceIds = list.AsEnumerable();
-                        var matchingIds = deviceIds.Where(id => Regex.IsMatch(id, pattern: search, ro)).ToArray();
-                        listBox0.Items.AddRange(matchingIds.ToArray());
+                        var matchingIds = deviceIds.Where(id => Regex.IsMatch(id.Text, pattern: search, ro)).ToArray();
+                        listView0.Items.AddRange(matchingIds.ToArray());
                     }
                     catch (ArgumentException)
                     {
                     this.Invoke((MethodInvoker)(() =>
                     {
-                        listBox0.Items.Clear();
-                            listBox0.Items.AddRange(list.OrderBy(m => m).ToArray());
+                        listView0.Items.Clear();
+                            listView0.Items.AddRange(list.OrderBy(m => m.Text).ToArray());
                     }));
                 }
 
@@ -101,13 +136,12 @@ namespace Meter.Forms
             {
                 this.Invoke((MethodInvoker)(() =>
                 {
-                    listBox0.Items.Clear();
-                    listBox0.Items.AddRange(list.OrderBy(m => m).ToArray());
+                    listView0.Items.Clear();
+                    listView0.Items.AddRange(list.OrderBy(m => m.Text).ToArray());
                 }));
             }
 
         }
-
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
             GlobalMethods.ToLog(this, sender, tbSearch.Text);

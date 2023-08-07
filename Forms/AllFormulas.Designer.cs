@@ -28,22 +28,39 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.listBox0 = new System.Windows.Forms.ListBox();
+            // this.listBox0 = new System.Windows.Forms.ListBox();
+            this.listView0 = new System.Windows.Forms.ListView();
             this.btnOk = new System.Windows.Forms.Button();
             this.tbSearch = new System.Windows.Forms.TextBox();
             this.сheckBox1 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
+            // // 
+            // // listBox0
+            // // 
+            // this.listBox0.ColumnWidth = 440;
+            // this.listBox0.ItemHeight = 15;
+            // this.listBox0.Location = new System.Drawing.Point(16, 48);
+            // this.listBox0.MultiColumn = false;
+            // this.listBox0.Name = "listBox0";
+            // this.listBox0.Size = new System.Drawing.Size(684,259);
+            // this.listBox0.TabIndex = 0;
+            // this.listBox0.DoubleClick += new System.EventHandler(this.listBox0_DoubleClick);
             // 
-            // listBox0
+            // listView0
             // 
-            this.listBox0.ColumnWidth = 440;
-            this.listBox0.ItemHeight = 15;
-            this.listBox0.Location = new System.Drawing.Point(16, 48);
-            this.listBox0.MultiColumn = false;
-            this.listBox0.Name = "listBox0";
-            this.listBox0.Size = new System.Drawing.Size(684,259);
-            this.listBox0.TabIndex = 0;
-            this.listBox0.DoubleClick += new System.EventHandler(this.listBox0_DoubleClick);
+            // this.listView0.ColumnWidth = 440;
+            // this.listView0.ItemHeight = 15;
+            this.listView0.Location = new System.Drawing.Point(16, 48);
+            // this.listView0.MultiColumn = false;
+            this.listView0.Alignment = ListViewAlignment.Top;
+            this.listView0.View = View.Details;
+            this.listView0.Columns.Add("Формулы",670);
+            this.listView0.MultiSelect = false;
+            this.listView0.HeaderStyle = ColumnHeaderStyle.None;
+            this.listView0.Name = "listView0";
+            this.listView0.Size = new System.Drawing.Size(684,259);
+            this.listView0.TabIndex = 0;
+            this.listView0.DoubleClick += new System.EventHandler(this.listBox0_DoubleClick);
             // 
             // btnOk
             // 
@@ -75,7 +92,8 @@
             // AllFormulas
             // 
             this.ClientSize = new System.Drawing.Size(736,404);
-            this.Controls.Add(this.listBox0);
+            // this.Controls.Add(this.listBox0);
+            this.Controls.Add(this.listView0);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.tbSearch);
             this.Controls.Add(this.сheckBox1);
@@ -90,7 +108,8 @@
 
         #endregion 
 
-        protected ListBox listBox0;
+        // protected ListBox listBox0;
+        protected ListView listView0;
         protected Button btnOk;
         protected TextBox tbSearch;
         public CheckBox сheckBox1;

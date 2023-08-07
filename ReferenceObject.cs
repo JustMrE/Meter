@@ -579,7 +579,7 @@ namespace Meter
             Main.instance.references.references.Remove(_name);
             if (File.Exists(Main.dir + @"\current\references\" + ID + ".json"))
             {
-                File.Delete(Main.dir + @"\current\references\" + ID + ".json");
+                Main.filesToDelete.Add(Main.dir + @"\current\references\" + ID + ".json");
             }
             ID = null;
 

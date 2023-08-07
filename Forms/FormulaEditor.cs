@@ -403,7 +403,7 @@ namespace Meter.Forms
                 switch (item.SpecialTag().type)
                 {
                     case ButtonsType.subject:
-                        if ((item.SpecialTag().text == "#ссылка" || item.SpecialTag().ID == null) || (lastControl != null && lastControl.type != ButtonsType.znaki))
+                        if ((item.SpecialTag().text == "#ссылка" || item.SpecialTag().ID == null || item.Text.Contains("удален")) || (lastControl != null && lastControl.type != ButtonsType.znaki))
                         {
                             item.BackColor = Color.Red;
                         }
@@ -697,26 +697,30 @@ namespace Meter.Forms
             ToolStripItem tsi = null;
 
             ContextMenuStrip menu = new ContextMenuStrip();
-            tsi = menu.Items.Add("Показать в счетчиках");
 
-            tsi.Click += (object sender, EventArgs e) =>
+            if (b.SpecialTag().ID != null)
             {
-                string newID = b.SpecialTag().ID;
-                ChildObject co = (ChildObject)RangeReferences.idDictionary[newID];
-                ReferenceObject ro = co.GetFirstParent;
-                ro.PS.Range.Select();
-            };
+                tsi = menu.Items.Add("Показать в счетчиках");
 
-            string id = b.SpecialTag().ID;
-            if (RangeReferences.idDictionary.ContainsKey(id))
-            {
-                if (((ChildObject)RangeReferences.idDictionary[id]).GetParent<ChildObject>().HasItem("формула"))
+                tsi.Click += (object sender, EventArgs e) =>
                 {
-                    tsi = menu.Items.Add("Показать формулу");
-                    tsi.Click += (object sender, EventArgs e) =>
+                    string newID = b.SpecialTag().ID;
+                    ChildObject co = (ChildObject)RangeReferences.idDictionary[newID];
+                    ReferenceObject ro = co.GetFirstParent;
+                    ro.PS.Range.Select();
+                };
+
+                string id = b.SpecialTag().ID;
+                if (RangeReferences.idDictionary.ContainsKey(id))
+                {
+                    if (((ChildObject)RangeReferences.idDictionary[id]).GetParent<ChildObject>().HasItem("формула"))
                     {
-                        OpenFormula(b);
-                    };
+                        tsi = menu.Items.Add("Показать формулу");
+                        tsi.Click += (object sender, EventArgs e) =>
+                        {
+                            OpenFormula(b);
+                        };
+                    }
                 }
             }
             b.ContextMenuStrip = menu;

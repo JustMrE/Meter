@@ -33,6 +33,7 @@ namespace Meter
         public static MyApplicationContext instance;
 
         public static List<Form> menues;
+        public static List<string> filesToDelete;
         
         public Excel.Application xlApp;
         public Excel.Workbook wb;
@@ -90,7 +91,16 @@ namespace Meter
 
                 GlobalMethods.ToLog("Инициализация закрытия книги...");
                 if (dontsave == false)
-                    ArhivateNewTempFile();
+                {
+                    SaveBeforeClose();
+                    if (filesToDelete.Count != 0)
+                    {
+                        foreach (string file in filesToDelete)
+                        {
+                            File.Delete(file);
+                        }
+                    }
+                }
                 else
                     wb.Saved = true;
 
@@ -296,6 +306,7 @@ namespace Meter
             InitForms();
             InitExcelEvents();
             menu.ClearContextMenu();
+            filesToDelete = new List<string>();
         }
         
         public void OpenMonth(string thisYear, string thisMonth, string selectedYear, string selectedMonth, string file, bool silent = false)
@@ -770,6 +781,7 @@ namespace Meter
             month = menu.lblMonth.Text;
             year = menu.lblYear.Text;
             ArhivateNew(year, month, withoutSave);
+            ArchivateToTemp();
         }
         private void ArhivateNew(string year, string month, bool withoutSave = false)
         {
@@ -813,7 +825,7 @@ namespace Meter
             Directory.Delete(tempDirectory, true);
             GlobalMethods.ToLog("Книга архивирована (" + month + " " + year + " года) в файл " + arhiveName);
         }
-        private void ArhivateNewTempFile()
+        private void SaveBeforeClose()
         {
             string thisYear, thisMonth, selectedYear, selectedMonth, file;
 
@@ -865,6 +877,53 @@ namespace Meter
                 OpenMonth(thisYear, thisMonth, selectedYear, selectedMonth, file);
                 SaveWB();
             }
+        }
+
+        private void ArchivateToTemp()
+        {
+            string thisYear, thisMonth, selectedYear, selectedMonth, file;
+            
+            thisMonth = menu.lblMonth.Text;
+            thisYear = menu.lblYear.Text;
+            selectedMonth = DateTime.Today.ToString("MMMM", GlobalMethods.culture);
+            selectedYear = DateTime.Today.ToString("yyyy");
+            file = dir + @"\arch\" + selectedYear + @"\" + selectedMonth + @".zip";
+
+            string sourceFolder = dir + @"\current";
+            string tempDirectory = Path.Combine(Path.GetTempPath(), GlobalMethods.username + " " + DateTime.Today.ToString("MMMM", GlobalMethods.culture));
+            Directory.CreateDirectory(tempDirectory);
+            foreach (string dirPath in Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories))
+            {
+                Directory.CreateDirectory(dirPath.Replace(sourceFolder, tempDirectory));
+            }
+            foreach (string filePath in Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories))
+            {
+                string newFilePath = filePath.Replace(sourceFolder, tempDirectory);
+                if (newFilePath.Contains("~$"))
+                {
+                    continue;
+                }
+                File.Copy(filePath, newFilePath, true);
+            }
+            string archPath = dir + @"\temparch";
+            if (!Directory.Exists(archPath))
+            {
+                Directory.CreateDirectory(archPath);
+            }
+            string arhiveName = archPath + @"\" + DateTime.Now.ToString("dd'.'MM'.'yyyy HH'.'mm'.'ss") + @".zip";
+            ZipFile.CreateFromDirectory(tempDirectory, arhiveName, CompressionLevel.Fastest, false, System.Text.Encoding.UTF8);
+            Directory.Delete(tempDirectory, true);
+
+            DirectoryInfo directoryInfo = new DirectoryInfo(archPath);
+            FileInfo[] files = directoryInfo.GetFiles();
+            if (files.Length > 10)
+            {
+                FileInfo oldestFile = files.OrderBy(f => f.LastWriteTime).First();
+                oldestFile.Delete();
+                GlobalMethods.ToLog("Удален временный архив " + oldestFile);
+            }
+
+            GlobalMethods.ToLog("Книга архивирована в файл " + arhiveName);
         }
         private void ReleaseAllComObjects()
         {

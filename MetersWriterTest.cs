@@ -20,21 +20,28 @@ namespace Meter
             Excel.Worksheet ws1;
 
             var watch = Stopwatch.StartNew();
+            string wa1;
             
             Dictionary<string,string> tiDict = new Dictionary<string, string>();
             List<Subject> subjects = new List<Subject>();
             List<string> wsNames = new List<string>();
             w1 = Main.instance.xlApp.Workbooks.Open(dict);
 
-            for (int i = 3; i < w1.Worksheets.Count; i++)
+            for (int i = 3; i <= w1.Worksheets.Count; i++)
             {
                 wsNames.Add(((Excel.Worksheet)w1.Worksheets[i]).Name);
             }
             w1.Close(false);
             w1 = null;
 
+            watch.Stop();
+            wa1 = "read tiDict: " + (watch.ElapsedMilliseconds / 1000) + " sec\n";
+
             foreach (string dictWSName in wsNames)
             {
+                wa1 += dictWSName;
+                watch = Stopwatch.StartNew();
+
                 tiDict.Clear();
                 subjects.Clear();
                 w1 = Main.instance.xlApp.Workbooks.Open(dict);
@@ -56,6 +63,10 @@ namespace Meter
                 w1 = null;
                 ws1 = null;
                 r = null;
+
+                watch.Stop();
+                wa1 += "read ti: " + (watch.ElapsedMilliseconds / 1000) + " sec, ";
+                watch = Stopwatch.StartNew();
 
                 w1 = Main.instance.xlApp.Workbooks.Open(file, false);
                 ws1 = (Excel.Worksheet)w1.Worksheets[fileWSName];
@@ -99,6 +110,10 @@ namespace Meter
                 ws1 = null;
                 r = null;
 
+                watch.Stop();
+                wa1 += "read vals: " + (watch.ElapsedMilliseconds / 1000) + " sec, ";
+                watch = Stopwatch.StartNew();
+
                 ReferenceObject ro = null;
                 foreach (Subject s in subjects)
                 {
@@ -122,9 +137,10 @@ namespace Meter
                     }
                 }
                 Main.instance.ResumeAll();
+                watch.Stop();
+                wa1 += "write vals: " + (watch.ElapsedMilliseconds / 1000) + " sec\n";
             }
-            watch.Stop();
-            MessageBox.Show("Done!\n" + (watch.ElapsedMilliseconds / 1000) + " sec");
+            MessageBox.Show("Done!\n" + wa1);
         }
     }
 

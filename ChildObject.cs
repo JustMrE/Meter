@@ -1017,12 +1017,14 @@ namespace Meter
                 Main.instance.formulas.formulas.Remove(ID);
             }
             List<ForTags> temp = new List<ForTags>();
-            temp = Main.instance.formulas.formulas.Where(kv => (kv.Value != null && (kv.Value.Any(n => (n != null && n.ID != null && n.ID == ID))))).SelectMany(kv => kv.Value).Where(c => (c != null && c.ID != null && c.ID == ID)).ToList();
+            // temp = Main.instance.formulas.formulas.Where(kv => (kv.Value != null && (kv.Value.Any(n => (n != null && n.ID != null && n.ID == ID))))).SelectMany(kv => kv.Value).Where(c => (c != null && c.ID != null && c.ID == ID)).ToList();
+            temp = Main.instance.formulas.formulas.Values.SelectMany(f => f).Where(t => t.ID == ID).ToList();
             if (temp.Count != 0)
             {
                 foreach (ForTags f in temp)
                 {
-                    f.text = "#ссылка";
+                    // f.text = "#ссылка";
+                    f.text += " (удален)";
                     f.ID = null;
                 }
             }
