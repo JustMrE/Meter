@@ -624,5 +624,19 @@ namespace Meter
                 h2.UpdateBorders();
             }
         }
+    
+        public void RemoveChild(string nameL2)
+        {
+            try
+            {
+                if (DB.HasItem(nameL2)) DB.childs[nameL2].Remove();
+                if (PS.HasItem(nameL2)) PS.childs[nameL2].Remove();
+            }
+            catch (System.Exception)
+            {
+
+            }
+            
+        }
     }
 }

@@ -69,6 +69,8 @@ namespace Meter.Forms
         }
 
         #region  Buttons
+
+        //Emcos
         protected override void Button2_Click(object sender, EventArgs e)
         {
             base.Button2_Click(sender, e);
@@ -122,6 +124,8 @@ namespace Meter.Forms
             Main.instance.ResumeAll();
             MessageBox.Show("Done!");
         }
+        
+        //Write TEP
         protected override void Button3_Click(object sender, EventArgs e)
         {
             DateTime date;
@@ -163,10 +167,27 @@ namespace Meter.Forms
             }
             MessageBox.Show("Done!");
         }
+        
+        //Write W89
         protected override void Button4_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Запись формы W89");
         }
+
+        //Write Meters
+        protected override void Button5_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(textBox1.Text) ||  (Int32.Parse(textBox1.Text) <= 0 && Int32.Parse(textBox1.Text) > 31))
+            {
+                MessageBox.Show("Не введена дата записи!");
+                return;
+            }
+            DateTime date;
+            DateTime.TryParseExact(textBox1.Text + " " + lblMonth.Text + " " + lblYear.Text, "dd MMMM yyyy", GlobalMethods.culture, DateTimeStyles.None, out date);
+            base.Button5_Click(sender, e);
+            MetersWriterTest.WriteMeters1(date);
+        }
+
         protected override void btnAdmin_Click(object sender, EventArgs e)
         {
             base.btnAdmin_Click(sender, e);

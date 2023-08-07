@@ -566,7 +566,7 @@ namespace Meter
         }
         public void Remove(bool stopall = true)
         {
-            string nameL1 = "", nameL2 = "";
+            string nameL1 = "", nameL2 = "", nameL0 = "";
             if (stopall) Main.instance.StopAll();
             int a = 0;
             int b = 0;
@@ -580,11 +580,13 @@ namespace Meter
                 b = 2;
                 nameL2 = _name;
                 nameL1 = GetParent<ChildObject>()._name;
+                nameL0 = GetFirstParent._name;
             }
             else if (_level == Level.level1)
             {
                 b = 1;
                 nameL1 = _name;
+                nameL0 = GetFirstParent._name;
             }
             GlobalMethods.ToLog("Для субъекта " + GetFirstParent._name + " на листе " + WS.Name + " удален " + nameL1 + " " + nameL2);
             c = a + b;
@@ -592,6 +594,11 @@ namespace Meter
             string _id = GetFirstParent.ID;
             ClearDatas();
             r.Delete(Shift:Excel.XlDeleteShiftDirection.xlShiftToLeft); 
+            if (_level != Level.level0)
+            {
+                GetFirstParent.PS.Head.Value = nameL0;
+                GetFirstParent.PS.Head.Value = nameL0;
+            }
             RangeReferences.idDictionary[_id].UpdateBorders();
             //Marshal.ReleaseComObject(r);
             if (stopall) Main.instance.ResumeAll();

@@ -54,6 +54,11 @@
             //
             this.button4.Visible = true;
             this.button4.Text = "записать планы";
+            //
+            //button 5
+            //
+            this.button5.Visible = true;
+            this.button5.Text = "записать счетчики";
         }
 
         #endregion

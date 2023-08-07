@@ -54,7 +54,7 @@
             // this.listView0.MultiColumn = false;
             this.listView0.Alignment = ListViewAlignment.Top;
             this.listView0.View = View.Details;
-            this.listView0.Columns.Add("Формулы",670);
+            this.listView0.Columns.Add("Формулы",660);
             this.listView0.MultiSelect = false;
             this.listView0.HeaderStyle = ColumnHeaderStyle.None;
             this.listView0.Name = "listView0";

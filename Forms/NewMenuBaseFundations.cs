@@ -836,7 +836,7 @@ namespace Meter.Forms
                     MessageBox.Show("Не введена дата записи!");
                     return;
                 }
-                MetersWriterTest.WriteMeters(result);
+                MetersWriterTest.WriteMeters1(result);
             });
         }
         protected void OpenForm()
@@ -1213,7 +1213,7 @@ namespace Meter.Forms
                 });
                 if (selectedButtons.Contains("Special")) SpecialMenuMain();
                 if (selectedButtons.Contains("Удалить субъект"))AddButtonToCommandBar("Удалить субъект", () => RangeReferences.activeTable.RemoveSubject(), 330);
-                if (selectedButtons.Contains("Удалить тип"))AddButtonToCommandBar("Удалить тип", () => RangeReferences.activeTable._activeChild.Remove());
+                if (selectedButtons.Contains("Удалить тип"))AddButtonToCommandBar("Удалить тип", () => RangeReferences.activeTable.RemoveChild(RangeReferences.ActiveL1));
 
                 if (selectedButtons.Contains("Добавить отступ")) AddButtonToCommandBar("Добавить отступ", () =>
                 {
