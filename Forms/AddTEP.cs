@@ -22,7 +22,7 @@ namespace Meter.Forms
         {
             childObject = co;
             InitializeComponent();
-            this.Text = "Код для ТЭП";
+            this.Text = childObject.GetFirstParent._name + " " + childObject._name;//"Код для ТЭП";
             this.label3.Text = "Введите код для ТЭП:";
         }
 

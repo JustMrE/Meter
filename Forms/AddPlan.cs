@@ -28,7 +28,7 @@ namespace Meter.Forms
             referenceObject = null;
             childObject = co;
             InitializeComponent();
-            this.Text = "Код для макетТЭП";
+            this.Text = childObject.GetFirstParent._name + " " + childObject._name;
             this.label3.Text = "Введите код для макетТЭП:";
         }
 
