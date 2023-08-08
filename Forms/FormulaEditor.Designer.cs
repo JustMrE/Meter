@@ -44,6 +44,7 @@
             this.btnClear = new System.Windows.Forms.Button();
             this.btnConst = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
+            this.cbSearchFormula = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
             // 
             // flowLayoutPanel1
@@ -71,6 +72,7 @@
             this.listView1.UseCompatibleStateImageBehavior = false;
             this.listView1.View = System.Windows.Forms.View.Details;
             this.listView1.MouseDown += new System.Windows.Forms.MouseEventHandler(this.listView1_MouseDown);
+            this.listView1.Click += new System.EventHandler(this.listView1_Click);
             // 
             // tbSearch
             // 
@@ -90,11 +92,22 @@
             this.checkBox1.TabIndex = 5;
             this.checkBox1.Text = "Учитывать регистр";
             this.checkBox1.UseVisualStyleBackColor = true;
+            //
+            // cbSearchFormula
+            //
+            this.cbSearchFormula.AutoSize =  true;
+            this.cbSearchFormula.Name = "cbSearchFormula";
+            this.cbSearchFormula.Text =  "Поиск в формуле";
+            this.cbSearchFormula.Location = new System.Drawing.Point(676,306);
+            this.cbSearchFormula.Size = new System.Drawing.Size(124,19);
+            this.cbSearchFormula.TabIndex = 15;
+            this.cbSearchFormula.UseVisualStyleBackColor = true;
+            this.cbSearchFormula.CheckedChanged += new System.EventHandler(this.cbSearchFormula_CheckedChanged);
             // 
             // button1
             // 
             this.button1.Name = "button1";
-            this.button1.Location = new System.Drawing.Point(686,317);
+            this.button1.Location = new System.Drawing.Point(686,333);
             this.button1.Size = new System.Drawing.Size(37,23);
             this.button1.TabIndex = 6;
             this.button1.Text = "+";
@@ -104,7 +117,7 @@
             // button2
             // 
             this.button2.Name = "button2";
-            this.button2.Location = new System.Drawing.Point(686,342);
+            this.button2.Location = new System.Drawing.Point(686,358);
             this.button2.Size = new System.Drawing.Size(37,23);
             this.button2.TabIndex = 7;
             this.button2.Text = "*";
@@ -114,7 +127,7 @@
             // button3
             // 
             this.button3.Name = "button3";
-            this.button3.Location = new System.Drawing.Point(729,317);
+            this.button3.Location = new System.Drawing.Point(729,333);
             this.button3.Size = new System.Drawing.Size(37,23);
             this.button3.TabIndex = 8;
             this.button3.Text = "-";
@@ -124,7 +137,7 @@
             // button4
             // 
             this.button4.Name = "button4";
-            this.button4.Location = new System.Drawing.Point(729,342);
+            this.button4.Location = new System.Drawing.Point(729,358);
             this.button4.Size = new System.Drawing.Size(37,23);
             this.button4.TabIndex = 9;
             this.button4.Text = "/";
@@ -135,7 +148,7 @@
             // 
             this.button5.ForeColor = System.Drawing.SystemColors.ControlText;
             this.button5.Name = "button5";
-            this.button5.Location = new System.Drawing.Point(686,367);
+            this.button5.Location = new System.Drawing.Point(686,383);
             this.button5.Size = new System.Drawing.Size(37,23);
             this.button5.TabIndex = 10;
             this.button5.Text = "(";
@@ -145,7 +158,7 @@
             // button6
             // 
             this.button6.Name = "button6";
-            this.button6.Location = new System.Drawing.Point(729,367);
+            this.button6.Location = new System.Drawing.Point(729,383);
             this.button6.Size = new System.Drawing.Size(37,23);
             this.button6.TabIndex = 11;
             this.button6.Text = ")";
@@ -178,7 +191,7 @@
             // btnClear
             // 
             this.btnClear.Name = "btnClear";
-            this.btnClear.Location = new System.Drawing.Point(686,421);
+            this.btnClear.Location = new System.Drawing.Point(686,437);
             this.btnClear.Size = new System.Drawing.Size(80,23);
             this.btnClear.TabIndex = 17;
             this.btnClear.Text = "Очистить";
@@ -188,7 +201,7 @@
             // btnConst
             // 
             this.btnConst.Name = "btnConst";
-            this.btnConst.Location = new System.Drawing.Point(686,393);
+            this.btnConst.Location = new System.Drawing.Point(686,409);
             this.btnConst.Size = new System.Drawing.Size(80,23);
             this.btnConst.TabIndex = 16;
             this.btnConst.Text = "Константа";
@@ -225,6 +238,7 @@
             this.Controls.Add(this.flowLayoutPanel1);
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnConst);
+            this.Controls.Add(this.cbSearchFormula);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "FormulaEditor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -255,5 +269,6 @@
         private Button btnCancel;
         private Button btnClear;
         private Button btnConst;
+        private CheckBox cbSearchFormula;
     }
 }

@@ -53,6 +53,7 @@
             this.listView0.Location = new System.Drawing.Point(16, 48);
             // this.listView0.MultiColumn = false;
             this.listView0.Alignment = ListViewAlignment.Top;
+            this.listView0.ShowItemToolTips = true;
             this.listView0.View = View.Details;
             this.listView0.Columns.Add("Формулы",660);
             this.listView0.MultiSelect = false;

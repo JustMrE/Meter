@@ -43,7 +43,17 @@ namespace Meter.Forms
                         selectedButtons.Add("Изменить код для ТЭП");
                         selectedButtons.Add("Удалить код для ТЭП");
                     }
+                    if (!RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].HasItem("счетчик"))
+                    {
+                        selectedButtons.Add("Добавить по показаниям счетчика");
+                    }
+                    else
+                    {
+                        selectedButtons.Add("Удалить по показаниям счетчика");
+                    }
                 }
+            
+
             }
             if (Main.instance.colors.main["subject"] == activeColor)
             {
@@ -51,13 +61,22 @@ namespace Meter.Forms
                 selectedButtons.Add("GoTo DB");
                 selectedButtons.Add("Переименовать");
                 selectedButtons.Add("Добавить новый L1");
+                if (RangeReferences.activeTable.DB.HasItem("план"))
+                {
+                    selectedButtons.Add("Изменить код плана");
+                    selectedButtons.Add("Удалить план");
+                }
+                else
+                {
+                    selectedButtons.Add("Добавить план");
+                }
                 selectedButtons.Add("Удалить субъект");
             }
             if (activeColor == Main.instance.colors.main["прием"] || activeColor == Main.instance.colors.main["отдача"] || activeColor == Main.instance.colors.main["сальдо"])
             {
                 selectedButtons.Add("Добавить новый L2");
                 selectedButtons.Add("Удалить");
-                if (RangeReferences.activeTable.childs.Count > 1)
+                if (RangeReferences.activeTable.PS.childs.Count > 1)
                 {
                     selectedButtons.Add("Удалить тип");
                 }

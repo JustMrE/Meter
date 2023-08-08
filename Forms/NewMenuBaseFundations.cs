@@ -232,14 +232,14 @@ namespace Meter.Forms
                 {
                     selectedButtons.Add("Изменить формулу");
                 }
-                if (!RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].HasItem("счетчик"))
-                {
-                    selectedButtons.Add("Добавить по показаниям счетчика");
-                }
-                else
-                {
-                    selectedButtons.Add("Удалить по показаниям счетчика");
-                }
+                // if (!RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].HasItem("счетчик"))
+                // {
+                //     selectedButtons.Add("Добавить по показаниям счетчика");
+                // }
+                // else
+                // {
+                //     selectedButtons.Add("Удалить по показаниям счетчика");
+                // }
             }
             if (activeColor == Main.instance.colors.main["subject"])
             {
@@ -248,15 +248,15 @@ namespace Meter.Forms
                 {
                     selectedButtons.Add("Записать данные из EMCOS (Все дни)");
                 }
-                if (RangeReferences.activeTable.DB.HasItem("план"))
-                {
-                    selectedButtons.Add("Изменить код плана");
-                    selectedButtons.Add("Удалить план");
-                }
-                else
-                {
-                    selectedButtons.Add("Добавить план");
-                }
+                // if (RangeReferences.activeTable.DB.HasItem("план"))
+                // {
+                //     selectedButtons.Add("Изменить код плана");
+                //     selectedButtons.Add("Удалить план");
+                // }
+                // else
+                // {
+                //     selectedButtons.Add("Добавить план");
+                // }
                 if (RangeReferences.activeTable.DB.HasItem("по счетчику"))
                 {
                     selectedButtons.Add("Изменить коэффициент счетчика");

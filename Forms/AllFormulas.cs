@@ -34,6 +34,11 @@ namespace Meter.Forms
                     {
                         Text = name,
                     };
+                    if (Main.instance.formulas.formulas[id].Where(f => f.type == ButtonsType.subject && f.ID == null).ToList().Count > 0)
+                    {
+                        item.BackColor = Color.Orange;
+                        item.ToolTipText = "В формуле ошибка! Удаленный субъект...";
+                    }
                     listView0.Items.Add(item);
                     list.Add(item);
                     idByName.Add(name, id);
@@ -44,6 +49,7 @@ namespace Meter.Forms
                     {
                         Text = id,
                         BackColor = Color.Red,
+                        ToolTipText = "Субъект не существует в счетчиках..."
                     };
                     listView0.Items.Add(item);
                     list.Add(item);

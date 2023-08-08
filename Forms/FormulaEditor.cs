@@ -60,13 +60,17 @@ namespace Meter.Forms
                     {
                         continue;
                     }
-                    if (co._name == "план")
-                    {
-                        continue;
-                    }
+                    // if (co._name == "план")
+                    // {
+                    //     continue;
+                    // }
                     item = new ListViewItem();
                     item.Text = ro._name + " " + co._name;
                     item.Tag = new ForTags();
+                    if (co._name == "план")
+                    {
+                        item.BackColor = ColorTranslator.FromHtml("#CCFF33");
+                    }
                     ((ForTags)item.Tag).ID = co.childs["основное"].ID;
                     ((ForTags)item.Tag).type = ButtonsType.subject;
                     listView1.Items.Add(item);
@@ -170,7 +174,31 @@ namespace Meter.Forms
 
                 UpdateCheck();
             });
-            
+        }
+
+        private void listView1_Click(object sender, EventArgs e)
+        {
+            foreach (Control item in flowLayoutPanel1.Controls)
+            {
+                if (item is Button button)
+                {
+                    try
+                    {
+                        if (listView1.SelectedItems[0].Text == button.Text)
+                        {
+                            button.BackColor = SystemColors.Highlight;
+                        }
+                        else
+                        {
+                            button.BackColor = SystemColors.Control;
+                        }
+                    }
+                    catch (System.Exception)
+                    {
+                        button.BackColor = SystemColors.Control;
+                    }
+                }
+            }
         }
 
         private void control_MouseDown(object sender, MouseEventArgs e)
@@ -366,12 +394,12 @@ namespace Meter.Forms
                     }
                     catch (ArgumentException)
                     {
-                    this.Invoke((MethodInvoker)(() =>
-                    {
-                        listView1.Items.Clear();
+                        this.Invoke((MethodInvoker)(() =>
+                        {
+                            listView1.Items.Clear();
                             listView1.Items.AddRange(list.OrderBy(m => m.Text).ToArray());
-                    }));
-                }
+                        }));
+                    }
 
                 }));
             }
@@ -386,9 +414,59 @@ namespace Meter.Forms
 
         }
 
+        private void RegexSearchFormula()
+        {
+            RegexOptions ro = checkBox1.Checked ? RegexOptions.None : RegexOptions.IgnoreCase;
+            if (this.tbSearch.Text != "" && cbSearchFormula.Checked == true)
+            {
+                this.Invoke((MethodInvoker)(() =>
+                {
+                    try
+                    {
+                        string search = this.tbSearch.Text;
+                        search = search.Replace("*", @".*");
+                        foreach (Control item in flowLayoutPanel1.Controls)
+                        {
+                            if (item is Button button)
+                            {
+                                bool match = Regex.IsMatch(button.Text, pattern: search, ro);
+                                button.BackColor = match ? Color.LightSkyBlue : SystemColors.Control;
+                            }
+                        }
+                    }
+                    catch (ArgumentException)
+                    {
+                        this.Invoke((MethodInvoker)(() =>
+                        {
+                            foreach (Control item in flowLayoutPanel1.Controls)
+                            {
+                                item.BackColor = SystemColors.Control;
+                            }
+                        }));
+                    }
+                }));
+            }
+            else
+            {
+                this.Invoke((MethodInvoker)(() =>
+                {
+                    foreach (Control item in flowLayoutPanel1.Controls)
+                    {
+                        item.BackColor = SystemColors.Control;
+                    }
+                }));
+            }
+        }
+
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
             RegexSearch();
+            RegexSearchFormula();
+        }
+
+        private void cbSearchFormula_CheckedChanged(object sender, EventArgs e)
+        {
+            RegexSearchFormula();
         }
 
         private void UpdateCheck()

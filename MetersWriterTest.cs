@@ -11,7 +11,7 @@ namespace Meter
         public static void WriteMeters1(DateTime date)
         {
             string dict = Main.dir + @"\current\Словарь ТИ факт.xlsx";
-            string path = "H2";
+            string path = "H1";
             string fName = "I1";
             string fileWSName = "сч";
             int day = date.Day;
@@ -24,7 +24,7 @@ namespace Meter
             List<Subject> subjects = new List<Subject>();
 
             var watch = Stopwatch.StartNew();
-
+            GlobalMethods.ToLog("Считывание словаря: " + dict);
             xlApp = new Excel.ApplicationClass
             {
                 Visible = false
@@ -36,16 +36,19 @@ namespace Meter
             }
             w1.Close(false);
             w1 = null;
-
+            GlobalMethods.ToLog("Считывание словаря завершено: " + dict);
             foreach (string file in dict2.Keys)
             {
                 w1 = xlApp.Workbooks.Open(file, false);
                 ws1 = (Excel.Worksheet)w1.Worksheets[fileWSName];
+                GlobalMethods.ToLog("Считывание данных: " + file);
+
                 foreach (string item in dict2[file].Keys)
                 {
                     string[] k = item.Split("/");
                     string[] v = dict2[file][item].Split("/");
 
+                    GlobalMethods.ToLog("Считывание данных: " + item);
                     try
                     {
                         r = ws1.Range["A:A"].Find(k[0], LookAt: Excel.XlLookAt.xlWhole).MergeArea;
@@ -79,9 +82,10 @@ namespace Meter
                     }
                     catch (System.Exception e)
                     {
-                        GlobalMethods.Err(e + " " + k[0]);
+                        GlobalMethods.Err(e + " " + "{" + k[0] + "}");
+                        GlobalMethods.ToLog(e + " " + "{" + k[0] + "}");
                     }
-                    
+                    GlobalMethods.ToLog("Считывание данных завершено: " + item);
                 }
                 w1.Close(false);
                 w1 = null;

@@ -164,7 +164,7 @@ namespace Meter.Forms
         private void btnOk_Click(object sender, EventArgs e)
         {
             GlobalMethods.ToLog(this, sender);
-            referenceObject.WriteToDB(RangeReferences.ActiveL1, nameL2, (int)day, tbCorr.Text);
+            referenceObject.WriteToDB(RangeReferences.ActiveL1, nameL2, (int)day, tbCorr.Text.Replace(",","."));
             Close();
         }
 
