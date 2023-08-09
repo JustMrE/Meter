@@ -80,7 +80,8 @@
             checkBox2 = new CheckBox();
             tableLayoutPanel3 = new TableLayoutPanel();
             tbSearch = new TextBox();
-            listBox1 = new ListBox();
+            // listBox1 = new ListBox();
+            listBox1 = new ListView();
             tableLayoutPanel2 = new TableLayoutPanel();
             btnToArhive = new Button();
             btnFromArhive = new Button();
@@ -768,8 +769,13 @@
             // listBox1
             // 
             listBox1.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            listBox1.FormattingEnabled = true;
-            listBox1.ItemHeight = 15;
+            // listBox1.FormattingEnabled = true;
+            // listBox1.ItemHeight = 15;
+            listBox1.View = View.Details;
+            listBox1.Columns.Add("",300);
+            listBox1.MultiSelect = false;
+            listBox1.ShowItemToolTips = true;
+            listBox1.HeaderStyle = ColumnHeaderStyle.None;
             listBox1.Location = new Point(0, 23);
             listBox1.Margin = new Padding(0);
             listBox1.Name = "listBox1";
@@ -901,7 +907,8 @@
 
         #endregion
         protected FlowLayoutPanel flpButtons;
-        protected ListBox listBox1;
+        // protected ListBox listBox1;
+        protected ListView listBox1;
         protected Button btnToArhive;
         protected Button btnFromArhive;
         protected Button button46;

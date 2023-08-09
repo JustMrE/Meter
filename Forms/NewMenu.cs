@@ -16,6 +16,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using Main = Meter.MyApplicationContext;
 using System.Collections.Concurrent;
 using System.Globalization;
+using System.Diagnostics;
 
 namespace Meter.Forms
 {
@@ -128,6 +129,7 @@ namespace Meter.Forms
         //Write TEP
         protected override void Button3_Click(object sender, EventArgs e)
         {
+            var stopWatch = Stopwatch.StartNew();
             DateTime date;
             DateTime.TryParseExact(textBox1.Text + " " + lblMonth.Text + " " + lblYear.Text, "dd MMMM yyyy", GlobalMethods.culture, DateTimeStyles.None, out date);
             string datstr = date.ToString("dd.MM.yy");
@@ -144,8 +146,10 @@ namespace Meter.Forms
                 DateTime.TryParseExact(lastDateStr, "dd.MM.yy", GlobalMethods.culture, DateTimeStyles.None, out lastDate);
                 if (lastDate != date && lastDate < date && (date - lastDate).TotalDays == 1)
                 {
-                    WriteMaketTEP(date);
-                    WriteTEP(date);
+                    Main.instance.StopAll();
+                    WriteMaketTEP(date, false);
+                    WriteTEP(date, false, false);
+                    Main.instance.ResumeAll();
                 }
                 else if (lastDate == date || lastDate > date)
                 {
@@ -165,7 +169,9 @@ namespace Meter.Forms
                 }
 
             }
-            MessageBox.Show("Done!");
+            
+            stopWatch.Stop();
+            MessageBox.Show("Done! " + (stopWatch.ElapsedMilliseconds / 1000) + " sec.");
         }
         
         //Write W89
@@ -202,6 +208,7 @@ namespace Meter.Forms
                         Main.instance.menu.Show();
                         this.Hide();
                         GlobalMethods.CalculateFormsPositions();
+                        Main.instance.wsDb.Visible = Excel.XlSheetVisibility.xlSheetVisible;
                     }
                 }
             }
@@ -226,13 +233,15 @@ namespace Meter.Forms
         
         private void WriteTEPs(DateTime date, bool rewrite = false)
         {
-            WriteMaketTEP(date);
-            WriteTEP(date, rewrite);
+            Main.instance.StopAll();
+            WriteMaketTEP(date, false);
+            WriteTEP(date, rewrite, false);
+            Main.instance.ResumeAll();
             CreateTXTforCDU();
         }
-        private void WriteTEP(DateTime date, bool rewrite = false)
+        private void WriteTEP(DateTime date, bool rewrite = false, bool stopall = true)
         {
-            Main.instance.StopAll();
+            if (stopall) Main.instance.StopAll();
             string datstr = date.ToString("dd.MM.yy");
             int? row;
             GlobalMethods.ToLog("Зписываются ТЭПм и ТЭПн на " + datstr);
@@ -265,16 +274,16 @@ namespace Meter.Forms
                     co.WriteToTEP(day, (int)row, rewrite: rewrite);
                 }
             }
-            Main.instance.ResumeAll();
+            if (stopall) Main.instance.ResumeAll();
         }
-        private void WriteMaketTEP(DateTime date)
+        private void WriteMaketTEP(DateTime date, bool stopall = true)
         {
             string datstr = date.ToString("dd.MM.yy");
             GlobalMethods.ToLog("Зписываются ТЭПм и ТЭПн на " + datstr);
 
-            Main.instance.StopAll();
+            if (stopall) Main.instance.StopAll();
             Main.instance.wsMTEP.Range["B:B"].ClearContents();
-            Main.instance.ResumeAll();
+            if (stopall) Main.instance.ResumeAll();
             Main.instance.wsMTEP.Range["B1"].Value = datstr;
             int day = int.Parse(this.textBox1.Text);
             List<ChildObject> coList = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codMaketTEP != null).ToList();

@@ -32,7 +32,8 @@ namespace Meter.Forms
 
         protected virtual void NewMenuBase_Load(object sender, EventArgs e)
         {
-            listBox1.Items.AddRange(Main.instance.references.references.Keys.OrderBy(m => m).ToArray());
+            // listBox1.Items.AddRange(Main.instance.references.references.Keys.OrderBy(m => m).ToArray());
+            listBox1.Items.AddRange(Main.instance.references.references.Keys.OrderBy(m => m).Select(str => new ListViewItem(str){ToolTipText = str}).ToArray());
             formHwnd = this.Handle;
             SetParent(formHwnd, Main.instance.xlAppHwnd);
 
@@ -76,19 +77,22 @@ namespace Meter.Forms
 
         protected virtual void listBox1_DoubleClick(object sender, EventArgs e)
         {
-            ToLog(sender, listBox1.SelectedItem);
+            // ToLog(sender, listBox1.SelectedItem);
+            ToLog(sender, listBox1.SelectedItems[0].Text);
             string codeName = ((Excel.Worksheet)Main.instance.xlApp.ActiveSheet).CodeName;
             if (checkBox2.Checked == false)
             {
                 if (codeName == "PS")
                 {
-                    Main.instance.references[(string)listBox1.SelectedItem].PS.Range.Select();
+                    // Main.instance.references[(string)listBox1.SelectedItem].PS.Range.Select();
+                    Main.instance.references[listBox1.SelectedItems[0].Text].PS.Range.Select();
                     SetForegroundWindow(Main.instance.xlAppHwnd);
 
                 }
                 else if (codeName == "DB")
                 {
-                    Main.instance.references[(string)listBox1.SelectedItem].DB.Range.Select();
+                    // Main.instance.references[(string)listBox1.SelectedItem].DB.Range.Select();
+                    Main.instance.references[listBox1.SelectedItems[0].Text].DB.Range.Select();
                     SetForegroundWindow(Main.instance.xlAppHwnd);
                 }
             }
@@ -96,7 +100,8 @@ namespace Meter.Forms
             {
                 if (codeName == "PS")
                 {
-                    Main.instance.heads.HeadByName((string)listBox1.SelectedItem).Range.Select();
+                    // Main.instance.heads.HeadByName((string)listBox1.SelectedItem).Range.Select();
+                    Main.instance.heads.HeadByName(listBox1.SelectedItems[0].Text).Range.Select();
                     SetForegroundWindow(Main.instance.xlAppHwnd);
                 }
             }

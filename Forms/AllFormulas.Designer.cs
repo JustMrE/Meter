@@ -28,30 +28,15 @@
         /// </summary>
         private void InitializeComponent()
         {
-            // this.listBox0 = new System.Windows.Forms.ListBox();
             this.listView0 = new System.Windows.Forms.ListView();
             this.btnOk = new System.Windows.Forms.Button();
             this.tbSearch = new System.Windows.Forms.TextBox();
             this.сheckBox1 = new System.Windows.Forms.CheckBox();
             this.SuspendLayout();
-            // // 
-            // // listBox0
-            // // 
-            // this.listBox0.ColumnWidth = 440;
-            // this.listBox0.ItemHeight = 15;
-            // this.listBox0.Location = new System.Drawing.Point(16, 48);
-            // this.listBox0.MultiColumn = false;
-            // this.listBox0.Name = "listBox0";
-            // this.listBox0.Size = new System.Drawing.Size(684,259);
-            // this.listBox0.TabIndex = 0;
-            // this.listBox0.DoubleClick += new System.EventHandler(this.listBox0_DoubleClick);
             // 
             // listView0
             // 
-            // this.listView0.ColumnWidth = 440;
-            // this.listView0.ItemHeight = 15;
             this.listView0.Location = new System.Drawing.Point(16, 48);
-            // this.listView0.MultiColumn = false;
             this.listView0.Alignment = ListViewAlignment.Top;
             this.listView0.ShowItemToolTips = true;
             this.listView0.View = View.Details;
@@ -92,24 +77,22 @@
             // 
             // AllFormulas
             // 
-            this.ClientSize = new System.Drawing.Size(736,404);
-            // this.Controls.Add(this.listBox0);
+            this.ClientSize = new System.Drawing.Size(736,355);
             this.Controls.Add(this.listView0);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.tbSearch);
             this.Controls.Add(this.сheckBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
+            this.StartPosition = FormStartPosition.CenterScreen;
             this.Name = "AllFormulas";
             this.Text = "Все формулы";
             this.Shown += new System.EventHandler(this.AllFormulas_Shown);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         } 
 
         #endregion 
 
-        // protected ListBox listBox0;
         protected ListView listView0;
         protected Button btnOk;
         protected TextBox tbSearch;

@@ -30,7 +30,6 @@ namespace Meter.Forms
         ForTags lastControl = null;
         string oldFormula = "";
         string newFormula = "";
-        //ButtonsType? lastType = null;
 
         public FormulaEditor(ref ReferenceObject referenceObject, string nameL1)
         {
@@ -803,11 +802,102 @@ namespace Meter.Forms
             }
             b.ContextMenuStrip = menu;
         }
-    
-        private void Test(object sender, EventArgs e) 
+
+        private void btnSave_Click(object sender, EventArgs e)
         {
-            Control b = (Control)sender;
-            MessageBox.Show(b.SpecialTag().ID);
+            GlobalMethods.ToLog(this, sender);
+            List<ForTags> formulaForSave = new();
+            foreach (Control item in flowLayoutPanel1.Controls)
+            {
+                if (item.BackColor == Color.Red)
+                {
+                    MessageBox.Show("В формуле есть ошибки. Проверьте правильность введенной формулы!");
+                    return;
+                }
+                formulaForSave.Add(item.SpecialTag());
+                newFormula += "{" + item.Text + "} ";
+            }
+
+            Thread t = new Thread(() =>
+            {
+                SaveFormula saveFormula = new(formulaForSave);
+                saveFormula.FormClosed += (s, args) =>
+                {
+                    if (saveFormula.DialogResult == DialogResult.OK)
+                    {
+                        GlobalMethods.ToLog("Экспортирована формула " + newFormula + "'");
+                    }
+                    System.Windows.Forms.Application.ExitThread();
+                };
+                saveFormula.Show();
+                System.Windows.Forms.Application.Run();
+            });
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
+        }
+
+        private void btnLoad_Click(object sender, EventArgs e)
+        {
+            List<ForTags> loadedFormula;
+            Thread t = new Thread(() =>
+            {
+                LoadFormula loadFormula = new();
+                loadFormula.FormClosed += (s, args) =>
+                {
+                    if (loadFormula.DialogResult == DialogResult.OK)
+                    {
+                        loadedFormula = loadFormula.loadedFormula;
+                        this.Invoke(() => 
+                        {
+                            flowLayoutPanel1.Controls.Clear();
+                            foreach (ForTags f in loadedFormula)
+                            {
+                                Button b = new Button();
+                                b.Tag = f;
+                                if (f.type == ButtonsType.subject)
+                                {
+                                    b.Text = f.text;
+                                    b.Font = new Font(b.Font, FontStyle.Bold);
+                                    b.UseVisualStyleBackColor = true;
+                                    b.AutoSize = true;
+                                    b.MouseDown += control_MouseDown;   
+                                    SubjectContextMenu(b);
+                                }
+                                else if (f.type == ButtonsType.constant)
+                                {
+                                    b.Text = f.text;
+                                    b.Font = new Font(b.Font, FontStyle.Bold);
+                                    b.UseVisualStyleBackColor = true;
+                                    b.AutoSize = true;
+                                    b.MouseDown += control_MouseDown;
+                                    b.MouseDown += EnterConstant;
+                                }
+                                else
+                                {
+                                    b.Text = f.text;
+                                    b.Font = new Font(b.Font, FontStyle.Bold);
+                                    b.UseVisualStyleBackColor = true;
+                                    b.Width = button5.Width;
+                                    b.Height = button5.Height;
+                                    b.MouseDown += control_MouseDown;
+                                    if (b.Text == ")" || b.Text == "(")
+                                    {
+                                        b.MouseDown += ShowPara;
+                                    }
+                                }
+                                oldFormula += "{" + b.Text + "} ";
+                                flowLayoutPanel1.Controls.Add(b);
+                            }
+                        });
+                        GlobalMethods.ToLog("Импортирована формула " + newFormula + "'");
+                    }
+                    System.Windows.Forms.Application.ExitThread();
+                };
+                loadFormula.Show();
+                System.Windows.Forms.Application.Run();
+            });
+            t.SetApartmentState(ApartmentState.STA);
+            t.Start();
         }
     }
 }

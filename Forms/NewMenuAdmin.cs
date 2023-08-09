@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using System.Diagnostics;
 using Main = Meter.MyApplicationContext;
+using Excel = Microsoft.Office.Interop.Excel;
 
 namespace Meter.Forms
 {
@@ -203,6 +204,7 @@ namespace Meter.Forms
             Main.instance.menu.Show();
             this.Hide();
             GlobalMethods.CalculateFormsPositions();
+            Main.instance.wsDb.Visible = Excel.XlSheetVisibility.xlSheetHidden;
         }
         protected override void lblMonth_MouseDoubleClick(object sender, MouseEventArgs e)
         {

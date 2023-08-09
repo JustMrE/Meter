@@ -45,6 +45,8 @@
             this.btnConst = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.cbSearchFormula = new System.Windows.Forms.CheckBox();
+            this.btnSave = new System.Windows.Forms.Button();
+            this.btnLoad = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // flowLayoutPanel1
@@ -54,7 +56,7 @@
             this.flowLayoutPanel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.flowLayoutPanel1.Location = new System.Drawing.Point(12, 12);
             this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(788, 287);
+            this.flowLayoutPanel1.Size = new System.Drawing.Size(1044,287);
             this.flowLayoutPanel1.TabIndex = 0;
             // 
             // listView1
@@ -65,7 +67,7 @@
             this.listView1.Location = new System.Drawing.Point(12, 334);
             this.listView1.MultiSelect = false;
             this.listView1.Name = "listView1";
-            this.listView1.Size = new System.Drawing.Size(660,110);
+            this.listView1.Size = new System.Drawing.Size(660,160);
             this.listView1.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.listView1.TabIndex = 3;
             this.listView1.TileSize = new System.Drawing.Size(10, 10);
@@ -180,7 +182,7 @@
             // 
             // btnOk
             // 
-            this.btnOk.Location = new System.Drawing.Point(314, 457);
+            this.btnOk.Location = new System.Drawing.Point(314, 506);
             this.btnOk.Name = "btnOk";
             this.btnOk.Size = new System.Drawing.Size(75, 23);
             this.btnOk.TabIndex = 14;
@@ -207,10 +209,24 @@
             this.btnConst.Text = "Константа";
             this.btnConst.UseVisualStyleBackColor = true;
             this.btnConst.MouseDown += new System.Windows.Forms.MouseEventHandler(this.control1_MouseDown);
+            //
+            // btnSave
+            //
+            this.btnSave.Text =  "Экспорт";
+            this.btnSave.Location = new System.Drawing.Point(772,409);
+            this.btnSave.TabIndex = 16;
+            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            //
+            // btnLoad
+            //
+            this.btnLoad.Text =  "Импорт";
+            this.btnLoad.Location = new System.Drawing.Point(772,437);
+            this.btnLoad.TabIndex = 17;
+            this.btnLoad.Click += new System.EventHandler(this.btnLoad_Click);
             // 
             // btnCancel
             // 
-            this.btnCancel.Location = new System.Drawing.Point(405, 457);
+            this.btnCancel.Location = new System.Drawing.Point(405, 506);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(75, 23);
             this.btnCancel.TabIndex = 15;
@@ -222,7 +238,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(810, 498);
+            this.ClientSize = new System.Drawing.Size(1084,541);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnOk);
             this.Controls.Add(this.trash);
@@ -239,6 +255,8 @@
             this.Controls.Add(this.btnClear);
             this.Controls.Add(this.btnConst);
             this.Controls.Add(this.cbSearchFormula);
+            this.Controls.Add(this.btnSave);
+            this.Controls.Add(this.btnLoad);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "FormulaEditor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -270,5 +288,7 @@
         private Button btnClear;
         private Button btnConst;
         private CheckBox cbSearchFormula;
+        private Button btnSave;
+        private Button btnLoad;
     }
 }

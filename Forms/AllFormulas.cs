@@ -23,7 +23,53 @@ namespace Meter.Forms
         public AllFormulas()
         {
             InitializeComponent();
-            // int i;
+            LoadAllFormulas();
+        }
+
+        public AllFormulas(ReferenceObject ro, string activeL1)
+        {
+            InitializeComponent();
+            LoadFormulasFor(ro, activeL1);
+        }
+
+        private void LoadFormulasFor(ReferenceObject ro, string activeL1) 
+        {
+            string i = ro.DB.childs[activeL1].childs["основное"].ID;
+            List<string> formulas = Main.instance.formulas.formulas.Where(kv => kv.Value.Any(f => f.ID == i)).Select(kv => kv.Key).ToList();
+            foreach (string id in formulas)
+            {
+                try 
+                {
+                    string name = ((ChildObject)RangeReferences.idDictionary[id]).GetFirstParent._name + " " + RangeReferences.idDictionary[id]._name;
+                    ListViewItem item = new ListViewItem()
+                    {
+                        Text = name,
+                    };
+                    if (Main.instance.formulas.formulas[id].Where(f => f.type == ButtonsType.subject && f.ID == null).ToList().Count > 0)
+                    {
+                        item.BackColor = Color.Orange;
+                        item.ToolTipText = "В формуле ошибка! Удаленный субъект...";
+                    }
+                    listView0.Items.Add(item);
+                    list.Add(item);
+                    idByName.Add(name, id);
+                }
+                catch (Exception e)
+                {
+                    ListViewItem item = new ListViewItem()
+                    {
+                        Text = id,
+                        BackColor = Color.Red,
+                        ToolTipText = "Субъект не существует в счетчиках..."
+                    };
+                    listView0.Items.Add(item);
+                    list.Add(item);
+                    GlobalMethods.Err(e.Message);
+                }
+            }
+        }
+        private void LoadAllFormulas()
+        {
             foreach (string id in Main.instance.formulas.formulas.Keys)
             {
                 try 
@@ -79,7 +125,7 @@ namespace Meter.Forms
             t.Start();
         }
 
-        private void listBox0_DoubleClick(object? sender, System.EventArgs e)
+        private void listBox0_DoubleClick(object? sender, EventArgs e)
         {
             ListViewItem item = listView0.SelectedItems[0];
             GlobalMethods.ToLog(this, sender, item.Text);
@@ -148,6 +194,7 @@ namespace Meter.Forms
             }
 
         }
+        
         private void tbSearch_TextChanged(object sender, EventArgs e)
         {
             GlobalMethods.ToLog(this, sender, tbSearch.Text);

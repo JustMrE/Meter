@@ -63,7 +63,7 @@ namespace Meter.Forms
                         search = search.Replace("*", @".*");
 
                         var deviceIds = Main.instance.references.references.Values.AsEnumerable();
-                        var matchingIds = deviceIds.Where(id => Regex.IsMatch(id._name, pattern: search, ro)).Select(n => n._name).ToArray();
+                        var matchingIds = deviceIds.Where(id => Regex.IsMatch(id._name, pattern: search, ro)).Select(n => new ListViewItem(n._name){ToolTipText = n._name}).ToArray();
                         listBox1.Items.AddRange(matchingIds.ToArray());
                     }
                     catch (ArgumentException)
@@ -71,7 +71,7 @@ namespace Meter.Forms
                         this.Invoke((MethodInvoker)(() =>
                         {
                             listBox1.Items.Clear();
-                            listBox1.Items.AddRange(Main.instance.references.references.Keys.OrderBy(m => m).ToArray());
+                            listBox1.Items.AddRange(Main.instance.references.references.Keys.OrderBy(m => m).Select(str => new ListViewItem(str){ToolTipText = str}).ToArray());
                         }));
                     }
 
@@ -82,7 +82,7 @@ namespace Meter.Forms
                 this.Invoke((MethodInvoker)(() =>
                 {
                     listBox1.Items.Clear();
-                    listBox1.Items.AddRange(Main.instance.references.references.Keys.OrderBy(m => m).ToArray());
+                    listBox1.Items.AddRange(Main.instance.references.references.Keys.OrderBy(m => m).Select(str => new ListViewItem(str){ToolTipText = str}).ToArray());
                 }));
             }
 
@@ -101,7 +101,7 @@ namespace Meter.Forms
                         search = search.Replace("*", @".*");
 
                         var deviceIds = HeadReferences.idDictionary.Values.ToList();
-                        var matchingIds = deviceIds.Where(id => Regex.IsMatch(id._name, pattern: search, ro)).Select(n => n._name).ToArray();
+                        var matchingIds = deviceIds.Where(id => Regex.IsMatch(id._name, pattern: search, ro)).Select(n => new ListViewItem(n._name){ToolTipText = n._name}).ToArray();
                         listBox1.Items.AddRange(matchingIds.ToArray());
                     }
                     catch (ArgumentException)
@@ -109,7 +109,7 @@ namespace Meter.Forms
                         this.Invoke((MethodInvoker)(() =>
                         {
                             listBox1.Items.Clear();
-                            listBox1.Items.AddRange(HeadReferences.idDictionary.Values.Select(n => n._name).OrderBy(m => m).ToArray());
+                            listBox1.Items.AddRange(HeadReferences.idDictionary.Values.Select(n => n._name).OrderBy(m => m).Select(n => new ListViewItem(n){ToolTipText = n}).ToArray());
                         }));
                     }
 
@@ -120,7 +120,7 @@ namespace Meter.Forms
                 this.Invoke((MethodInvoker)(() =>
                 {
                     listBox1.Items.Clear();
-                    listBox1.Items.AddRange(HeadReferences.idDictionary.Values.Select(n => n._name).OrderBy(m => m).ToArray());
+                    listBox1.Items.AddRange(HeadReferences.idDictionary.Values.Select(n => n._name).OrderBy(m => m).Select(n => new ListViewItem(n){ToolTipText = n}).ToArray());
                 }));
             }
 
@@ -240,6 +240,7 @@ namespace Meter.Forms
                 // {
                 //     selectedButtons.Add("Удалить по показаниям счетчика");
                 // }
+                selectedButtons.Add("Зависимые формулы");
             }
             if (activeColor == Main.instance.colors.main["subject"])
             {
@@ -1024,7 +1025,7 @@ namespace Meter.Forms
 
                     RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codTEP = null;
                 });
-
+                
                 if (selectedButtons.Contains("Добавить новый L1")) AddNewL1();
                 if (selectedButtons.Contains("Добавить новый L2")) AddNewL2();
                 if (selectedButtons.Contains("Выбрать из EMCOS")) AddButtonToCommandBar("Выбрать из EMCOS", EmcosSelect);
@@ -1185,6 +1186,21 @@ namespace Meter.Forms
                 {
                     OpenForm();
                 }, 385);
+                if (selectedButtons.Contains("Зависимые формулы")) AddButtonToCommandBar("Зависимые формулы", () => 
+                {
+                    Thread t = new Thread(() =>
+                    {
+                        AllFormulas form = new AllFormulas(RangeReferences.activeTable, RangeReferences.ActiveL1);
+                        form.FormClosed += (s, args) => 
+                        { 
+                            System.Windows.Forms.Application.ExitThread(); 
+                        };
+                        form.Show();
+                        System.Windows.Forms.Application.Run();
+                    });
+                    t.SetApartmentState(ApartmentState.STA);
+                    t.Start();
+                });
                 if (selectedButtons.Contains("Добавить по показаниям счетчика")) AddButtonToCommandBar("Добавить по показаниям счетчика",() => {
                     RangeReferences.activeTable.AddMeter(RangeReferences.ActiveL1);
                     }, 33);
