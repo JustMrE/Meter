@@ -11,7 +11,8 @@ namespace Meter
         public static void WriteMeters1(DateTime date)
         {
             string dict = Main.dir + @"\current\Словарь ТИ факт.xlsx";
-            string path = "H1";
+            // string path = "H1";
+            string path = "H2";
             string fName = "I1";
             string fileWSName = "сч";
             int day = date.Day;
@@ -25,6 +26,11 @@ namespace Meter
 
             var watch = Stopwatch.StartNew();
             GlobalMethods.ToLog("Считывание словаря: " + dict);
+            Forms.SplashScreen splashScreen = new();
+            splashScreen.Show();
+
+            splashScreen.UpdateLabel("Запись счетчиков: ");
+            splashScreen.UpdateText("cчитывание словаря");
             xlApp = new Excel.ApplicationClass
             {
                 Visible = false
@@ -42,6 +48,7 @@ namespace Meter
                 w1 = xlApp.Workbooks.Open(file, false);
                 ws1 = (Excel.Worksheet)w1.Worksheets[fileWSName];
                 GlobalMethods.ToLog("Считывание данных: " + file);
+                splashScreen.UpdateText("Считывание данных: " + file.Substring(file.LastIndexOf("\\") + 1));
 
                 foreach (string item in dict2[file].Keys)
                 {
@@ -100,10 +107,12 @@ namespace Meter
             Marshal.ReleaseComObject(xlApp);
             xlApp = null;
 
+            splashScreen.UpdateText("запись данных");
             Main.instance.StopAll();
             ReferenceObject ro = null;
             foreach (Subject s in subjects)
             {
+                splashScreen.UpdateText("запись данных " + s.subjectName);
                 if (Main.instance.references.references.TryGetValue(s.subjectName, out ro))
                 {
                     if (ro != null)
@@ -125,6 +134,7 @@ namespace Meter
             }
             Main.instance.ResumeAll();
 
+            splashScreen.Close();
             watch.Stop();
             MessageBox.Show("Done!\n" + (watch.ElapsedMilliseconds / 1000) + " sec");
         }

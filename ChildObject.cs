@@ -602,7 +602,6 @@ namespace Meter
             RangeReferences.idDictionary[_id].UpdateBorders();
             //Marshal.ReleaseComObject(r);
             if (stopall) Main.instance.ResumeAll();
-
         }
 
         public void UpdateChilds()

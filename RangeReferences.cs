@@ -252,7 +252,7 @@ namespace Meter
         //     GlobalMethods.ToLog("База данных очищена за " + (watch.ElapsedMilliseconds / 1000) + " sec.");
         //     MessageBox.Show("Готово!\n"+ (watch.ElapsedMilliseconds / 1000) + " sec.");
         // }
-        public void ClearAllDB(bool message = true, DBClearing splashScreen = null)
+        public void ClearAllDB(bool message = true, SplashScreen splashScreen = null)
         {
             if (message == true) MessageBox.Show("Это может занять некоторое время! \nДождитесь сообщения об окончании.");
             GlobalMethods.ToLog("Инициализация очистки базы данных...");

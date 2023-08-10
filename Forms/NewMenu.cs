@@ -92,6 +92,10 @@ namespace Meter.Forms
             
             ConcurrentDictionary<string, string> emcosValues = new ConcurrentDictionary<string, string>();
             //foreach (ReferenceObject item in ranges)
+            SplashScreen splashScreen = new();
+            splashScreen.Show();
+            splashScreen.UpdateLabel("Запись данных из АСКУЭ за " + result.ToString("dd.MM.yyyy") + ": ");
+            splashScreen.UpdateText("считывание данных из АСКУЭ");
             Parallel.ForEach(ranges, item => 
             {
                 foreach (var v in item.DB.childs.Values)
@@ -115,14 +119,16 @@ namespace Meter.Forms
                     }
                 }
             });
-
             Main.instance.StopAll();
             foreach (string id in emcosValues.Keys)
             {
+                ChildObject co = (ChildObject)RangeReferences.idDictionary[id];
+                splashScreen.UpdateText("запись данных из АСКУЭ: " + co._name);
                 // ((ChildObject)RangeReferences.idDictionary[id]).RangeByDay(int.Parse(this.textBox1.Text)).Value = emcosValues[id];
-                ((ChildObject)RangeReferences.idDictionary[id]).WriteValue(int.Parse(this.textBox1.Text), emcosValues[id]);
+                co.WriteValue(int.Parse(this.textBox1.Text), emcosValues[id]);
             }
             Main.instance.ResumeAll();
+            splashScreen.Close();
             MessageBox.Show("Done!");
         }
         

@@ -138,7 +138,7 @@ namespace Meter.Forms
             }
 
             MessageBox.Show("Это может занять некоторое время! \nДождитесь сообщения об окончании.");
-            DBClearing splashScreen = new DBClearing();
+            SplashScreen splashScreen = new SplashScreen();
             splashScreen.Show();
             GlobalMethods.ToLog("Инициализация создания нового листа...");
             splashScreen.UpdateText("Сохранение текущего листа в архив...");

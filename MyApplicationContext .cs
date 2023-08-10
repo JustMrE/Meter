@@ -58,9 +58,12 @@ namespace Meter
         public static bool PipeServerActive = true;
         Thread meterServer;
         Thread meterServerWriter;
+        private int batchSize = 0; // Переменная для хранения размера пачки
 
         static ConcurrentQueue<string> serverMessagesQueue;
-        static EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
+        // static EventWaitHandle waitHandle = new EventWaitHandle(false, EventResetMode.AutoReset);
+        private static ManualResetEventSlim waitHandle = new ManualResetEventSlim();
+        static ConcurrentQueue<string> serverMessages = new ConcurrentQueue<string>();
 
 
         public Excel.WorkbookEvents_BeforeCloseEventHandler Event_BeforeClose;
@@ -162,40 +165,188 @@ namespace Meter
 
         void ProcessQueue()
         {
-            while (PipeServerActive == true)
+            List<string> batchMessages = new List<string>();
+    
+            while (PipeServerActive)
             {
-                string? msg = null;
-                lock (serverMessagesQueue)
+                string msg;
+                
+                if (serverMessagesQueue != null && serverMessagesQueue.TryDequeue(out msg))
                 {
-                    if (serverMessagesQueue.Count == 0)
+                    if (msg == "Stop Meter Server")
                     {
-                        waitHandle.WaitOne();
-                        continue;
+                        GlobalMethods.ToLog("Stopping meterServerWriter");
+                        serverMessagesQueue.Clear();
+                        serverMessagesQueue = null;
+                        return;
                     }
-                    serverMessagesQueue.TryDequeue(out msg);
-                }
-                if (msg != "Stop Meter Server")
-                {
-                    // DataWriter.Write(msg);
-                    #region Old
-                    try
+                    
+                    batchMessages.Add(msg);
+
+                    if (batchMessages.Count >= batchSize)
                     {
-                        PipeValue pv = JsonConvert.DeserializeObject<PipeValue>(msg);
-                        if (!string.IsNullOrEmpty(pv.subjectName) && !string.IsNullOrEmpty(pv.level1Name) && !string.IsNullOrEmpty(pv.level2Name) && pv.day != null && !string.IsNullOrEmpty(pv.value))
+                        GlobalMethods.ToLog(">= " + batchMessages.Count + " " + batchSize);
+                        ProcessBatch(batchMessages);
+                        batchMessages.Clear();
+                    }
+                }
+                else
+                {
+                    if (batchMessages.Count > 0)
+                    {
+                        GlobalMethods.ToLog(">0 " + batchMessages.Count + " " + batchSize);
+                        ProcessBatch(batchMessages);
+                        batchMessages.Clear();
+                    }
+                    
+                    waitHandle.Wait();
+                }
+            }
+            #region old
+            // while (PipeServerActive == true)
+            // {
+            //     string? msg = null;
+            //     lock (serverMessagesQueue)
+            //     {
+            //         if (serverMessagesQueue.Count == 0)
+            //         {
+            //             waitHandle.WaitOne();
+            //             continue;
+            //         }
+            //         Thread.Sleep(250);
+            //         serverMessagesQueue.TryDequeue(out msg);
+            //     }
+            //     if (msg != "Stop Meter Server")
+            //     {
+            //         // DataWriter.Write(msg);
+            //         #region Old
+            //         try
+            //         {
+            //             GlobalMethods.ToLog("get msg: " + msg);
+            //             if (serverMessagesQueue.Count > 0)
+            //             {
+            //                 GlobalMethods.ToLog("add to queue: " + msg);
+            //                 serverMessages.Enqueue(msg);
+            //             }
+            //             else
+            //             {
+            //                 ConcurrentBag<PipeValue> result = new ();
+            //                 List<Task> tasks = new List<Task>();
+
+            //                 int totalItems = serverMessages.Count;
+            //                 for (int i = 0; i < totalItems; i++)
+            //                 {
+            //                     if (serverMessages.TryDequeue(out string json))
+            //                     {
+            //                         tasks.Add(Task.Run(() =>
+            //                         {
+            //                             PipeValue obj = JsonConvert.DeserializeObject<PipeValue>(json);
+            //                             result.Add(obj);
+            //                         }));
+            //                     }
+            //                 }
+            //                 Task.WaitAll(tasks.ToArray());
+
+            //                 StopAll();
+            //                 foreach (PipeValue pv in result)
+            //                 {
+            //                     GlobalMethods.ToLog("write to meter: " + pv.subjectName);
+            //                     if (!string.IsNullOrEmpty(pv.subjectName) && !string.IsNullOrEmpty(pv.level1Name) && !string.IsNullOrEmpty(pv.level2Name) && pv.day != null && !string.IsNullOrEmpty(pv.value))
+            //                     {
+            //                         ReferenceObject ro = null;
+            //                         if (references.references.TryGetValue(pv.subjectName, out ro))
+            //                         {
+            //                             if (ro != null)
+            //                             {
+            //                                 if (ro.DB.childs.ContainsKey(pv.level1Name) && ro.DB.childs[pv.level1Name].childs.ContainsKey(pv.level2Name))
+            //                                 {
+            //                                     ro.WriteToDB(pv.level1Name, pv.level2Name, (int)pv.day, pv.value.Replace(",", "."));
+            //                                 }
+            //                             }
+            //                             else
+            //                             {
+            //                                 GlobalMethods.ToLog("Не найден субъект " + pv.subjectName);
+            //                             }
+            //                         }
+            //                         else
+            //                         {
+            //                             GlobalMethods.ToLog("Не найден субъект " + pv.subjectName);
+            //                         }
+            //                     }
+            //                     else if (pv != null)
+            //                     {
+            //                         if (pv.cod != null && pv.day != null && pv.value != null)
+            //                         {
+            //                             ReferenceObject ro = references.references.Values.AsParallel().Where(n => n.codPlan == pv.cod).FirstOrDefault();
+            //                             if (ro != null)
+            //                             {
+            //                                 ro.WriteToDB("план", "утвержденный", (int)pv.day, pv.value.Replace(",","."));
+            //                             }
+            //                             else
+            //                             {
+            //                                 GlobalMethods.ToLog("Не найден субъект с кодом плана " + pv.cod);
+            //                             }
+            //                         }
+            //                     }
+            //                     else
+            //                     {
+            //                         GlobalMethods.ToLog("Не достаточно данных для записи");
+            //                     }
+            //                 }
+            //                 ResumeAll();
+            //             }
+            //         }
+            //         catch
+            //         {
+            //             GlobalMethods.ToLog("Ошибка записи для полученных данных " + msg);
+            //         }
+            //         #endregion
+            //     }
+            //     else
+            //     {
+            //         GlobalMethods.ToLog("Stopping meterServerWriter");
+            //         serverMessagesQueue.Clear();
+            //         serverMessagesQueue = null;
+            //     }
+            // }
+            #endregion
+        }
+
+        void ProcessBatch(List<string> messages)
+        {
+            try
+            {
+                GlobalMethods.ToLog("Received " + messages.Count + " messages.");
+
+                ConcurrentBag<PipeValue> result = new ConcurrentBag<PipeValue>();
+                List<Task> tasks = new List<Task>();
+
+                foreach (string json in messages)
+                {
+                    tasks.Add(Task.Run(() =>
+                    {
+                        PipeValue obj = JsonConvert.DeserializeObject<PipeValue>(json);
+                        result.Add(obj);
+                    }));
+                }
+
+                Task.WaitAll(tasks.ToArray());
+
+                StopAll();
+                
+                foreach (PipeValue pv in result)
+                {
+                    GlobalMethods.ToLog("write to meter: " + pv.subjectName);
+                    if (!string.IsNullOrEmpty(pv.subjectName) && !string.IsNullOrEmpty(pv.level1Name) && !string.IsNullOrEmpty(pv.level2Name) && pv.day != null && !string.IsNullOrEmpty(pv.value))
+                    {
+                        ReferenceObject ro = null;
+                        if (references.references.TryGetValue(pv.subjectName, out ro))
                         {
-                            ReferenceObject ro = null;
-                            if (references.references.TryGetValue(pv.subjectName, out ro))
+                            if (ro != null)
                             {
-                                if (ro != null)
+                                if (ro.DB.childs.ContainsKey(pv.level1Name) && ro.DB.childs[pv.level1Name].childs.ContainsKey(pv.level2Name))
                                 {
-                                    if (ro.DB.childs.ContainsKey(pv.level1Name) && ro.DB.childs[pv.level1Name].childs.ContainsKey(pv.level2Name))
-                                    {
-                                        ro.WriteToDB(pv.level1Name, pv.level2Name, (int)pv.day, pv.value.Replace(",", "."));
-                                    }
-                                }
-                                else
-                                {
-                                    GlobalMethods.ToLog("Не найден субъект " + pv.subjectName);
+                                    ro.WriteToDB(pv.level1Name, pv.level2Name, (int)pv.day, pv.value.Replace(",", "."));
                                 }
                             }
                             else
@@ -203,38 +354,37 @@ namespace Meter
                                 GlobalMethods.ToLog("Не найден субъект " + pv.subjectName);
                             }
                         }
-                        else if (pv != null)
-                        {
-                            if (pv.cod != null && pv.day != null && pv.value != null)
-                            {
-                                ReferenceObject ro = references.references.Values.AsParallel().Where(n => n.codPlan == pv.cod).FirstOrDefault();
-                                if (ro != null)
-                                {
-                                    ro.WriteToDB("план", "утвержденный", (int)pv.day, pv.value.Replace(",","."));
-                                }
-                                else
-                                {
-                                    GlobalMethods.ToLog("Не найден субъект с кодом плана " + pv.cod);
-                                }
-                            }
-                        }
                         else
                         {
-                            GlobalMethods.ToLog("Не достаточно данных для записи");
+                            GlobalMethods.ToLog("Не найден субъект " + pv.subjectName);
                         }
                     }
-                    catch
+                    else if (pv != null)
                     {
-                        GlobalMethods.ToLog("Ошибка записи для полученных данных " + msg);
+                        if (pv.cod != null && pv.day != null && pv.value != null)
+                        {
+                            ReferenceObject ro = references.references.Values.AsParallel().Where(n => n.codPlan == pv.cod).FirstOrDefault();
+                            if (ro != null)
+                            {
+                                ro.WriteToDB("план", "утвержденный", (int)pv.day, pv.value.Replace(",","."));
+                            }
+                            else
+                            {
+                                GlobalMethods.ToLog("Не найден субъект с кодом плана " + pv.cod);
+                            }
+                        }
                     }
-                    #endregion
+                    else
+                    {
+                        GlobalMethods.ToLog("Не достаточно данных для записи");
+                    }
                 }
-                else
-                {
-                    GlobalMethods.ToLog("Stopping meterServerWriter");
-                    serverMessagesQueue.Clear();
-                    serverMessagesQueue = null;
-                }
+                
+                ResumeAll();
+            }
+            catch
+            {
+                GlobalMethods.ToLog("Ошибка записи для полученных данных.");
             }
         }
 
@@ -242,6 +392,9 @@ namespace Meter
         {
             serverMessagesQueue = new ConcurrentQueue<string>();
             string? msg = null;
+
+            GlobalMethods.ToLog("Запуск сервера Meter...");
+
             while (PipeServerActive == true)
             {
                 using (NamedPipeServerStream pipeServer = new NamedPipeServerStream("MeterServer"))
@@ -250,7 +403,18 @@ namespace Meter
                     using (StreamReader sr = new StreamReader(pipeServer, Encoding.GetEncoding("windows-1251")))
                     {
                         msg = sr.ReadLine();
-                        if (msg != "check")
+                        if (msg == "check")
+                        {
+
+                        }
+                        else if (msg.Contains("size"))
+                        {
+                            msg = msg.Replace("size:", "");
+                            // Первое сообщение содержит размер пачки
+                            int.TryParse(msg, out batchSize);
+                            GlobalMethods.ToLog("size: " + batchSize);
+                        }
+                        else
                         {
                             serverMessagesQueue.Enqueue(msg);
                             waitHandle.Set();
@@ -259,9 +423,34 @@ namespace Meter
                     }
                 }
             }
+
             serverMessagesQueue.Enqueue("Stop Meter Server");
             waitHandle.Set();
             GlobalMethods.ToLog("Stopping meterServer");
+            #region Old
+            // serverMessagesQueue = new ConcurrentQueue<string>();
+            // string? msg = null;
+            // while (PipeServerActive == true)
+            // {
+            //     using (NamedPipeServerStream pipeServer = new NamedPipeServerStream("MeterServer"))
+            //     {
+            //         pipeServer.WaitForConnection();
+            //         using (StreamReader sr = new StreamReader(pipeServer, Encoding.GetEncoding("windows-1251")))
+            //         {
+            //             msg = sr.ReadLine();
+            //             if (msg != "check")
+            //             {
+            //                 serverMessagesQueue.Enqueue(msg);
+            //                 waitHandle.Set();
+            //                 msg = null;
+            //             }
+            //         }
+            //     }
+            // }
+            // serverMessagesQueue.Enqueue("Stop Meter Server");
+            // waitHandle.Set();
+            // GlobalMethods.ToLog("Stopping meterServer");
+            #endregion
         }
 
         private void EnqueueNewMsg(string msg)
@@ -278,7 +467,6 @@ namespace Meter
                 using (StreamWriter sw = new StreamWriter(pipeServer))
                 {
                     sw.WriteLine("Stop Meter Server");
-
                 }
             }
         }
