@@ -176,26 +176,21 @@ namespace Meter
                 }
                 if (msg != "Stop Meter Server")
                 {
-                    //DataWriter.Write(msg);
+                    // DataWriter.Write(msg);
                     #region Old
-                        try
+                    try
+                    {
+                        PipeValue pv = JsonConvert.DeserializeObject<PipeValue>(msg);
+                        if (!string.IsNullOrEmpty(pv.subjectName) && !string.IsNullOrEmpty(pv.level1Name) && !string.IsNullOrEmpty(pv.level2Name) && pv.day != null && !string.IsNullOrEmpty(pv.value))
                         {
-                            PipeValue pv = JsonConvert.DeserializeObject<PipeValue>(msg);
-                            if (!string.IsNullOrEmpty(pv.subjectName) && !string.IsNullOrEmpty(pv.level1Name) && !string.IsNullOrEmpty(pv.level2Name) && pv.day != null && !string.IsNullOrEmpty(pv.value))
+                            ReferenceObject ro = null;
+                            if (references.references.TryGetValue(pv.subjectName, out ro))
                             {
-                                ReferenceObject ro = null;
-                                if (references.references.TryGetValue(pv.subjectName, out ro))
+                                if (ro != null)
                                 {
-                                    if (ro != null)
+                                    if (ro.DB.childs.ContainsKey(pv.level1Name) && ro.DB.childs[pv.level1Name].childs.ContainsKey(pv.level2Name))
                                     {
-                                        if (ro.DB.childs.ContainsKey(pv.level1Name) && ro.DB.childs[pv.level1Name].childs.ContainsKey(pv.level2Name))
-                                        {
-                                            ro.WriteToDB(pv.level1Name, pv.level2Name, (int)pv.day, pv.value.Replace(",", "."));
-                                        }
-                                    }
-                                    else
-                                    {
-                                        GlobalMethods.ToLog("Не найден субъект " + pv.subjectName);
+                                        ro.WriteToDB(pv.level1Name, pv.level2Name, (int)pv.day, pv.value.Replace(",", "."));
                                     }
                                 }
                                 else
@@ -203,30 +198,35 @@ namespace Meter
                                     GlobalMethods.ToLog("Не найден субъект " + pv.subjectName);
                                 }
                             }
-                            else if (pv != null)
-                            {
-                                if (pv.cod != null && pv.day != null && pv.value != null)
-                                {
-                                    ReferenceObject ro = references.references.Values.AsParallel().Where(n => n.codPlan == pv.cod).FirstOrDefault();
-                                    if (ro != null)
-                                    {
-                                        ro.WriteToDB("план", "утвержденный", (int)pv.day, pv.value.Replace(",","."));
-                                    }
-                                    else
-                                    {
-                                        GlobalMethods.ToLog("Не найден субъект с кодом плана " + pv.cod);
-                                    }
-                                }
-                            }
                             else
                             {
-                                GlobalMethods.ToLog("Не достаточно данных для записи");
+                                GlobalMethods.ToLog("Не найден субъект " + pv.subjectName);
                             }
                         }
-                        catch
+                        else if (pv != null)
                         {
-                            GlobalMethods.ToLog("Ошибка записи для полученных данных " + msg);
+                            if (pv.cod != null && pv.day != null && pv.value != null)
+                            {
+                                ReferenceObject ro = references.references.Values.AsParallel().Where(n => n.codPlan == pv.cod).FirstOrDefault();
+                                if (ro != null)
+                                {
+                                    ro.WriteToDB("план", "утвержденный", (int)pv.day, pv.value.Replace(",","."));
+                                }
+                                else
+                                {
+                                    GlobalMethods.ToLog("Не найден субъект с кодом плана " + pv.cod);
+                                }
+                            }
                         }
+                        else
+                        {
+                            GlobalMethods.ToLog("Не достаточно данных для записи");
+                        }
+                    }
+                    catch
+                    {
+                        GlobalMethods.ToLog("Ошибка записи для полученных данных " + msg);
+                    }
                     #endregion
                 }
                 else
@@ -548,6 +548,8 @@ namespace Meter
 
             Events_AfterSave = new Excel.WorkbookEvents_AfterSaveEventHandler(Wb_AfterSave);
             wb.AfterSave += Events_AfterSave;
+
+            xlApp.OnKey("^v", "");
 
             GlobalMethods.CalculateFormsPositions();
         }
@@ -916,7 +918,7 @@ namespace Meter
 
             DirectoryInfo directoryInfo = new DirectoryInfo(archPath);
             FileInfo[] files = directoryInfo.GetFiles();
-            if (files.Length > 10)
+            if (files.Length > 50)
             {
                 FileInfo oldestFile = files.OrderBy(f => f.LastWriteTime).First();
                 oldestFile.Delete();

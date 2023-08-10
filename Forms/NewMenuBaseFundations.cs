@@ -181,6 +181,7 @@ namespace Meter.Forms
         public virtual void ContextMenu()
         {
             GlobalMethods.ToLog("Открыто контекстное меню");
+            selectedButtons.Add("Вставить");
             if (Main.instance.colors.subColors.ContainsValue(activeColor))
             {
                 HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
@@ -565,7 +566,6 @@ namespace Meter.Forms
             }
             rng.Formula = oldValsArray;
         }
-
         private object[,] GetExcelRangeFromCB()
         {
             IDataObject clipboardData = Clipboard.GetDataObject();
@@ -941,6 +941,53 @@ namespace Meter.Forms
                     Marshal.ReleaseComObject(item);
                 }
 
+                if (selectedButtons.Contains("Вставить")) AddButtonToCommandBar("Вставить", () => 
+                {
+                    // try
+                    // {
+                    //     Main.instance.xlApp.ActiveCell.PasteSpecial(Excel.XlPasteType.xlPasteValues);
+                    // }
+                    // catch (Exception e) 
+                    // {
+                        // if (e.HResult == -2146827284)
+                        // {
+                            try
+                            {
+                                IDataObject idat = null;
+                                Invoke(new Action(() => idat = Clipboard.GetDataObject()));
+                                if (idat != null)
+                                {
+                                    if (idat.GetDataPresent(DataFormats.Text))
+                                    {
+                                        string clipboardString = idat.GetData(DataFormats.Text) as string;
+                                        clipboardString = clipboardString.Replace("\r\n", "");
+                                        clipboardString = clipboardString.Replace(",", ".");
+                                        Main.instance.xlApp.ActiveCell.Value = clipboardString;
+                                    }
+                                    else if (idat.GetDataPresent(DataFormats.StringFormat))
+                                    {
+                                        string clipboardString = idat.GetData(DataFormats.StringFormat) as string;
+                                        clipboardString = clipboardString.Replace("\r\n", "");
+                                        clipboardString = clipboardString.Replace(",", ".");
+                                        Main.instance.xlApp.ActiveCell.Value = clipboardString;
+                                    }
+                                    if (idat.GetDataPresent(DataFormats.UnicodeText))
+                                    {
+                                        string clipboardString = idat.GetData(DataFormats.UnicodeText) as string;
+                                        clipboardString = clipboardString.Replace("\r\n", "");
+                                        clipboardString = clipboardString.Replace(",", ".");
+                                        Main.instance.xlApp.ActiveCell.Value = clipboardString;
+                                    }
+                                    else
+                                    {
+                                        MessageBox.Show("Ошибка вставки данных");
+                                    }
+                                }
+                            }
+                            catch (Exception){}
+                    //     }
+                    // }
+                });
                 if (selectedButtons.Contains("GoTo DB")) AddButtonToCommandBar("GoTo DB", GotoDB, 2116);
                 if (selectedButtons.Contains("Выделить")) AddButtonToCommandBar("Выделить", () => 
                 {

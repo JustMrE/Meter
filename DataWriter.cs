@@ -11,6 +11,7 @@ namespace Meter
             try
             {
                 PipeValue pv = JsonConvert.DeserializeObject<PipeValue>(msg);
+
                 if (!string.IsNullOrEmpty(pv.subjectName) && !string.IsNullOrEmpty(pv.level1Name) && !string.IsNullOrEmpty(pv.level2Name) && pv.day != null && !string.IsNullOrEmpty(pv.value))
                 {
                     ReferenceObject ro = null;
@@ -49,9 +50,10 @@ namespace Meter
                     }
                 }
                 else
-                {
-                    GlobalMethods.ToLog("Не достаточно данных для записи");
-                }
+                    {
+                        GlobalMethods.ToLog("Не достаточно данных для записи");
+                    }
+
             }
             catch
             {
