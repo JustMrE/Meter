@@ -11,8 +11,8 @@ namespace Meter
         public static void WriteMeters1(DateTime date)
         {
             string dict = Main.dir + @"\current\Словарь ТИ факт.xlsx";
-            // string path = "H1";
-            string path = "H2";
+            string path = "H1";
+            // string path = "H2";
             string fName = "I1";
             string fileWSName = "сч";
             int day = date.Day;
@@ -45,59 +45,68 @@ namespace Meter
             GlobalMethods.ToLog("Считывание словаря завершено: " + dict);
             foreach (string file in dict2.Keys)
             {
-                w1 = xlApp.Workbooks.Open(file, false);
-                ws1 = (Excel.Worksheet)w1.Worksheets[fileWSName];
-                GlobalMethods.ToLog("Считывание данных: " + file);
-                splashScreen.UpdateText("Считывание данных: " + file.Substring(file.LastIndexOf("\\") + 1));
-
-                foreach (string item in dict2[file].Keys)
+                try 
                 {
-                    string[] k = item.Split("/");
-                    string[] v = dict2[file][item].Split("/");
+                    w1 = xlApp.Workbooks.Open(file, false);
+                    ws1 = (Excel.Worksheet)w1.Worksheets[fileWSName];
+                    GlobalMethods.ToLog("Считывание данных: " + file);
+                    splashScreen.UpdateText("Считывание данных: " + file.Substring(file.LastIndexOf("\\") + 1));
 
-                    GlobalMethods.ToLog("Считывание данных: " + item);
-                    try
+                    foreach (string item in dict2[file].Keys)
                     {
-                        r = ws1.Range["A:A"].Find(k[0], LookAt: Excel.XlLookAt.xlWhole).MergeArea;
-                        int c1, c2, r1, r2;
-                        c1 = ((Excel.Range)r.Cells[1, 1]).Column;
-                        r1 = ((Excel.Range)r.Cells[1, 1]).Row;
-                        c2 = ((Excel.Range)r.Cells[r.Cells.Rows.Count, r.Cells.Columns.Count]).Column;
-                        r2 = ((Excel.Range)r.Cells[r.Cells.Rows.Count, r.Cells.Columns.Count]).Row;
-                        c1 += 1;
-                        c2 += 1;
-                        
-                        string adr = ws1.Range[ws1.Cells[r1, c1], ws1.Cells[r2, c2]].Address;
-                        if (ws1.Range[adr].Find(k[1], After: ws1.Range[adr].Cells[ws1.Range[adr].Cells.Count], LookAt: Excel.XlLookAt.xlPart) != null)
+                        string[] k = item.Split("/");
+                        string[] v = dict2[file][item].Split("/");
+
+                        GlobalMethods.ToLog("Считывание данных: " + item);
+                        try
                         {
-                            adr = ws1.Range[adr].Find(k[1], After: ws1.Range[adr].Cells[ws1.Range[adr].Cells.Count], LookAt: Excel.XlLookAt.xlPart).Address;
-                            r1 = ws1.Range[adr].Row;
-                            c1 = 3 + day;
-                            adr = ((Excel.Range)ws1.Cells[r1, c1]).Address;
+                            r = ws1.Range["A:A"].Find(k[0], LookAt: Excel.XlLookAt.xlWhole).MergeArea;
+                            int c1, c2, r1, r2;
+                            c1 = ((Excel.Range)r.Cells[1, 1]).Column;
+                            r1 = ((Excel.Range)r.Cells[1, 1]).Row;
+                            c2 = ((Excel.Range)r.Cells[r.Cells.Rows.Count, r.Cells.Columns.Count]).Column;
+                            r2 = ((Excel.Range)r.Cells[r.Cells.Rows.Count, r.Cells.Columns.Count]).Row;
+                            c1 += 1;
+                            c2 += 1;
                             
-                            if (ws1.Range[adr].Value != null)
+                            string adr = ws1.Range[ws1.Cells[r1, c1], ws1.Cells[r2, c2]].Address;
+                            if (ws1.Range[adr].Find(k[1], After: ws1.Range[adr].Cells[ws1.Range[adr].Cells.Count], LookAt: Excel.XlLookAt.xlPart) != null)
                             {
-                                subjects.Add(new Subject()
+                                adr = ws1.Range[adr].Find(k[1], After: ws1.Range[adr].Cells[ws1.Range[adr].Cells.Count], LookAt: Excel.XlLookAt.xlPart).Address;
+                                r1 = ws1.Range[adr].Row;
+                                c1 = 3 + day;
+                                adr = ((Excel.Range)ws1.Cells[r1, c1]).Address;
+                                
+                                if (ws1.Range[adr].Value != null)
                                 {
-                                    subjectName = v[0],
-                                    level1Name = v[1],
-                                    level2Name = "счетчик",
-                                    val = ((double)ws1.Range[adr].Value).ToString()
-                                });
+                                    subjects.Add(new Subject()
+                                    {
+                                        subjectName = v[0],
+                                        level1Name = v[1],
+                                        level2Name = "счетчик",
+                                        val = ((double)ws1.Range[adr].Value).ToString()
+                                    });
+                                }
                             }
                         }
+                        catch (System.Exception e)
+                        {
+                            GlobalMethods.Err(e + " " + "{" + k[0] + "}");
+                            GlobalMethods.ToLog(e + " " + "{" + k[0] + "}");
+                        }
+                        GlobalMethods.ToLog("Считывание данных завершено: " + item);
                     }
-                    catch (System.Exception e)
-                    {
-                        GlobalMethods.Err(e + " " + "{" + k[0] + "}");
-                        GlobalMethods.ToLog(e + " " + "{" + k[0] + "}");
-                    }
-                    GlobalMethods.ToLog("Считывание данных завершено: " + item);
+                    w1.Close(false);
+                    w1 = null;
+                    ws1 = null;
+                    r = null;
                 }
-                w1.Close(false);
-                w1 = null;
-                ws1 = null;
-                r = null;
+                catch (Exception e) 
+                {
+                    GlobalMethods.ToLog("Файл: " + file + " ошибка: " + e.Message);
+                    splashScreen.UpdateText(e.Message);
+                    Thread.Sleep(1000);
+                }
             }
 
             ws1 = null;

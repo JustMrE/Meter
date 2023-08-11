@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using Newtonsoft.Json;
 using Excel = Microsoft.Office.Interop.Excel;
 using Main = Meter.MyApplicationContext;
@@ -6,12 +7,54 @@ namespace Meter
 {
     public static class DataWriter
     {
-        public static void Write(string msg)
+        public static void ProcessBatch(List<string> messages)
         {
             try
             {
-                PipeValue pv = JsonConvert.DeserializeObject<PipeValue>(msg);
+                GlobalMethods.ToLog("Received " + messages.Count + " messages.");
+                ConcurrentBag<PipeValue> result = DeserializeMessages<PipeValue>(messages);
+                Write(result);
+            }
+            catch
+            {
+                GlobalMethods.ToLog("Ошибка записи для полученных данных.");
+            }
+        }
 
+        static ConcurrentBag<T> DeserializeMessages<T>(List<string> messages)
+        {
+            ConcurrentBag<T> result = new ();
+            List<Task> tasks = new List<Task>();
+
+            foreach (string json in messages)
+            {
+                if (json != null)
+                {
+                    tasks.Add(Task.Run(() =>
+                    {
+                        try
+                        {
+                            T obj = JsonConvert.DeserializeObject<T>(json);
+                            result.Add(obj);
+                        }
+                        catch (Exception)
+                        {
+                            
+                        }
+                    }));
+                }
+            }
+
+            Task.WaitAll(tasks.ToArray());
+
+            return result;
+        }
+        static void Write(ConcurrentBag<PipeValue> result)
+        {
+            Main.instance.StopAll();
+            foreach (PipeValue pv in result)
+            {
+                GlobalMethods.ToLog("write to meter: " + pv.subjectName);
                 if (!string.IsNullOrEmpty(pv.subjectName) && !string.IsNullOrEmpty(pv.level1Name) && !string.IsNullOrEmpty(pv.level2Name) && pv.day != null && !string.IsNullOrEmpty(pv.value))
                 {
                     ReferenceObject ro = null;
@@ -50,15 +93,11 @@ namespace Meter
                     }
                 }
                 else
-                    {
-                        GlobalMethods.ToLog("Не достаточно данных для записи");
-                    }
-
+                {
+                    GlobalMethods.ToLog("Не достаточно данных для записи");
+                }
             }
-            catch
-            {
-                GlobalMethods.ToLog("Ошибка записи для полученных данных " + msg);
-            }
+            Main.instance.ResumeAll();
         }
     }
 }

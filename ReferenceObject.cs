@@ -105,7 +105,7 @@ namespace Meter
                 return DB.childs.Values.Any(n => n.emcosID != null);
             }
         }
-
+        
         public ReferenceObject()
         {
             if (ID == null)
@@ -180,9 +180,34 @@ namespace Meter
             if (stopall == true) Main.instance.ResumeAll();
         }
 
-        public int? ActiveDay()
+        public ChildObject GetL1(Excel.Range rng)
         {
-            return _activeChild._activeChild._activeChild.DayByRange(NewMenuBase._activeRange);
+            return PS.childs.Values.AsParallel().FirstOrDefault(n => n.HasRange(rng));
+        }
+        public ChildObject GetL2(Excel.Range rng, string rngL1 = "")
+        {
+            if (rngL1 == "")
+            {
+                return GetL1(rng).childs.Values.AsParallel().FirstOrDefault(n => n.HasRange(rng));
+            }
+            else
+            {
+                return PS.childs[rngL1].childs.Values.AsParallel().FirstOrDefault(n => n.HasRange(rng));
+            }
+            
+        }
+        public int? ActiveDay(Excel.Range rng = null)
+        {
+            if (rng == null)
+            {
+                return _activeChild._activeChild._activeChild.DayByRange(NewMenuBase._activeRange);
+            }
+            else
+            {
+                string rngL1 = GetL1(rng)._name;
+                string rngL2 = GetL2(rng)._name;
+                return PS.childs[rngL1].childs[rngL2].DayByRange(rng);
+            }
         }
         public bool HasRange(Excel.Range rng)
         {

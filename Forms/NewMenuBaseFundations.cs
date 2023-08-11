@@ -443,10 +443,12 @@ namespace Meter.Forms
             Main.instance.references.ActivateTable(range);
             if (range.Formula is string)
             {
+                oldValsArray = null;
                 oldVal = (string)range.Formula;
             }
             else if (range.Formula is object[,])
             {
+                oldVal = null;
                 oldValsArray = (object[,])range.Formula;
             }
             
@@ -463,89 +465,150 @@ namespace Meter.Forms
             {
                 return;
             }
-            Main.instance.StopAll();
+            Main.instance.xlApp.EnableEvents = false;
+            Main.instance.xlApp.Calculation = Excel.XlCalculation.xlCalculationManual;
+            // Excel.Range coloredCells = range.SpecialCells(Excel.XlCellType.xlCellTypeSameFormatConditions);
+
+            var coloredCellsToProcess = range.Cast<Excel.Range>().Where(cell =>
             {
-                if (range.Cells.Count != _activeRange.Cells.Count)
-                {
-                    int r, c;
-                    Excel.Range r1 = ((Excel.Range)_activeRange.Cells[1, 1]);
+                Color c = ColorsData.GetRangeColor(cell);
+                return c == Main.instance.colors.mainSubtitle["ручное"] || 
+                c == Main.instance.colors.mainSubtitle["корректировка"] || 
+                c == Main.instance.colors.mainSubtitle["корректировка факт"] ||
+                c == Main.instance.colors.mainSubtitle["счетчик"] ||
+                c == Main.instance.colors.extraSubtitle["РУЧНОЕ"] ||
+                c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА"] ||
+                c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА ФАКТ"] ||
+                c == Main.instance.colors.extraSubtitle["СЧЕТЧИК"]; 
+            });
 
-                    r = 1 + (range.Row - r1.Row);
-                    c = 1 + (range.Column - r1.Column);
-                    oldVal = (string)oldValsArray[r, c];
-                    Marshal.ReleaseComObject(r1);
-                }
-                if (range.Cells.Count > 1) 
+            foreach (Excel.Range cell in coloredCellsToProcess)
+            {   
+                ReferenceObject ro = Main.instance.references[cell];
+                if (ro != null)
                 {
-                    // oldValsArray = (object[,])range.Formula;
-                    // foreach (Excel.Range cell in range.Cells)
-                    // {
-                    //     Color c = ColorsData.GetRangeColor(cell);
-                    //     if (c == Main.instance.colors.mainSubtitle["ручное"] || 
-                    //         c == Main.instance.colors.mainSubtitle["корректировка"] || 
-                    //         c == Main.instance.colors.mainSubtitle["корректировка факт"] ||
-                    //         c == Main.instance.colors.mainSubtitle["счетчик"] ||
-                    //         c == Main.instance.colors.extraSubtitle["РУЧНОЕ"] ||
-                    //         c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА"] ||
-                    //         c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА ФАКТ"] ||
-                    //         c == Main.instance.colors.extraSubtitle["СЧЕТЧИК"])
-                    //     {
-                    //         _activeRange = cell;
-                    //         Main.instance.references.ActivateTable(_activeRange);
-                    //         if (RangeReferences.activeTable != null)
-                    //         {
-                    //             int? day = RangeReferences.activeTable.ActiveDay();
-                    //             if (day != null)
-                    //             {
-                    //                 WriteToDB(_activeRange, (int)day, false);
-                    //             }
-                    //         }
-
-                    //     }
-                    // }
-                    // _activeRange = range;
-                    DontEditRange(range);
-                }
-                else
-                {
-                    Color c = ColorsData.GetRangeColor(range);
-                    if (c == Main.instance.colors.mainSubtitle["ручное"] || 
-                        c == Main.instance.colors.mainSubtitle["корректировка"] || 
-                        c == Main.instance.colors.mainSubtitle["корректировка факт"] ||
-                        c == Main.instance.colors.mainSubtitle["счетчик"] ||
-                        c == Main.instance.colors.extraSubtitle["РУЧНОЕ"] ||
-                        c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА"] ||
-                        c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА ФАКТ"] ||
-                        c == Main.instance.colors.extraSubtitle["СЧЕТЧИК"])
+                    string nameL1 = ro.GetL1(cell)._name;
+                    string nameL2 = ro.GetL2(cell, nameL1)._name;
+                    int? day = ro.PS.childs[nameL1].childs[nameL2].DayByRange(cell);
+                    if (day != null)
                     {
-                        int? day = RangeReferences.activeTable.ActiveDay();
-                        if (day != null)
-                        {
-                            string? name = Main.instance.colors.NameByColor(c);
-                            WriteToDB(_activeRange, (int)day, true, L2: name);
-                        }
-                    }
-                    else
-                    {
-                        DontEdit(range);
+                        string val = cell.Formula != null ? cell.Formula.ToString() : "";
+                        ro.WriteToDB(nameL1, nameL2, (int)day, val);
                     }
                 }
+                
             }
-            Main.instance.ResumeAll();
+
+            DontEdit(range);
+            #region Old
+                // {
+                //     if (range.Cells.Count != _activeRange.Cells.Count)
+                //     {
+                //         int r, c;
+                //         Excel.Range r1 = (Excel.Range)_activeRange.Cells[1, 1];
+    
+                //         r = 1 + (range.Row - r1.Row);
+                //         c = 1 + (range.Column - r1.Column);
+                //         oldVal = (string)oldValsArray[r, c];
+                //         Marshal.ReleaseComObject(r1);
+                //     }
+                //     if (range.Cells.Count > 1) 
+                //     {
+                //         // oldValsArray = (object[,])range.Formula;
+                //         // foreach (Excel.Range cell in range.Cells)
+                //         // {
+                //         //     Color c = ColorsData.GetRangeColor(cell);
+                //         //     if (c == Main.instance.colors.mainSubtitle["ручное"] || 
+                //         //         c == Main.instance.colors.mainSubtitle["корректировка"] || 
+                //         //         c == Main.instance.colors.mainSubtitle["корректировка факт"] ||
+                //         //         c == Main.instance.colors.mainSubtitle["счетчик"] ||
+                //         //         c == Main.instance.colors.extraSubtitle["РУЧНОЕ"] ||
+                //         //         c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА"] ||
+                //         //         c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА ФАКТ"] ||
+                //         //         c == Main.instance.colors.extraSubtitle["СЧЕТЧИК"])
+                //         //     {
+                //         //         _activeRange = cell;
+                //         //         Main.instance.references.ActivateTable(_activeRange);
+                //         //         if (RangeReferences.activeTable != null)
+                //         //         {
+                //         //             int? day = RangeReferences.activeTable.ActiveDay();
+                //         //             if (day != null)
+                //         //             {
+                //         //                 WriteToDB(_activeRange, (int)day, false);
+                //         //             }
+                //         //         }
+    
+                //         //     }
+                //         // }
+                //         // _activeRange = range;
+                //         DontEditRange(range);
+                //     }
+                //     else
+                //     {
+                //         Color c = ColorsData.GetRangeColor(range);
+                //         if (c == Main.instance.colors.mainSubtitle["ручное"] || 
+                //             c == Main.instance.colors.mainSubtitle["корректировка"] || 
+                //             c == Main.instance.colors.mainSubtitle["корректировка факт"] ||
+                //             c == Main.instance.colors.mainSubtitle["счетчик"] ||
+                //             c == Main.instance.colors.extraSubtitle["РУЧНОЕ"] ||
+                //             c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА"] ||
+                //             c == Main.instance.colors.extraSubtitle["КОРРЕКТИРОВКА ФАКТ"] ||
+                //             c == Main.instance.colors.extraSubtitle["СЧЕТЧИК"])
+                //         {
+                //             int? day = RangeReferences.activeTable.ActiveDay();
+                //             if (day != null)
+                //             {
+                //                 string? name = Main.instance.colors.NameByColor(c);
+                //                 WriteToDB(_activeRange, (int)day, true, L2: name);
+                //             }
+                //         }
+                //         else
+                //         {
+                //             DontEdit(range);
+                //         }
+                //     }
+                // }
+            #endregion
+            Main.instance.xlApp.Calculation = Excel.XlCalculation.xlCalculationAutomatic;
+            Main.instance.xlApp.EnableEvents = true;
         }
         public void WriteToDB(Excel.Range rng, int day, bool dontedit = true, string? L2 = null)
         {
-            string nameL2 = L2 == null ? RangeReferences.activeL2 : (string)L2;
-            string val = rng.Formula != null ? rng.Formula.ToString() : "";
-            if (dontedit) DontEdit(rng, day);
-            RangeReferences.activeTable.WriteToDB(RangeReferences.ActiveL1, nameL2,(int)day, val);
-            
+            #region Old
+                // string nameL2 = L2 == null ? RangeReferences.activeL2 : (string)L2;
+                // string val = rng.Formula != null ? rng.Formula.ToString() : "";
+                // if (dontedit) DontEdit(rng, day);
+                // RangeReferences.activeTable.WriteToDB(RangeReferences.ActiveL1, nameL2,(int)day, val);
+            #endregion
         }
+
+        public void WriteToDB(ReferenceObject ro, Excel.Range rng, int day)
+        {
+            // string val = rng.Formula != null ? rng.Formula.ToString() : "";
+            // ro.WriteToDB(nameL1, nameL2, (int)day, val);
+        }
+
         private void DontEdit(Excel.Range rng, int? day = null)
         {
-            string val = rng.Formula != null ? rng.Formula.ToString() : "";
-            rng.Formula = oldVal;
-            GlobalMethods.ToLog("Изменено значение ячейки " + rng.Address + " с '" + val + "' на '" + oldVal + "'");
+            if (oldVal != null)
+            {
+                rng.Formula = oldVal;
+            }
+            else if (oldValsArray != null)
+            {
+                int numRows = oldValsArray.GetLength(0);
+                int numCols = oldValsArray.GetLength(1);
+
+                if (numRows == rng.Rows.Count && numCols == rng.Columns.Count)
+                {
+                    rng.Formula = oldValsArray;
+                }
+            }
+            #region Old
+                // string val = rng.Formula != null ? rng.Formula.ToString() : "";
+                // rng.Formula = oldVal;
+                // GlobalMethods.ToLog("Изменено значение ячейки " + rng.Address + " с '" + val + "' на '" + oldVal + "'");
+            #endregion
         }
         private void DontEditRange(Excel.Range rng)
         {
