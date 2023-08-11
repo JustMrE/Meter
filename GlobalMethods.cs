@@ -10,6 +10,7 @@ using System.Globalization;
 using System.Drawing;
 using System.Text.RegularExpressions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using System.Diagnostics;
 
 namespace Meter
 {

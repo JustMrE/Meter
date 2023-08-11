@@ -131,7 +131,6 @@ namespace Meter
                 xlApp = null;
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
-
                 GlobalMethods.ToLog("Счетчики закрыты");
                 if (restarted == false) ExitThread();
             }
@@ -159,7 +158,6 @@ namespace Meter
             GlobalMethods.dpiY = Graphics.FromHwnd(IntPtr.Zero).DpiY;
             
             Start();
-
         }
 
         void ProcessQueue()
@@ -494,11 +492,6 @@ namespace Meter
             Events_ActivateSheet = new Excel.WorkbookEvents_SheetActivateEventHandler(Application_ActivateSheet);
             wb.SheetActivate += Events_ActivateSheet;
 
-            // pasteButton = (CommandBarControl)xlApp.CommandBars[9].Controls[12];
-            // pasteButton.Enabled = false;
-            //CommandBarButtonEvents_ClickEvent= new _CommandBarButtonEvents_ClickEventHandler((CommandBarButton ctrl, ref bool cancelDefault) => { MessageBox.Show("Haha");});
-            //pasteButton.OnAction = () => {} ;
-
             Events_BeforeDoubleClick = new Excel.DocEvents_BeforeDoubleClickEventHandler(Application_BeforeDoubleClick);
             wsCh.BeforeDoubleClick += Events_BeforeDoubleClick;
 
@@ -522,7 +515,7 @@ namespace Meter
 
             Events_AfterSave = new Excel.WorkbookEvents_AfterSaveEventHandler(Wb_AfterSave);
             wb.AfterSave += Events_AfterSave;
-
+            
             xlApp.OnKey("^v", "");
 
             GlobalMethods.CalculateFormsPositions();
@@ -572,6 +565,18 @@ namespace Meter
             xlApp.EnableEvents = true;
         }
 
+        void Worksheet_KeyDown(Excel.Range target, Excel.Application application, System.Windows.Forms.Keys keycode, ref bool shift)
+        {
+            if (shift && keycode == System.Windows.Forms.Keys.V)
+            {
+                // Отключаем стандартное поведение вставки (Ctrl+V)
+                application.CutCopyMode = 0;
+                MessageBox.Show("Paste command");
+                // Выполняем вашу специальную логику вставки
+                // Например, вызываем ваш метод для вставки данных
+                // YourCustomPasteLogic();
+            }
+        }
         public void Application_BeforeClose(ref bool cancel)
         {
             if (!closed)

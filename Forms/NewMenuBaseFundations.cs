@@ -39,14 +39,13 @@ namespace Meter.Forms
         protected delegate void CommandBarButtonClick(CommandBarButton commandBarButton, ref bool cancel);
         private static object[,] oldValsArray;
         private static string oldVal;
-        //public static HttpClient client = new HttpClient();
         protected static string token = "";
         protected CommandBar cb;
         protected Color activeColor;
         public static Excel.Range _activeRange;
         public static bool restartFlag = false;
-        public static HashSet<string> editedFormulas = new HashSet<string>();
-        public static HashSet<string> selectedButtons = new HashSet<string>();
+        public static HashSet<string> editedFormulas = new ();
+        public static HashSet<string> selectedButtons = new ();
 
         
         private void RegexSearch()
@@ -181,7 +180,10 @@ namespace Meter.Forms
         public virtual void ContextMenu()
         {
             GlobalMethods.ToLog("Открыто контекстное меню");
-            selectedButtons.Add("Вставить");
+            selectedButtons.Add("Копировать");
+            IDataObject clipboardData = null;
+            Invoke(new Action(() => clipboardData = Clipboard.GetDataObject()));
+            if (clipboardData != null && clipboardData.GetFormats().Length > 0) selectedButtons.Add("Вставить");
             if (Main.instance.colors.subColors.ContainsValue(activeColor))
             {
                 HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
@@ -283,11 +285,6 @@ namespace Meter.Forms
             b.Caption = caption;
             if (faceid != null) b.FaceId = (int)faceid;
             b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
-
-            // if (!myMenuButtons.ContainsKey(Tag))
-            // {
-            //     myMenuButtons.Add(Tag, b);
-            // }
         }
         protected void AddButtonToCommandBar(string caption, Action<string> action, string s1, int type = 1)
         {
@@ -467,7 +464,6 @@ namespace Meter.Forms
             }
             Main.instance.xlApp.EnableEvents = false;
             Main.instance.xlApp.Calculation = Excel.XlCalculation.xlCalculationManual;
-            // Excel.Range coloredCells = range.SpecialCells(Excel.XlCellType.xlCellTypeSameFormatConditions);
 
             var coloredCellsToProcess = range.Cast<Excel.Range>().Where(cell =>
             {
@@ -572,21 +568,6 @@ namespace Meter.Forms
             Main.instance.xlApp.Calculation = Excel.XlCalculation.xlCalculationAutomatic;
             Main.instance.xlApp.EnableEvents = true;
         }
-        public void WriteToDB(Excel.Range rng, int day, bool dontedit = true, string? L2 = null)
-        {
-            #region Old
-                // string nameL2 = L2 == null ? RangeReferences.activeL2 : (string)L2;
-                // string val = rng.Formula != null ? rng.Formula.ToString() : "";
-                // if (dontedit) DontEdit(rng, day);
-                // RangeReferences.activeTable.WriteToDB(RangeReferences.ActiveL1, nameL2,(int)day, val);
-            #endregion
-        }
-
-        public void WriteToDB(ReferenceObject ro, Excel.Range rng, int day)
-        {
-            // string val = rng.Formula != null ? rng.Formula.ToString() : "";
-            // ro.WriteToDB(nameL1, nameL2, (int)day, val);
-        }
 
         private void DontEdit(Excel.Range rng, int? day = null)
         {
@@ -603,53 +584,6 @@ namespace Meter.Forms
                 {
                     rng.Formula = oldValsArray;
                 }
-            }
-            #region Old
-                // string val = rng.Formula != null ? rng.Formula.ToString() : "";
-                // rng.Formula = oldVal;
-                // GlobalMethods.ToLog("Изменено значение ячейки " + rng.Address + " с '" + val + "' на '" + oldVal + "'");
-            #endregion
-        }
-        private void DontEditRange(Excel.Range rng)
-        {
-            object[,] newValsArray = (object[,])rng.Formula;
-            if (newValsArray == null || newValsArray.Length != oldValsArray.Length)
-            {
-                newValsArray = GetExcelRangeFromCB();
-            }
-            if (newValsArray != null && newValsArray.Length == oldValsArray.Length)
-            {
-                for (int i = 1; i <= rng.Columns.Count; i++)
-                {
-                    for (int j = 1; j <= rng.Rows.Count; j++)
-                    {
-                        GlobalMethods.ToLog("Изменено значение ячейки " + ((Excel.Range)rng.Cells[j, i]).Address + " с '" + newValsArray[j, i] + "' на '" + oldValsArray[j, i] + "'");
-                    }
-                }
-            }
-            rng.Formula = oldValsArray;
-        }
-        private object[,] GetExcelRangeFromCB()
-        {
-            IDataObject clipboardData = Clipboard.GetDataObject();
-            if (clipboardData != null && clipboardData.GetDataPresent(DataFormats.CommaSeparatedValue))
-            {
-                string csvText = (string)clipboardData.GetData(DataFormats.CommaSeparatedValue);
-                string[] lines = csvText.Split(new char[] {'\r', '\n'}, StringSplitOptions.RemoveEmptyEntries);
-                object[,] data = new object[lines.Length, lines[0].Split(',').Length];
-                for (int i = 0; i < lines.Length; i++)
-                {
-                    string[] values = lines[i].Split(',');
-                    for (int j = 0; j < values.Length; j++)
-                    {
-                        data[i,j] = values[j];
-                    }
-                }
-                return data;
-            }
-            else
-            {
-                return null;
             }
         }
         private void NewMenuBase_FormClosed(object sender, FormClosedEventArgs e)
@@ -1004,53 +938,78 @@ namespace Meter.Forms
                     Marshal.ReleaseComObject(item);
                 }
 
+                if (selectedButtons.Contains("Копировать")) AddButtonToCommandBar("Копировать", () => 
+                {
+                    GlobalMethods.ToLog("Копирование диапазона: " + ((Excel.Range)Main.instance.xlApp.Selection).Address);
+                    ((Excel.Range)Main.instance.xlApp.Selection).Copy();
+                }, 0019);
                 if (selectedButtons.Contains("Вставить")) AddButtonToCommandBar("Вставить", () => 
                 {
-                    // try
-                    // {
-                    //     Main.instance.xlApp.ActiveCell.PasteSpecial(Excel.XlPasteType.xlPasteValues);
-                    // }
-                    // catch (Exception e) 
-                    // {
-                        // if (e.HResult == -2146827284)
-                        // {
-                            try
+                    try
+                    {
+                        IDataObject idat = null;
+                        Invoke(new Action(() => idat = Clipboard.GetDataObject()));
+                        if (idat != null)
+                        {
+                            if (idat.GetDataPresent(DataFormats.Text))
                             {
-                                IDataObject idat = null;
-                                Invoke(new Action(() => idat = Clipboard.GetDataObject()));
-                                if (idat != null)
+                                string clipboardString = idat.GetData(DataFormats.Text) as string;
+                                clipboardString = clipboardString.Replace(",", ".");
+
+                                string[] rows = clipboardString.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
+                                int numRows = rows.Length;
+                                int numColumns = rows[0].Split('\t').Length;
+
+                                Excel.Range selectedRange = (Excel.Range)Main.instance.xlApp.Selection;
+                                int targetNumRows = selectedRange.Rows.Count;
+                                int targetNumColumns = selectedRange.Columns.Count;
+
+                                // Расширение выделенного диапазона, если необходимо
+                                if (targetNumRows < numRows || targetNumColumns < numColumns)
                                 {
-                                    if (idat.GetDataPresent(DataFormats.Text))
+                                    Excel.Range expandedRange = selectedRange.Resize[numRows, numColumns];
+                                    selectedRange = expandedRange;
+                                    targetNumRows = selectedRange.Rows.Count;
+                                    targetNumColumns = selectedRange.Columns.Count;
+                                }
+
+                                object[,] dataArray = new object[targetNumRows, targetNumColumns];
+
+                                for (int i = 0; i < targetNumRows; i++)
+                                {
+                                    for (int j = 0; j < targetNumColumns; j++)
                                     {
-                                        string clipboardString = idat.GetData(DataFormats.Text) as string;
-                                        clipboardString = clipboardString.Replace("\r\n", "");
-                                        clipboardString = clipboardString.Replace(",", ".");
-                                        Main.instance.xlApp.ActiveCell.Value = clipboardString;
-                                    }
-                                    else if (idat.GetDataPresent(DataFormats.StringFormat))
-                                    {
-                                        string clipboardString = idat.GetData(DataFormats.StringFormat) as string;
-                                        clipboardString = clipboardString.Replace("\r\n", "");
-                                        clipboardString = clipboardString.Replace(",", ".");
-                                        Main.instance.xlApp.ActiveCell.Value = clipboardString;
-                                    }
-                                    if (idat.GetDataPresent(DataFormats.UnicodeText))
-                                    {
-                                        string clipboardString = idat.GetData(DataFormats.UnicodeText) as string;
-                                        clipboardString = clipboardString.Replace("\r\n", "");
-                                        clipboardString = clipboardString.Replace(",", ".");
-                                        Main.instance.xlApp.ActiveCell.Value = clipboardString;
-                                    }
-                                    else
-                                    {
-                                        MessageBox.Show("Ошибка вставки данных");
+                                        int sourceRow = i % numRows;
+                                        int sourceColumn = j % numColumns;
+                                        dataArray[i, j] = rows[sourceRow].Split('\t')[sourceColumn];
                                     }
                                 }
+                                selectedRange.Select();
+                                selectedRange.Value2 = dataArray;
+                                GlobalMethods.ToLog(" в диапазон: " + selectedRange.Address + "Вставлены значения: \n" + clipboardString );
                             }
-                            catch (Exception){}
-                    //     }
-                    // }
-                });
+                            else if (idat.GetDataPresent(DataFormats.StringFormat))
+                            {
+                                // string clipboardString = idat.GetData(DataFormats.StringFormat) as string;
+                                // // clipboardString = clipboardString.Replace("\r\n", "");
+                                // clipboardString = clipboardString.Replace(",", ".");
+                                // Main.instance.xlApp.ActiveCell.Value = clipboardString;
+                            }
+                            else if (idat.GetDataPresent(DataFormats.UnicodeText))
+                            {
+                                // string clipboardString = idat.GetData(DataFormats.UnicodeText) as string;
+                                // // clipboardString = clipboardString.Replace("\r\n", "");
+                                // clipboardString = clipboardString.Replace(",", ".");
+                                // Main.instance.xlApp.ActiveCell.Value = clipboardString;
+                            }
+                            else
+                            {
+                                MessageBox.Show("Ошибка вставки данных");
+                            }
+                        }
+                    }
+                    catch (Exception){}
+                }, 0022);
                 if (selectedButtons.Contains("GoTo DB")) AddButtonToCommandBar("GoTo DB", GotoDB, 2116);
                 if (selectedButtons.Contains("Выделить")) AddButtonToCommandBar("Выделить", () => 
                 {
