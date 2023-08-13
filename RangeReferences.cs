@@ -136,6 +136,18 @@ namespace Meter
             }
             MessageBox.Show("Done!");
         }
+        public void UpdateAllDBNames()
+        {
+            var watch = Stopwatch.StartNew();
+            Main.instance.StopAll();
+            foreach (ReferenceObject item in references.Values)
+            {
+                item.UpdateDBNames();
+            }
+            Main.instance.ResumeAll();
+            watch.Stop();
+            MessageBox.Show("Done!\n" + (watch.ElapsedMilliseconds / 1000) + " sec");
+        }
         public void UpdateAllPSFormulas()
         {
             var watch = Stopwatch.StartNew();
@@ -155,6 +167,7 @@ namespace Meter
             Main.instance.StopAll();
             foreach (ReferenceObject item in references.Values)
             {
+                GlobalMethods.ToLog(item._name);
                 item.UpdateAllDBFormulas(false);
             }
             Main.instance.ResumeAll();

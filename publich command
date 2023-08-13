@@ -1,0 +1,1 @@
+dotnet publish --configuration Release -r win-x64 -p:IncludeAllContentForSelfExtract=true -p:PublishSingleFile=true --self-contained true

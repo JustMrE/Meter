@@ -76,8 +76,8 @@ namespace Meter
             }
 
             string file1 = db + @"\opened.txt";
-            string logFile = db + @"\log.txt";
-            string errLogFile = db + @"\errlog.txt";
+            string logFile = db + @"\log.log";
+            string errLogFile = db + @"\errlog.log";
             string username = Environment.UserName;
             #if !DEBUG
             if (File.Exists(file1))

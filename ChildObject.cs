@@ -780,7 +780,7 @@ namespace Meter
                 }
             }
         }
-        public void UpdateFormulas(bool stopall = true)
+        public void UpdateFormulas(bool stopall = true, bool clear = true)
         {
             if (childs == null && WS.CodeName != "DB")
             {
@@ -812,10 +812,13 @@ namespace Meter
             {
                 if (_name == "счетчик")
                 {
-                    object val = ((Excel.Range)Body.Cells[Body.Cells.Count]).Value;
-                    Body.ClearContents();
+                    if (clear == true)
+                    {
+                        object val = ((Excel.Range)Body.Cells[Body.Cells.Count]).Value;
+                        Body.ClearContents();
 
-                    ((Excel.Range)Body.Rows[1]).Value = val;
+                        ((Excel.Range)Body.Rows[1]).Value = val;
+                    }
                     ((Excel.Range)Body.Rows[12]).FormulaR1C1 = "=R[-1]C";
                     ((Excel.Range)Body.Rows[23]).FormulaR1C1 = "=R[-1]C";
                     ((Excel.Range)Body.Rows[24]).FormulaR1C1 = "=R[-1]C";
@@ -946,24 +949,27 @@ namespace Meter
                 }
                 else
                 {
-                    ((Excel.Range)Body.Rows[12]).ClearContents(); 
-                    ((Excel.Range)Body.Rows[23]).ClearContents();
-                    ((Excel.Range)Body.Rows[24]).ClearContents();
-                    ((Excel.Range)Body.Rows[36]).ClearContents();
-                    ((Excel.Range)Body.Rows[37]).ClearContents();
-
-                    Marshal.ReleaseComObject(((Excel.Range)Body.Rows[12]));
-                    Marshal.ReleaseComObject(((Excel.Range)Body.Rows[23]));
-                    Marshal.ReleaseComObject(((Excel.Range)Body.Rows[24]));
-                    Marshal.ReleaseComObject(((Excel.Range)Body.Rows[36]));
-                    Marshal.ReleaseComObject(((Excel.Range)Body.Rows[37]));
+                    if (clear == true)
+                    {
+                        ((Excel.Range)Body.Rows[12]).ClearContents(); 
+                        ((Excel.Range)Body.Rows[23]).ClearContents();
+                        ((Excel.Range)Body.Rows[24]).ClearContents();
+                        ((Excel.Range)Body.Rows[36]).ClearContents();
+                        ((Excel.Range)Body.Rows[37]).ClearContents();
+    
+                        Marshal.ReleaseComObject(((Excel.Range)Body.Rows[12]));
+                        Marshal.ReleaseComObject(((Excel.Range)Body.Rows[23]));
+                        Marshal.ReleaseComObject(((Excel.Range)Body.Rows[24]));
+                        Marshal.ReleaseComObject(((Excel.Range)Body.Rows[36]));
+                        Marshal.ReleaseComObject(((Excel.Range)Body.Rows[37]));
+                    }
                 }
             }
             else
             {
                 foreach (ChildObject item in childs.Values)
                 {
-                    item.UpdateFormulas(stopall);
+                    item.UpdateFormulas(stopall, clear);
                 }
             }
         }
@@ -1063,6 +1069,10 @@ namespace Meter
                     childs.Add(newName, c);
                 }
             }
+        }
+        public void UpdateDBNames()
+        {
+            ((Excel.Range)Head.Cells[1,1]).Value = _name;
         }
         public void UpdateReferences()
         {

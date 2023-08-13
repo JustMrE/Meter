@@ -778,6 +778,7 @@ namespace Meter.Forms
                 AddButtonToPopUpCommandBar(ref p, "UpdateNames", RangeReferences.activeTable.UpdateNames);
             }
             AddButtonToPopUpCommandBar(ref p, "UpdateAllNames", Main.instance.references.UpdateAllNames);
+            AddButtonToPopUpCommandBar(ref p, "UpdateAllDBNames", Main.instance.references.UpdateAllDBNames);
             //AddButtonToPopUpCommandBar(ref p, "ClearAllDB", Main.instance.references.ClearAllDB);
             AddButtonToPopUpCommandBar(ref p, "UpdateAllColors", Main.instance.references.UpdateAllColors);
             AddButtonToPopUpCommandBar(ref p, "UpdateAllPSFormulas", Main.instance.references.UpdateAllPSFormulas);
@@ -954,7 +955,7 @@ namespace Meter.Forms
                             if (idat.GetDataPresent(DataFormats.Text))
                             {
                                 string clipboardString = idat.GetData(DataFormats.Text) as string;
-                                clipboardString = clipboardString.Replace(",", ".");
+                                // clipboardString = clipboardString.Replace(",", ".");
 
                                 string[] rows = clipboardString.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
                                 int numRows = rows.Length;
@@ -974,14 +975,23 @@ namespace Meter.Forms
                                 }
 
                                 object[,] dataArray = new object[targetNumRows, targetNumColumns];
-
                                 for (int i = 0; i < targetNumRows; i++)
                                 {
                                     for (int j = 0; j < targetNumColumns; j++)
                                     {
                                         int sourceRow = i % numRows;
                                         int sourceColumn = j % numColumns;
-                                        dataArray[i, j] = rows[sourceRow].Split('\t')[sourceColumn];
+                                        double val;
+                                        string strVal = rows[sourceRow].Split('\t')[sourceColumn];
+                                        if (double.TryParse(strVal, out val))
+                                        {
+                                            dataArray[i, j] = val;
+                                        }
+                                        else
+                                        {
+                                            dataArray[i, j] = null;
+                                        }
+                                        
                                     }
                                 }
                                 selectedRange.Select();

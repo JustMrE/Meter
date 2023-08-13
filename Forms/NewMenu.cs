@@ -132,8 +132,22 @@ namespace Meter.Forms
             MessageBox.Show("Done!");
         }
         
-        //Write TEP
+        //Write Meters
         protected override void Button3_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(textBox1.Text) ||  (Int32.Parse(textBox1.Text) <= 0 && Int32.Parse(textBox1.Text) > 31))
+            {
+                MessageBox.Show("Не введена дата записи!");
+                return;
+            }
+            DateTime date;
+            DateTime.TryParseExact(textBox1.Text + " " + lblMonth.Text + " " + lblYear.Text, "dd MMMM yyyy", GlobalMethods.culture, DateTimeStyles.None, out date);
+            base.Button5_Click(sender, e);
+            MetersWriterTest.WriteMeters1(date);
+        }
+
+        //Write TEP
+        protected override void Button4_Click(object sender, EventArgs e)
         {
             var stopWatch = Stopwatch.StartNew();
             DateTime date;
@@ -181,25 +195,11 @@ namespace Meter.Forms
         }
         
         //Write W89
-        protected override void Button4_Click(object sender, EventArgs e)
+        protected override void Button5_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Запись формы W89");
         }
-
-        //Write Meters
-        protected override void Button5_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(textBox1.Text) ||  (Int32.Parse(textBox1.Text) <= 0 && Int32.Parse(textBox1.Text) > 31))
-            {
-                MessageBox.Show("Не введена дата записи!");
-                return;
-            }
-            DateTime date;
-            DateTime.TryParseExact(textBox1.Text + " " + lblMonth.Text + " " + lblYear.Text, "dd MMMM yyyy", GlobalMethods.culture, DateTimeStyles.None, out date);
-            base.Button5_Click(sender, e);
-            MetersWriterTest.WriteMeters1(date);
-        }
-
+        
         protected override void btnAdmin_Click(object sender, EventArgs e)
         {
             base.btnAdmin_Click(sender, e);
@@ -285,12 +285,13 @@ namespace Meter.Forms
         private void WriteMaketTEP(DateTime date, bool stopall = true)
         {
             string datstr = date.ToString("dd.MM.yy");
-            GlobalMethods.ToLog("Зписываются ТЭПм и ТЭПн на " + datstr);
+            GlobalMethods.ToLog("Зписываются макетТЭП на " + datstr);
 
             if (stopall) Main.instance.StopAll();
             Main.instance.wsMTEP.Range["B:B"].ClearContents();
             if (stopall) Main.instance.ResumeAll();
             Main.instance.wsMTEP.Range["B1"].Value = datstr;
+            Main.instance.wsMTEP.Range["D1"].Value = "Макет ТЭП в суточный рапорт в ЦДУ за " + datstr + " подготовлен: " + DateTime.Now.ToString("dd.MM.yyyy HH:mm:ss");
             int day = int.Parse(this.textBox1.Text);
             List<ChildObject> coList = Main.instance.references.references.Values.SelectMany(n => n.PS.childs.Values).Where(m => m.codMaketTEP != null).ToList();
             foreach (ChildObject co in coList)

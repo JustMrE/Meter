@@ -310,6 +310,10 @@ namespace Meter
         {
             PS.UpdateNames();
         }
+        public void UpdateDBNames()
+        {
+            DB.UpdateDBNames();
+        }
         public void UpdateAllColors()
         {
             if (PS != null)
@@ -330,7 +334,7 @@ namespace Meter
         }
         public void UpdateAllDBFormulas(bool stopall = true)
         {
-            DB.UpdateFormulas(stopall);
+            DB.UpdateFormulas(stopall, false);
         }
         public void UpdateReferencesPS()
         {

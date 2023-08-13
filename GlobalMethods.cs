@@ -67,7 +67,7 @@ namespace Meter
         {
             using (StreamWriter writer = new StreamWriter(errLogFile, true))
             {
-                writer.WriteLine(DateTime.Now + " " + username + " " + msg);
+                writer.WriteLine(DateTime.Now + " " + username + " ERROR " + " " + msg);
             }
         }
 
@@ -75,7 +75,7 @@ namespace Meter
         {
             using (StreamWriter writer = new StreamWriter(logFile, true))
             {
-                writer.WriteLine(DateTime.Now + " " + username + " " + msg);
+                writer.WriteLine(DateTime.Now + " " + username + " INFO " + " " + msg);
             }
         }
 

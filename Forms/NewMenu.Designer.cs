@@ -45,20 +45,21 @@
             this.button2.Visible = true;
             this.button2.Text = "EMCOS";
             //
-            //button 3
+            //button 5
             //
             this.button3.Visible = true;
-            this.button3.Text = "записать ТЭП";
+            this.button3.Text = "записать счетчики";
             //
             //button 4
             //
             this.button4.Visible = true;
-            this.button4.Text = "записать планы";
+            this.button4.Text = "записать ТЭП";
             //
             //button 5
             //
             this.button5.Visible = true;
-            this.button5.Text = "записать счетчики";
+            this.button5.Text = "записать планы";
+            
         }
 
         #endregion
