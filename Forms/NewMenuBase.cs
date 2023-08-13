@@ -367,8 +367,14 @@ namespace Meter.Forms
                 return;
             }
 
+            SplashScreen splashScreen = new();
+            splashScreen.Show();
+            splashScreen.UpdateLabel("Архивация...");
+            splashScreen.UpdateText("Сохранение счетчиков...");
+
             Main.instance.Arhivate();
 
+            splashScreen.Close();
             MessageBox.Show("Готово!");
         }
         protected virtual void btnFromArhive_Click(object sender, EventArgs e)
