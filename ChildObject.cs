@@ -353,30 +353,26 @@ namespace Meter
         }
         public int? DayByRange(Excel.Range range) 
         {
+            int? day = null;
             if (childs == null)
             {
-                int day = 0;
-                for (int i = 1; i < _body.Rows.Count; i++)
+                int rowNumber = range.Row;
+                int firstRow = ((Excel.Range)_body.Cells[1, 1]).Row;
+                int d = rowNumber - firstRow + 1;
+                if (d >= 1 && d <= 10)
                 {
-                    if (i <= 10)
-                    {
-                        day = i;
-                    }
-                    else if (i <= 20)
-                    {
-                        day = i - 1;
-                    }
-                    else
-                    {
-                        day = i - 3;
-                    }
-                    if (((Excel.Range)_body.Cells[i, 1]).Address == range.Address)
-                    {
-                        return day;
-                    }
+                    day = d;
+                }
+                else if (d >= 11 && d <= 21)
+                {
+                    day = d - 1;
+                }
+                else if (d >= 24 && d <= 34)
+                {
+                    day = d - 3;
                 }
             }
-            return null;
+            return day;
         }
         public void AddNewRange(string nameL1, string nameL2, bool stopall = true)
         {
