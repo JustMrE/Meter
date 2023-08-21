@@ -131,7 +131,6 @@ namespace Meter.Forms
             splashScreen.Close();
             MessageBox.Show("Done!");
         }
-        
         //Write Meters
         protected override void Button3_Click(object sender, EventArgs e)
         {
@@ -145,9 +144,21 @@ namespace Meter.Forms
             base.Button5_Click(sender, e);
             MetersWriterTest.WriteMeters1(date);
         }
-
-        //Write TEP
+        //Write Old Meter
         protected override void Button4_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrEmpty(textBox1.Text) ||  (Int32.Parse(textBox1.Text) <= 0 && Int32.Parse(textBox1.Text) > 31))
+            {
+                MessageBox.Show("Не введена дата записи!");
+                return;
+            }
+            DateTime date;
+            DateTime.TryParseExact(textBox1.Text + " " + lblMonth.Text + " " + lblYear.Text, "dd MMMM yyyy", GlobalMethods.culture, DateTimeStyles.None, out date);
+            base.Button5_Click(sender, e);
+            MetersWriterTest.WriteOldMeters(date);
+        }
+        //Write TEP
+        protected override void Button5_Click(object sender, EventArgs e)
         {
             var stopWatch = Stopwatch.StartNew();
             DateTime date;
@@ -195,7 +206,7 @@ namespace Meter.Forms
         }
         
         //Write W89
-        protected override void Button5_Click(object sender, EventArgs e)
+        protected override void Button6_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Запись формы W89");
         }

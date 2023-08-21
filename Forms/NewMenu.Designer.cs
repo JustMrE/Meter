@@ -45,7 +45,7 @@
             this.button2.Visible = true;
             this.button2.Text = "EMCOS";
             //
-            //button 5
+            //button 3
             //
             this.button3.Visible = true;
             this.button3.Text = "записать счетчики";
@@ -53,12 +53,17 @@
             //button 4
             //
             this.button4.Visible = true;
-            this.button4.Text = "записать ТЭП";
+            this.button4.Text = "старые счетчики (временно)";
             //
             //button 5
             //
             this.button5.Visible = true;
-            this.button5.Text = "записать планы";
+            this.button5.Text = "записать ТЭП";
+            //
+            //button 6
+            //
+            this.button6.Visible = true;
+            this.button6.Text = "записать планы";
             
         }
 
