@@ -1,5 +1,4 @@
 {
     "dotnet.inlayHints.enableInlayHintsForObjectCreationParameters": false,
-    "csharp.inlayHints.enableInlayHintsForLambdaParameterTypes": true,
-    "dotnet.defaultSolution": "Meter.sln"
+    "csharp.inlayHints.enableInlayHintsForLambdaParameterTypes": true
 }
