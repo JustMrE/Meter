@@ -855,8 +855,11 @@ namespace Meter
 
             if (thisMonth != selectedMonth || thisYear != selectedYear) 
             {
-                OpenMonth(thisYear, thisMonth, selectedYear, selectedMonth, file);
-                SaveWB();
+                if (File.Exists(file))
+                {
+                    OpenMonth(thisYear, thisMonth, selectedYear, selectedMonth, file);
+                    SaveWB();
+                }
             }
         }
 

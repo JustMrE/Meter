@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
+using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
 using Excel = Microsoft.Office.Interop.Excel;
 using Main = Meter.MyApplicationContext;
@@ -328,7 +329,19 @@ namespace Meter
         public static void WriteMeters1(DateTime date)
         {
             string dict = Main.dir + @"\current\Словарь ТИ факт.xlsx";
-            string path = "H1";
+            string path;
+            string archPath;
+            if (true)
+            {
+                path = "H2";
+                archPath = date.Year + "\\" + date.ToString("MMMM", GlobalMethods.culture) + "\\";
+            }
+            else
+            {
+                path = "H1";
+            }
+            
+            // path = "H1";
             // string path = "H2";
             string fName = "I1";
             string fileWSName = "сч";
@@ -355,7 +368,7 @@ namespace Meter
             w1 = xlApp.Workbooks.Open(dict);
             for (int i = 3; i <= w1.Worksheets.Count; i++)
             {
-                dict2.Add((string)((Excel.Worksheet)w1.Worksheets[i]).Range[path].Value + (string)((Excel.Worksheet)w1.Worksheets[i]).Range[fName].Value, ReadTIDict((Excel.Worksheet)w1.Worksheets[i]));
+                dict2.Add((string)((Excel.Worksheet)w1.Worksheets[i]).Range[path].Value + archPath + (string)((Excel.Worksheet)w1.Worksheets[i]).Range[fName].Value, ReadTIDict((Excel.Worksheet)w1.Worksheets[i]));
             }
             w1.Close(false);
             w1 = null;

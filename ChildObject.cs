@@ -829,6 +829,7 @@ namespace Meter
                 }
                 if (_name == "формула")
                 {
+                    return;
                     // object val = ((Excel.Range)Body.Cells[Body.Cells.Count]).Value;
                     // Body.ClearContents();
                 }
@@ -1187,6 +1188,7 @@ namespace Meter
             }
             else if (_name == "формула")
             {
+                UpdateFormulas();
                 //Body.FormulaR1C1 = "";
                 
                 //((Excel.Range)Body.Rows[1]).ClearContents();;
