@@ -330,8 +330,8 @@ namespace Meter
         {
             string dict = Main.dir + @"\current\Словарь ТИ факт.xlsx";
             string path;
-            string archPath;
-            if (true)
+            string archPath = "";
+            if (false)
             {
                 path = "H2";
                 archPath = date.Year + "\\" + date.ToString("MMMM", GlobalMethods.culture) + "\\";
