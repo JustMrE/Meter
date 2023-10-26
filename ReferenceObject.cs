@@ -542,6 +542,11 @@ namespace Meter
             DB.ClearAll();
         }
 
+        public void UpdateMeterAll()
+        {
+            DB.UpdateMeterAll();
+        }
+
         public void Check()
         {
             foreach (ChildObject item in childs.Values)

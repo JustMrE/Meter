@@ -283,6 +283,16 @@ namespace Meter
             if (message == true) MessageBox.Show("Готово!\n"+ (watch.ElapsedMilliseconds / 1000) + " sec.");
         }
 
+        public void UpdateMeterAllDB()
+        {
+            Main.instance.StopAll();
+            foreach (ReferenceObject item in references.Values)
+            {
+                item.UpdateMeterAll();
+            }
+            Main.instance.ResumeAll();
+        }
+
         public void CheckAllRanges()
         {
             Errors = new List<string>();

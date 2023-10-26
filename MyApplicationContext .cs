@@ -216,22 +216,24 @@ namespace Meter
                     using (StreamReader sr = new StreamReader(pipeServer, Encoding.GetEncoding("windows-1251")))
                     {
                         msg = sr.ReadLine();
-                        if (msg == "check")
-                        {
+                        if (msg != null){
+                            if (msg == "check")
+                            {
 
-                        }
-                        else if (msg.Contains("size"))
-                        {
-                            msg = msg.Replace("size:", "");
-                            // Первое сообщение содержит размер пачки
-                            int.TryParse(msg, out batchSize);
-                            GlobalMethods.ToLog("size: " + batchSize);
-                        }
-                        else
-                        {
-                            serverMessagesQueue.Enqueue(msg);
-                            waitHandle.Set();
-                            msg = null;
+                            }
+                            else if (msg.Contains("size"))
+                            {
+                                msg = msg.Replace("size:", "");
+                                // Первое сообщение содержит размер пачки
+                                int.TryParse(msg, out batchSize);
+                                GlobalMethods.ToLog("size: " + batchSize);
+                            }
+                            else
+                            {
+                                serverMessagesQueue.Enqueue(msg);
+                                waitHandle.Set();
+                                msg = null;
+                            }
                         }
                     }
                 }

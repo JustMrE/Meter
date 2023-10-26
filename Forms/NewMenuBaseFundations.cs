@@ -837,6 +837,10 @@ namespace Meter.Forms
                 }
                 MetersWriterTest.WriteMeters1(result);
             });
+            AddButtonToPopUpCommandBar(ref p, "Обновить счетчики", () => 
+            {
+                Main.instance.references.UpdateMeterAllDB();
+            });
         }
         protected void OpenForm()
         {

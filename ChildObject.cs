@@ -776,6 +776,21 @@ namespace Meter
                 }
             }
         }
+
+        public void UpdateMeter()
+        {
+            if (_name == "счетчик")
+            {
+                ((Excel.Range)Body.Rows[12]).FormulaR1C1 = "=R[-1]C";
+                ((Excel.Range)Body.Rows[23]).FormulaR1C1 = "=R[-1]C";
+                ((Excel.Range)Body.Rows[24]).FormulaR1C1 = "=R[-1]C";
+                ((Excel.Range)Body.Rows[33]).FormulaR1C1 = "=R[-1]C";
+                ((Excel.Range)Body.Rows[34]).FormulaR1C1 = "=R[-1]C";
+                ((Excel.Range)Body.Rows[35]).FormulaR1C1 = "=R[-1]C";
+                ((Excel.Range)Body.Rows[36]).FormulaR1C1 = "=R[-1]C";
+                ((Excel.Range)Body.Rows[37]).FormulaR1C1 = "=R[-1]C";
+            }
+        }
         public void UpdateFormulas(bool stopall = true, bool clear = true)
         {
             if (childs == null && WS.CodeName != "DB")
@@ -818,6 +833,9 @@ namespace Meter
                     ((Excel.Range)Body.Rows[12]).FormulaR1C1 = "=R[-1]C";
                     ((Excel.Range)Body.Rows[23]).FormulaR1C1 = "=R[-1]C";
                     ((Excel.Range)Body.Rows[24]).FormulaR1C1 = "=R[-1]C";
+                    ((Excel.Range)Body.Rows[33]).FormulaR1C1 = "=R[-1]C";
+                    ((Excel.Range)Body.Rows[34]).FormulaR1C1 = "=R[-1]C";
+                    ((Excel.Range)Body.Rows[35]).FormulaR1C1 = "=R[-1]C";
                     ((Excel.Range)Body.Rows[36]).FormulaR1C1 = "=R[-1]C";
                     ((Excel.Range)Body.Rows[37]).FormulaR1C1 = "=R[-1]C";
 
@@ -827,7 +845,7 @@ namespace Meter
                     //Marshal.ReleaseComObject(((Excel.Range)Body.Rows[36]).FormulaR1C1);
                     //Marshal.ReleaseComObject(((Excel.Range)Body.Rows[37]).FormulaR1C1);
                 }
-                if (_name == "формула")
+                else if (_name == "формула")
                 {
                     return;
                     // object val = ((Excel.Range)Body.Cells[Body.Cells.Count]).Value;
@@ -1242,6 +1260,20 @@ namespace Meter
                 foreach (ChildObject c in childs.Values)
                 {
                     c.ClearAll();
+                }
+            }
+        }
+        public void UpdateMeterAll()
+        {
+            if (_level == Level.level2)
+            {
+                UpdateMeter();
+            }
+            else
+            {
+                foreach (ChildObject c in childs.Values)
+                {
+                    c.UpdateMeterAll();
                 }
             }
         }
