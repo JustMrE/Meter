@@ -66,8 +66,8 @@ namespace Meter.Forms
             GlobalMethods.ToLog(this, sender);
             if (sum >= 0)
             {
-                referenceObject.WriteToDB(RangeReferences.ActiveL1, "счетчик", (int)day - 1, tbPrev.Text);
-                referenceObject.WriteToDB(RangeReferences.ActiveL1, "счетчик", (int)day, tbNext.Text);
+                referenceObject.WriteToDB(RangeReferences.ActiveL1, "счетчик", (int)day - 1, tbPrev.Text.Replace(",","."));
+                referenceObject.WriteToDB(RangeReferences.ActiveL1, "счетчик", (int)day, tbNext.Text.Replace(",","."));
 
                 GlobalMethods.ToLog("Измены показания счетчика {" + referenceObject._name + "} " + RangeReferences.ActiveL1 + " за " + ((int)day - 1) + " число на " + tbPrev.Text);
                 GlobalMethods.ToLog("Измены показания счетчика {" + referenceObject._name + "} " + RangeReferences.ActiveL1 + " за " + ((int)day) + " число на " + tbNext.Text);
