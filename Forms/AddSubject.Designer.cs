@@ -250,7 +250,6 @@ namespace Meter.Forms
             this.FlowLayoutPanel20.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
-
         } 
 
         #endregion 

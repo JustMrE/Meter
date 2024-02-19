@@ -64,7 +64,15 @@ namespace Meter
                             }
                             else
                             {
-                                val = ((double)ws1.Range[s.adr].Offset[d, 0].Value).ToString();
+                                try
+                                {
+                                    val = ((double)ws1.Range[s.adr].Offset[d, 0].Value).ToString();
+                                }
+                                catch (System.Exception e)
+                                {
+                                    val = "";
+                                    GlobalMethods.Err("{" + s.level1Name + "} {" + s.level2Name + "} " + e.Message);
+                                }
                             }
                             ro.WriteToDB(s.level1Name, s.level2Name, (int)day, val.Replace(",", "."));
                         }

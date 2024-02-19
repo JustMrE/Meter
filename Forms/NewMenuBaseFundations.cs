@@ -841,6 +841,9 @@ namespace Meter.Forms
             {
                 Main.instance.references.UpdateMeterAllDB();
             });
+            AddButtonToPopUpCommandBar(ref p, "AArchTest", ()=>{
+                // AArchTest.ReadTI(739);
+            });
         }
         protected void OpenForm()
         {
