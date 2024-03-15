@@ -76,7 +76,7 @@ namespace Meter
             UpdateColors();
         }
         
-        public void GenerateClors()
+        public void GenerateColors()
         {
             allColors = new HashSet<Color>();
             subColors = new Dictionary<string, Color>();

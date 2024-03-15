@@ -262,6 +262,8 @@
             this.MonthCalendar20.Location = new System.Drawing.Point(12,48);
             this.MonthCalendar20.TabIndex = 20;
             this.MonthCalendar20.Visible = false;
+            this.MonthCalendar20.DateChanged += new DateRangeEventHandler(MonthCalendar20_DateChanged);
+            this.MonthCalendar20.DateSelected += new DateRangeEventHandler(MonthCalendar20_DateSelected);
             // 
             // FormulaEditor
             // 

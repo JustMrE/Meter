@@ -485,11 +485,13 @@ namespace Meter.Forms
                 {
                     string nameL1 = ro.GetL1(cell)._name;
                     string nameL2 = ro.GetL2(cell, nameL1)._name;
+                    // string nameL2 = Main.instance.colors.NameByColor(ColorsData.GetRangeColor(cell));
                     int? day = ro.PS.childs[nameL1].childs[nameL2].DayByRange(cell);
                     if (day != null)
                     {
+                        string dbNameL2 = Main.instance.colors.NameByColor(ColorsData.GetRangeColor(cell));
                         string val = cell.Formula != null ? cell.Formula.ToString() : "";
-                        ro.WriteToDB(nameL1, nameL2, (int)day, val);
+                        ro.WriteToDB(nameL1, dbNameL2, (int)day, val);
                     }
                 }
                 

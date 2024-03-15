@@ -83,6 +83,7 @@ namespace Meter.Forms
             data = this.textBox1.Text.PadLeft(2,'0') + " " + this.lblMonth.Text + " " + this.lblYear.Text;
             DateTime result;
             DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
+            MessageBox.Show(data);
             data = result.ToString("yyyy-MM-dd");
             if (string.IsNullOrEmpty(this.textBox1.Text) ||  (Int32.Parse(this.textBox1.Text) <= 0 && Int32.Parse(this.textBox1.Text) > 31))
             {

@@ -38,22 +38,22 @@ namespace Meter.Forms
             this.nameL1 = nameL1;
             myID = referenceObject.DB.childs[nameL1].ID;
             InitializeComponent();
+
+            string format = "dd MMMM yyyy";
+            string data;
+            DateTime result;
+            CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");
+
+            data = "01" + " " + NewMenuBase.month + " " + NewMenuBase.year;
+            DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
+            DateTime startDate = new DateTime(result.Year, result.Month, 1);
+            DateTime endDate = startDate.AddMonths(1).AddDays(-1);
+            MonthCalendar20.MinDate = startDate;
+            MonthCalendar20.MaxDate = endDate;
         }
 
         private void FormulaEditor_Load(object sender, EventArgs e)
         {
-            CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");
-            string format = "dd MMMM yyyy";
-            string data;
-            data = 01 + " " + NewMenuBase.month + " " + NewMenuBase.year;
-            DateTime result;
-            DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
-            DateTime startDate = new DateTime(result.Year, result.Month, 1);
-            DateTime endDate = startDate.AddMonths(1).AddDays(-1);
-
-            MessageBox.Show(startDate + " " + endDate);
-            // MonthCalendar20.MinDate = startDate;
-            // MonthCalendar20.MaxDate = endDate;
         }
 
         private void FormulaEditor_Shown(object sender, EventArgs e)
@@ -696,6 +696,8 @@ namespace Meter.Forms
 
         private void btnOk_Click(object sender, EventArgs e)
         {
+            UpdateCheck();
+
             GlobalMethods.ToLog(this, sender);
             List<ForTags> formulaIDs = new List<ForTags>();
             //List<string> formula = new List<string>();
@@ -934,6 +936,7 @@ namespace Meter.Forms
                 btnLoad.Enabled = false;
 
                 MonthCalendar20.Visible = true;
+                CheckValues();
             }
             else if(CheckBox19.Checked == false)
             {
@@ -955,6 +958,43 @@ namespace Meter.Forms
                 btnLoad.Enabled = true;
 
                 MonthCalendar20.Visible = false;
+                UpdateCheck();
+            }
+        }
+
+        private void MonthCalendar20_DateSelected(object sender, EventArgs e)
+        {
+            CheckValues();
+        }
+
+        private void MonthCalendar20_DateChanged(object sender, EventArgs e)
+        {
+            CheckValues();
+        }
+
+        private void CheckValues()
+        {
+            foreach (Control item in flowLayoutPanel1.Controls)
+            {
+                if (item.SpecialTag().type == ButtonsType.subject)
+                {
+                    string adr;
+                    Excel.Range r = null;
+                    if (item.SpecialTag().ID != null)
+                    {
+                        r = ((Excel.Range)((ChildObject)RangeReferences.idDictionary[item.SpecialTag().ID]).RangeByDay(MonthCalendar20.SelectionRange.Start.Day));
+                        if (string.IsNullOrEmpty(r.Value.ToString()))
+                        {
+                            item.BackColor = Color.Red;
+                        }
+                        else
+                        {
+                            item.BackColor = SystemColors.ButtonFace;
+                        }
+                    }
+
+                    if (r != null) Marshal.ReleaseComObject(r);
+                }
             }
         }
     }
