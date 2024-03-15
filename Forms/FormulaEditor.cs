@@ -13,6 +13,7 @@ using Main = Meter.MyApplicationContext;
 using Excel = Microsoft.Office.Interop.Excel;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 using System.Text.RegularExpressions;
+using System.Globalization;
 
 namespace Meter.Forms
 {
@@ -41,7 +42,18 @@ namespace Meter.Forms
 
         private void FormulaEditor_Load(object sender, EventArgs e)
         {
+            CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");
+            string format = "dd MMMM yyyy";
+            string data;
+            data = 01 + " " + NewMenuBase.month + " " + NewMenuBase.year;
+            DateTime result;
+            DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
+            DateTime startDate = new DateTime(result.Year, result.Month, 1);
+            DateTime endDate = startDate.AddMonths(1).AddDays(-1);
 
+            MessageBox.Show(startDate + " " + endDate);
+            // MonthCalendar20.MinDate = startDate;
+            // MonthCalendar20.MaxDate = endDate;
         }
 
         private void FormulaEditor_Shown(object sender, EventArgs e)
@@ -898,6 +910,52 @@ namespace Meter.Forms
             });
             t.SetApartmentState(ApartmentState.STA);
             t.Start();
+        }
+
+        private void CheckBox19_CheckedChanged(object sender, EventArgs e)
+        {
+            if (CheckBox19.Checked == true)
+            {
+                listView1.Enabled = false;
+                tbSearch.Enabled = false;
+                tbSearch.Enabled = false;
+                checkBox1.Enabled = false;
+                cbSearchFormula.Enabled = false;
+                button1.Enabled = false;
+                button2.Enabled = false;
+                button3.Enabled = false;
+                button4.Enabled = false;
+                button5.Enabled = false;
+                button6.Enabled = false;
+                btnClear.Enabled = false;
+                btnConst.Enabled = false;
+                cbSearchFormula.Enabled = false;
+                btnSave.Enabled = false;
+                btnLoad.Enabled = false;
+
+                MonthCalendar20.Visible = true;
+            }
+            else if(CheckBox19.Checked == false)
+            {
+                listView1.Enabled = true;
+                tbSearch.Enabled = true;
+                tbSearch.Enabled = true;
+                checkBox1.Enabled = true;
+                cbSearchFormula.Enabled = true;
+                button1.Enabled = true;
+                button2.Enabled = true;
+                button3.Enabled = true;
+                button4.Enabled = true;
+                button5.Enabled = true;
+                button6.Enabled = true;
+                btnClear.Enabled = true;
+                btnConst.Enabled = true;
+                cbSearchFormula.Enabled = true;
+                btnSave.Enabled = true;
+                btnLoad.Enabled = true;
+
+                MonthCalendar20.Visible = false;
+            }
         }
     }
 }

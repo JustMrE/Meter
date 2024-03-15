@@ -47,6 +47,9 @@
             this.cbSearchFormula = new System.Windows.Forms.CheckBox();
             this.btnSave = new System.Windows.Forms.Button();
             this.btnLoad = new System.Windows.Forms.Button();
+            this.GroupBox18 = new GroupBox();
+            this.CheckBox19 = new CheckBox();
+            this.MonthCalendar20 = new MonthCalendar();
             this.SuspendLayout();
             // 
             // flowLayoutPanel1
@@ -233,6 +236,32 @@
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            //
+            // GroupBox18
+            //
+            this.GroupBox18.Controls.Add(this.CheckBox19);
+            this.GroupBox18.Controls.Add(this.MonthCalendar20);
+            this.GroupBox18.Location = new System.Drawing.Point(856,304);
+            this.GroupBox18.Size = new System.Drawing.Size(200,220);
+            this.GroupBox18.TabIndex = 18;
+            //
+            // CheckBox19
+            //
+            this.CheckBox19.AutoSize =  true;
+            this.CheckBox19.Text =  "Проверка";
+            this.CheckBox19.Location = new System.Drawing.Point(12,20);
+            this.CheckBox19.Size = new System.Drawing.Size(80,19);
+            this.CheckBox19.TabIndex = 19;
+            this.CheckBox19.CheckedChanged += new EventHandler(CheckBox19_CheckedChanged);
+            //
+            // MonthCalendar20
+            //
+            this.MonthCalendar20.MaxSelectionCount = 1;
+            this.MonthCalendar20.Size = new System.Drawing.Size(164,162);
+            this.MonthCalendar20.Text =  "MonthCalendar20";
+            this.MonthCalendar20.Location = new System.Drawing.Point(12,48);
+            this.MonthCalendar20.TabIndex = 20;
+            this.MonthCalendar20.Visible = false;
             // 
             // FormulaEditor
             // 
@@ -257,6 +286,7 @@
             this.Controls.Add(this.cbSearchFormula);
             this.Controls.Add(this.btnSave);
             this.Controls.Add(this.btnLoad);
+            this.Controls.Add(this.GroupBox18);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Name = "FormulaEditor";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -290,5 +320,9 @@
         private CheckBox cbSearchFormula;
         private Button btnSave;
         private Button btnLoad;
+
+        private GroupBox GroupBox18;
+        private CheckBox CheckBox19;
+        private MonthCalendar MonthCalendar20;
     }
 }
