@@ -4,6 +4,7 @@ using Newtonsoft.Json;
 using Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization;
+using System.Text.RegularExpressions;
 
 namespace Meter
 {
@@ -1425,6 +1426,33 @@ namespace Meter
                 GetFirstParent.DB.childs[_name].childs["основное"].WriteToTEP(day, row, codTEP, rewrite);
                 if (GetFirstParent.DB.childs.ContainsKey("план"))
                     GetFirstParent.DB.childs["план"].childs["заявка"].WriteToTEP(day, row, codTEP, rewrite);
+            }
+        }
+    
+        public void RemoveFromMTEP()
+        {
+            if (codMaketTEP != null)
+            {
+                Main.instance.wsMTEP.Range["A:A"].Find(What: codMaketTEP, LookAt: XlLookAt.xlWhole).Interior.ColorIndex = 0;
+                Main.instance.wsMTEP.Range["A:A"].Find(What: codMaketTEP, LookAt: XlLookAt.xlWhole).Offset[0, 2].Value = "";
+                codMaketTEP = null;
+            }
+        }
+    
+        public void RemoveFromTEP()
+        {
+            if (codTEP != null)
+            {
+                string adr1 = Main.instance.wsTEPm.Range["5:5"].Find(What: codTEP, LookAt: Excel.XlLookAt.xlWhole).Address[false, false];
+                string adr2 = Main.instance.wsTEPm.Range["5:5"].Find(What: codTEP, LookAt: Excel.XlLookAt.xlWhole).Offset[0, 1].Address[false, false];
+                string adr = Regex.Replace(adr1, @"[^A-Z]+", String.Empty) + ":" + Regex.Replace(adr2, @"[^A-Z]+", String.Empty);
+
+                Main.instance.StopAll();
+                Main.instance.wsTEPn.Range[adr].Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+                Main.instance.wsTEPm.Range[adr].Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+                Main.instance.ResumeAll();
+
+                codTEP = null;
             }
         }
     }

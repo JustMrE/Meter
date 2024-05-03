@@ -562,13 +562,19 @@ namespace Meter
 
         public void RemoveSubject(bool stopall = true)
         {
-            GlobalMethods.ToLog("Субъект {" + _name + "} удален");
+            foreach (ChildObject co in PS.childs.Values)
+            {
+                co.RemoveFromMTEP();
+                co.RemoveFromTEP();
+            }
 
+            string deletedSubject = _name;
             string u0, u1, u2;
             u0 = ((Excel.Range)PS.Head.Offset[-3].MergeArea.Cells[1,1]).Value as string;
             u1 = ((Excel.Range)PS.Head.Offset[-2].MergeArea.Cells[1,1]).Value as string;
             u2 = ((Excel.Range)PS.Head.Offset[-1].MergeArea.Cells[1,1]).Value as string;
 
+            //remove u0, u1, u2
             if (Main.instance.heads.heads.ContainsKey(u0))
             {
                 if (Main.instance.heads.heads[u0].childs.ContainsKey(u1))
@@ -629,6 +635,8 @@ namespace Meter
                 }
                 Main.instance.heads.heads[u0].UpdateBorders();
             }
+
+            GlobalMethods.ToLog("Субъект {" + deletedSubject + "} удален");
         }
     
         public void UpdateHeads(bool stopall = true)

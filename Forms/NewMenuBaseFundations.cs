@@ -1077,10 +1077,11 @@ namespace Meter.Forms
                 });
                 if (selectedButtons.Contains("Удалить код для макетТЭП")) AddButtonToCommandBar("Удалить из макетТЭП", () => 
                 {
-                    int cod = (int)RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codMaketTEP;
-                    Main.instance.wsMTEP.Range["A:A"].Find(cod).Interior.ColorIndex = 0;
-                    Main.instance.wsMTEP.Range["A:A"].Find(cod).Offset[0, 2].Value = "";
-                    RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codMaketTEP = null;
+                    RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].RemoveFromMTEP();
+                    // int cod = (int)RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codMaketTEP;
+                    // Main.instance.wsMTEP.Range["A:A"].Find(cod).Interior.ColorIndex = 0;
+                    // Main.instance.wsMTEP.Range["A:A"].Find(cod).Offset[0, 2].Value = "";
+                    // RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codMaketTEP = null;
                 });
 
                 if (selectedButtons.Contains("Добавить код для ТЭП")) AddButtonToCommandBar("Добавить в ТЭП", () =>
@@ -1101,17 +1102,18 @@ namespace Meter.Forms
                 });
                 if (selectedButtons.Contains("Удалить код для ТЭП")) AddButtonToCommandBar("Удалить из ТЭП", () =>
                 {
-                    int cod = (int)RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codTEP;
-                    string adr1 = Main.instance.wsTEPm.Range["5:5"].Find(What: cod, LookAt: Excel.XlLookAt.xlWhole).Address[false, false];
-                    string adr2 = Main.instance.wsTEPm.Range["5:5"].Find(What: cod, LookAt: Excel.XlLookAt.xlWhole).Offset[0, 1].Address[false, false];
-                    string adr = Regex.Replace(adr1, @"[^A-Z]+", String.Empty) + ":" + Regex.Replace(adr2, @"[^A-Z]+", String.Empty);
+                    RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].RemoveFromTEP();
+                    // int cod = (int)RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codTEP;
+                    // string adr1 = Main.instance.wsTEPm.Range["5:5"].Find(What: cod, LookAt: Excel.XlLookAt.xlWhole).Address[false, false];
+                    // string adr2 = Main.instance.wsTEPm.Range["5:5"].Find(What: cod, LookAt: Excel.XlLookAt.xlWhole).Offset[0, 1].Address[false, false];
+                    // string adr = Regex.Replace(adr1, @"[^A-Z]+", String.Empty) + ":" + Regex.Replace(adr2, @"[^A-Z]+", String.Empty);
 
-                    Main.instance.StopAll();
-                    Main.instance.wsTEPn.Range[adr].Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
-                    Main.instance.wsTEPm.Range[adr].Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
-                    Main.instance.ResumeAll();
+                    // Main.instance.StopAll();
+                    // Main.instance.wsTEPn.Range[adr].Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+                    // Main.instance.wsTEPm.Range[adr].Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
+                    // Main.instance.ResumeAll();
 
-                    RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codTEP = null;
+                    // RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codTEP = null;
                 });
                 
                 if (selectedButtons.Contains("Добавить новый L1")) AddNewL1();

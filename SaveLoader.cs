@@ -65,6 +65,11 @@ namespace Meter
         static async void SaveReferencesNew()
         {
             var tasks = new List<Task>();
+            Directory.Delete(Main.dir + @"\current\references", true);
+            Directory.CreateDirectory(Main.dir + @"\current\references");
+            Directory.Delete(Main.dir + @"\current\formulas", true);
+            Directory.CreateDirectory(Main.dir + @"\current\formulas");
+
             foreach (string n in Main.instance.references.references.Keys)
             {
                 var task = Task.Run(() => 
