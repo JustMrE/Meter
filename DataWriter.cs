@@ -88,7 +88,8 @@ namespace Meter
                         }
                         else
                         {
-                            GlobalMethods.ToLog("Не найден субъект с кодом плана " + pv.cod);
+                            GlobalMethods.ToLogError("Не найден субъект с кодом плана " + pv.cod);
+                            GlobalMethods.Err("Не найден субъект с кодом плана " + pv.cod);
                         }
                     }
                 }

@@ -720,7 +720,7 @@ namespace Meter
                     }
                     catch
                     {
-                        GlobalMethods.ToLog("Err");
+                        GlobalMethods.ToLogError("Err");
                     }
                     
                 }

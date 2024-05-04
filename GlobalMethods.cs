@@ -79,6 +79,14 @@ namespace Meter
             }
         }
 
+        public static void ToLogError(string msg)
+        {
+            using (StreamWriter writer = new StreamWriter(logFile, true))
+            {
+                writer.WriteLine(DateTime.Now + " " + username + " ERROR " + " " + msg);
+            }
+        }
+
         public static void ToLog(object sender)
         {
             ToLog("Нажато " + ((Control)sender).Name);
