@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 
 namespace Meter.Forms
 {
-    public partial class AllFormulas : Form
+    public partial class AllFormulas : MyFormBase
     {
         private List<ListViewItem> list = new List<ListViewItem>();
         private Dictionary<string, string> idByName = new Dictionary<string, string>();

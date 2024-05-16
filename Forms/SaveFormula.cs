@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 namespace Meter
 {
 
-    partial class SaveFormula : Form
+    partial class SaveFormula : MyFormBase
     {
         private string path1;
         private List<ForTags> saveFormula;

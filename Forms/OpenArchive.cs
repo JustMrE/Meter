@@ -11,7 +11,7 @@ using Main = Meter.MyApplicationContext;
 
 namespace Meter.Forms
 {
-    public partial class OpenArchive : Form
+    public partial class OpenArchive : MyFormBase
     {
         string thisYear, thisMonth;
         string selectedYear, selectedMonth;

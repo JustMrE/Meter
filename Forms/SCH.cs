@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace Meter.Forms
 {
-    public partial class SCH : Form
+    public partial class SCH : MyFormBase
     {
         ReferenceObject referenceObject;
         int day;
@@ -55,11 +55,11 @@ namespace Meter.Forms
             lSum.Text = sum.ToString();
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            GlobalMethods.ToLog(this, sender);
-            Close();
-        }
+        // private void btnCancel_Click(object sender, EventArgs e)
+        // {
+        //     GlobalMethods.ToLog(this, sender);
+        //     Close();
+        // }
 
         private void btnOk_Click(object sender, EventArgs e)
         {

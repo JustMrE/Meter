@@ -14,7 +14,7 @@ using Main = Meter.MyApplicationContext;
 
 namespace Meter.Forms
 {
-    public partial class AddTEP : Form
+    public partial class AddTEP : MyFormBase
     {
         public ChildObject childObject;
 
@@ -190,11 +190,11 @@ namespace Meter.Forms
                 }
             }
         }
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            GlobalMethods.ToLog(this, sender);
-            this.Close();
-        }
+        // private void btnCancel_Click(object sender, EventArgs e)
+        // {
+        //     GlobalMethods.ToLog(this, sender);
+        //     this.Close();
+        // }
 
         private void AddPlan_Shown(object sender, EventArgs e)
         {

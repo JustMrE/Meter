@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 namespace Meter
 {
 
-    partial class LoadFormula : Form
+    partial class LoadFormula : MyFormBase
     {
         private List<string> list = new ();
         private Dictionary<string, string> formulas = new();
@@ -46,11 +46,16 @@ namespace Meter
             this.DialogResult = DialogResult.OK;
             Close();
         }
-        protected void btnCancel_Click(object sender, EventArgs e)
+        protected override void btnCancel_Click(object sender, EventArgs e)
         {
             this.DialogResult = DialogResult.Cancel;
-            Close();
+            base.btnCancel_Click(sender, e);
         }
+        // protected void btnCancel_Click(object sender, EventArgs e)
+        // {
+        //     this.DialogResult = DialogResult.Cancel;
+        //     Close();
+        // }
 
         private void OpenFormula()
         {

@@ -16,7 +16,7 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Meter.Forms
 {
-    public partial class NewMenuBase : Form
+    public partial class NewMenuBase : MyFormBase
     {
         public static string? month = null, year = null;
 
@@ -155,7 +155,7 @@ namespace Meter.Forms
 
         protected virtual void ToLog(object sender)
         {
-            GlobalMethods.ToLog("Нажато " + ((Control)sender).Name);
+            GlobalMethods.ToLog("Нажато " + ((Control)sender).Name + " (" + ((Control)sender).Text + ")");
         }
         protected virtual void ToLog(object sender, string txt)
         {

@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Meter.Forms
 {
-    public partial class MonthSelect : Form
+    public partial class MonthSelect : MyFormBase
     {
         public string? selectedMonth = null;
         public MonthSelect()

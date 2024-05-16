@@ -17,7 +17,7 @@ using System.Globalization;
 
 namespace Meter.Forms
 {
-    public partial class FormulaEditor : Form
+    public partial class FormulaEditor : MyFormBase
     {
         ReferenceObject referenceObject;
         string nameL1;
@@ -685,7 +685,7 @@ namespace Meter.Forms
             e.Effect = DragDropEffects.Move;
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        protected override void btnCancel_Click(object sender, EventArgs e)
         {
             GlobalMethods.ToLog(this, sender);
             if (MessageBox.Show("Все внесенные изменения будут отменены. Вы уверены?", "",MessageBoxButtons.YesNo) == DialogResult.Yes)

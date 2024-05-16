@@ -6,7 +6,7 @@ using Microsoft.Office.Interop.Excel;
 namespace Meter
 {
 
-    partial class Rename : Form
+    partial class Rename : MyFormBase
     {
         ReferenceObject referenceObject;
         HeadObject headObject;
@@ -123,10 +123,10 @@ namespace Meter
             Main.instance.ResumeAll();
         }
 
-        protected void btnCancel_Click(object sender, System.EventArgs e)
-        {
-            GlobalMethods.ToLog(this, sender);
-            Close();
-        }
+        // protected void btnCancel_Click(object sender, System.EventArgs e)
+        // {
+        //     GlobalMethods.ToLog(this, sender);
+        //     Close();
+        // }
     }
 }

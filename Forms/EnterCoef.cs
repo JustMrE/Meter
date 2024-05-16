@@ -12,7 +12,7 @@ using Main = Meter.MyApplicationContext;
 
 namespace Meter.Forms
 {
-    public partial class EnterCoef : Form
+    public partial class EnterCoef : MyFormBase
     {
         public string oldVal, newVal;
         Control button;
@@ -54,11 +54,11 @@ namespace Meter.Forms
             textBox1.Text = oldVal;
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            GlobalMethods.ToLog(this, sender);
-            Close();
-        }
+        // private void btnCancel_Click(object sender, EventArgs e)
+        // {
+        //     GlobalMethods.ToLog(this, sender);
+        //     Close();
+        // }
 
         private void Check(KeyPressEventArgs e, char c, string tbVal)
         {

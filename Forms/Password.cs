@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Meter
 {
-    public partial class Password : Form
+    public partial class Password : MyFormBase
     {
         public Password()
         {

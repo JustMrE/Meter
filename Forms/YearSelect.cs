@@ -10,7 +10,7 @@ using System.Windows.Forms;
 
 namespace Meter.Forms
 {
-    public partial class YearSelect : Form
+    public partial class YearSelect : MyFormBase
     {
         public string? year;
         public YearSelect(string thisYear)
@@ -28,12 +28,17 @@ namespace Meter.Forms
             }
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        protected override void btnCancel_Click(object sender, EventArgs e)
         {
-            GlobalMethods.ToLog(this, sender);
             year = null;
-            Close();
+            base.btnCancel_Click(sender, e);
         }
+        // private void btnCancel_Click(object sender, EventArgs e)
+        // {
+        //     GlobalMethods.ToLog(this, sender);
+        //     year = null;
+        //     Close();
+        // }
 
         private void btnOk_Click(object sender, EventArgs e)
         {

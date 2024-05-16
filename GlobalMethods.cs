@@ -116,8 +116,13 @@ namespace Meter
         {
             ToLog("Переключатель переключен на " + ((Control)sender).Name + " на '" + ch.ToString() + "' на форме " + form.Name);
         }
-        public static void ToLog(Form form)
+        public static void ToLog(Form form, bool closed = false)
         {
+            if (closed)
+            {
+                ToLog("Закрыта форма " + form.Name);
+                return;
+            }
             ToLog("Открыта форма " + form.Name);
         }
 

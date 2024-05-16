@@ -11,7 +11,7 @@ using Main = Meter.MyApplicationContext;
 
 namespace Meter
 {
-    public partial class ColorSettings : Form
+    public partial class ColorSettings : MyFormBase
     {
         public ColorSettings()
         {
@@ -158,15 +158,20 @@ namespace Meter
             }
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
+        protected override void btnCancel_Click(object sender, EventArgs e)
         {
-            GlobalMethods.ToLog(this, sender);
-            //if (MessageBox.Show("Вы хотите отменить внесенные изменения?", "Отмена", MessageBoxButtons.YesNo) == DialogResult.Yes) ;
-            {
-                SaveLoader.LoadStandartColors();
-                Close();
-            }
+            SaveLoader.LoadStandartColors();
+            base.btnCancel_Click(sender, e);
         }
+        // private void btnCancel_Click(object sender, EventArgs e)
+        // {
+        //     GlobalMethods.ToLog(this, sender);
+        //     //if (MessageBox.Show("Вы хотите отменить внесенные изменения?", "Отмена", MessageBoxButtons.YesNo) == DialogResult.Yes) ;
+        //     {
+        //         SaveLoader.LoadStandartColors();
+        //         Close();
+        //     }
+        // }
 
         private void ColorSettings_Shown(object sender, EventArgs e)
         {

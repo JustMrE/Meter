@@ -12,7 +12,7 @@ using System.Windows.Forms;
 
 namespace Meter.Forms
 {
-    public partial class Correct : Form
+    public partial class Correct : MyFormBase
     {
         ReferenceObject referenceObject;
         int? day;
@@ -168,10 +168,10 @@ namespace Meter.Forms
             Close();
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            GlobalMethods.ToLog(this, sender);
-            Close();
-        }
+        // private void btnCancel_Click(object sender, EventArgs e)
+        // {
+        //     GlobalMethods.ToLog(this, sender);
+        //     Close();
+        // }
     }
 }

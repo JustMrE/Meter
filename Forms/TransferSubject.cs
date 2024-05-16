@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 
 namespace Meter.Forms
 {
-    partial class TransferSubject : Form
+    partial class TransferSubject : MyFormBase
     {
         string? nameL0, nameL1, nameL2;
         string name;
@@ -520,10 +520,10 @@ namespace Meter.Forms
             Main.instance.heads.heads[nameL0].childs[nameL1].childs[nameL2].UpdateBorders();
         }
 
-        public void btnCancel_Click(object sender, EventArgs e)
-        {
-            GlobalMethods.ToLog(this, sender);
-            Close();
-        }
+        // public void btnCancel_Click(object sender, EventArgs e)
+        // {
+        //     GlobalMethods.ToLog(this, sender);
+        //     Close();
+        // }
     }
 }

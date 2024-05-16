@@ -14,7 +14,7 @@ using Emcos;
 
 namespace Meter
 {
-    public partial class EmcosPicker : Form
+    public partial class EmcosPicker : MyFormBase
     {
         private static HttpClient client = new HttpClient();
         static Dictionary<string, Groups> emcosList = new Dictionary<string, Groups>();

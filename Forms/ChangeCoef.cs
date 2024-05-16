@@ -12,7 +12,7 @@ using Main = Meter.MyApplicationContext;
 
 namespace Meter.Forms
 {
-    public partial class ChangeCoef : Form
+    public partial class ChangeCoef : MyFormBase
     {
         ReferenceObject referenceObject;
 
