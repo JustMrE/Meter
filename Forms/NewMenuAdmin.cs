@@ -7,7 +7,6 @@ namespace Meter.Forms
 {
     public partial class NewMenuAdmin : Meter.Forms.NewMenuBase
     {
-
         public NewMenuAdmin()
         {
             InitializeComponent();
@@ -150,6 +149,7 @@ namespace Meter.Forms
             lblMonth.Text = month;
             lblYear.Text = year;
             Main.instance.Arhivate();
+            GlobalMethods.ClearLogs();
             GlobalMethods.ToLog("Лист нового месяца создан (" + newMonthDate.ToString("MMMM yyyy", GlobalMethods.culture) + ")");
             splashScreen.Close();
             MessageBox.Show("Лист нового месяца создан (" + newMonthDate.ToString("MMMM yyyy", GlobalMethods.culture) + ")");
