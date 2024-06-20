@@ -1455,5 +1455,50 @@ namespace Meter
                 codTEP = null;
             }
         }
+    
+        public void AddNote(string msg, int day)
+        {
+            if (childs == null)
+            {
+                if (Main.instance.colors.mainTitle.ContainsKey(_name))
+                {
+                    Excel.Range rng = RangeByDay(day);
+                    if (rng.Comment != null)
+                    {
+                        string txt = rng.Comment.Text() + "\n" + msg;
+                        rng.Comment.Text(txt); 
+                    }
+                    else
+                    {
+                        rng.AddComment(msg);
+                    }
+                }
+            }
+            else
+            {
+                foreach (ChildObject item in childs.Values)
+                {
+                    item.AddNote(msg, day);
+                }
+            }
+        }
+        public void ClearNote(int day)
+        {
+            if (childs == null)
+            {
+                Excel.Range rng = RangeByDay(day);
+                if (rng.Comment != null)
+                {
+                    rng.Comment.Delete();
+                }
+            }
+            else
+            {
+                foreach (ChildObject item in childs.Values)
+                {
+                    item.ClearNote(day);
+                }
+            }
+        }
     }
 }

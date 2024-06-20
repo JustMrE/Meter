@@ -20,6 +20,8 @@ namespace Meter
         public static string username;
         public static CultureInfo culture = new CultureInfo("ru-RU");
         public static float dpiX, dpiY;
+        private static readonly object fileLock = new object();
+        private static readonly object errFileLock = new object();
 
         public static void CalculateFormsPositions()
         {
@@ -65,25 +67,34 @@ namespace Meter
         
         public static void Err(string msg)
         {
-            using (StreamWriter writer = new StreamWriter(errLogFile, true))
+            lock (errFileLock)
             {
-                writer.WriteLine(DateTime.Now + " " + username + " ERROR " + " " + msg);
+                using (StreamWriter writer = new StreamWriter(errLogFile, true))
+                {
+                    writer.WriteLine(DateTime.Now + " " + username + " ERROR " + " " + msg);
+                }
             }
         }
 
         public static void ToLog(string msg)
         {
-            using (StreamWriter writer = new StreamWriter(logFile, true))
+            lock (fileLock)
             {
-                writer.WriteLine(DateTime.Now + " " + username + " INFO " + " " + msg);
+                using (StreamWriter writer = new StreamWriter(logFile, true))
+                {
+                    writer.WriteLine(DateTime.Now + " " + username + " INFO " + " " + msg);
+                }
             }
         }
 
         public static void ToLogError(string msg)
         {
-            using (StreamWriter writer = new StreamWriter(logFile, true))
+            lock (fileLock)
             {
-                writer.WriteLine(DateTime.Now + " " + username + " ERROR " + " " + msg);
+                using (StreamWriter writer = new StreamWriter(logFile, true))
+                {
+                    writer.WriteLine(DateTime.Now + " " + username + " ERROR " + " " + msg);
+                }
             }
         }
 

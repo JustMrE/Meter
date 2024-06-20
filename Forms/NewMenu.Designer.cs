@@ -64,7 +64,6 @@
             //
             this.button6.Visible = true;
             this.button6.Text = "записать планы";
-            
         }
 
         #endregion

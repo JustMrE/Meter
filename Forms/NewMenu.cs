@@ -76,61 +76,14 @@ namespace Meter.Forms
         {
             base.Button2_Click(sender, e);
             CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");
-            ReferenceObject[] ranges = Main.instance.references.references.Values.Where(n => n.HasEmcosID == true).ToArray();
-            Login();
             string format = "dd MMMM yyyy";
             string data = "2023-02-" + this.textBox1.Text;
             data = this.textBox1.Text.PadLeft(2,'0') + " " + this.lblMonth.Text + " " + this.lblYear.Text;
             DateTime result;
             DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
-            data = result.ToString("yyyy-MM-dd");
-            if (string.IsNullOrEmpty(this.textBox1.Text) ||  (Int32.Parse(this.textBox1.Text) <= 0 && Int32.Parse(this.textBox1.Text) > 31))
-            {
-                MessageBox.Show("Не введена дата записи!");
-                return;
-            }
-            
-            ConcurrentDictionary<string, string> emcosValues = new ConcurrentDictionary<string, string>();
-            //foreach (ReferenceObject item in ranges)
-            SplashScreen splashScreen = new();
-            splashScreen.Show();
-            splashScreen.UpdateLabel("Запись данных из АСКУЭ за " + result.ToString("dd.MM.yyyy") + ": ");
-            splashScreen.UpdateText("считывание данных из АСКУЭ");
-            Parallel.ForEach(ranges, item => 
-            {
-                foreach (var v in item.DB.childs.Values)
-                {
-                    if (v.HasItem("аскуэ") && v.emcosID != null)
-                    {
-                        //string q = v.Read("аскуэ", 0);
-                        int id = (int)v.emcosID;
-                        float? floatVal = GetValue(data, data, v.emcosID.ToString()).data.Where(n => n.ML_ID == v.emcosMLID).FirstOrDefault().VAL;
-                        string? val = null;
-                        if (floatVal != null)
-                        {
-                            floatVal = floatVal / 1000f;
-                            val = floatVal.ToString().Replace(",", ".");
-                        }
-                        else
-                        {
-                            val = "0";
-                        }
-                        emcosValues.TryAdd(item.DB.childs[v._name].childs["аскуэ"].ID, val);
-                    }
-                }
-            });
-            Main.instance.StopAll();
-            foreach (string id in emcosValues.Keys)
-            {
-                ChildObject co = (ChildObject)RangeReferences.idDictionary[id];
-                splashScreen.UpdateText("запись данных из АСКУЭ: " + co._name);
-                // ((ChildObject)RangeReferences.idDictionary[id]).RangeByDay(int.Parse(this.textBox1.Text)).Value = emcosValues[id];
-                co.WriteValue(int.Parse(this.textBox1.Text), emcosValues[id]);
-            }
-            Main.instance.ResumeAll();
-            splashScreen.Close();
-            MessageBox.Show("Done!");
+            EmcosWrite(result, result);
         }
+
         //Write Meters
         protected override void Button3_Click(object sender, EventArgs e)
         {
@@ -210,7 +163,7 @@ namespace Meter.Forms
         {
             MessageBox.Show("Запись формы W89");
         }
-        
+
         protected override void btnAdmin_Click(object sender, EventArgs e)
         {
             base.btnAdmin_Click(sender, e);
