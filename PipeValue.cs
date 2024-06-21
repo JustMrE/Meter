@@ -11,8 +11,8 @@ namespace Meter
         public string? subjectName { get; set; }
         public string? level1Name { get; set; }
         public string? level2Name { get; set; }
-        public int? day { get; set; }
-        public int? cod { get; set; }
+        public string? day { get; set; }
+        public string? cod { get; set; }
         public string? value { get; set; }
     }
 }

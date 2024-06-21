@@ -55,13 +55,16 @@ namespace Meter
         public static bool loading = false;
         private static object[,] oldValsArray;
         private static string oldVal;
-        public static bool PipeServerActive = true;
-        Thread meterServer;
-        Thread meterServerWriter;
-        private int batchSize = 0; // Переменная для хранения размера пачки
+        FileWatcher fileWatcher;
 
-        static ConcurrentQueue<string> serverMessagesQueue;
-        private static ManualResetEventSlim waitHandle = new ();
+        #region oldPipes
+        // public static bool PipeServerActive = true;
+        // Thread meterServer;
+        // Thread meterServerWriter;
+        // private int batchSize = 0; // Переменная для хранения размера пачки
+        // static ConcurrentQueue<string> serverMessagesQueue;
+        // private static ManualResetEventSlim waitHandle = new ();
+        #endregion
 
         #region Excel events
             public Excel.WorkbookEvents_BeforeCloseEventHandler Event_BeforeClose;
@@ -83,11 +86,14 @@ namespace Meter
         {
             if (System.Windows.Forms.Application.OpenForms.Count == 0)
             {
-                GlobalMethods.ToLog("Остановка сервера Meter...");
-                StopNamedPipe();
-                meterServer.Join();
-                meterServerWriter.Join();
-                GlobalMethods.ToLog("Cервер Meter остановлен");
+                fileWatcher.Stop();
+                #region oldPipes
+                // GlobalMethods.ToLog("Остановка сервера Meter...");
+                // StopNamedPipe();
+                // meterServer.Join();
+                // meterServerWriter.Join();
+                // GlobalMethods.ToLog("Cервер Meter остановлен");
+                #endregion
 
                 var tasks = new List<Task>();
 
@@ -140,11 +146,13 @@ namespace Meter
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            meterServer = new Thread(StartNamedPipe);
-            meterServer.Start();
+            #region oldPipes
+            // meterServer = new Thread(StartNamedPipe);
+            // meterServer.Start();
 
-            meterServerWriter = new Thread(ProcessQueue);
-            meterServerWriter.Start();
+            // meterServerWriter = new Thread(ProcessQueue);
+            // meterServerWriter.Start();
+            #endregion
 
             instance = this;
             //If WinForms exposed a global event that fires whenever a new Form is created,
@@ -158,104 +166,110 @@ namespace Meter
             GlobalMethods.dpiY = Graphics.FromHwnd(IntPtr.Zero).DpiY;
             
             Start();
+            
+            fileWatcher = new FileWatcher();
+            fileWatcher.Start();
+            fileWatcher.ProcessExistingFiles();
         }
 
-        void ProcessQueue()
-        {
-            List<string> batchMessages = new List<string>();
+        #region oldPipes
+        // void ProcessQueue()
+        // {
+        //     List<string> batchMessages = new List<string>();
     
-            while (PipeServerActive)
-            {
-                string msg;
+        //     while (PipeServerActive)
+        //     {
+        //         string msg;
                 
-                if (serverMessagesQueue != null && serverMessagesQueue.TryDequeue(out msg))
-                {
-                    if (msg == "Stop Meter Server")
-                    {
-                        GlobalMethods.ToLog("Stopping meterServerWriter");
-                        serverMessagesQueue.Clear();
-                        serverMessagesQueue = null;
-                        return;
-                    }
+        //         if (serverMessagesQueue != null && serverMessagesQueue.TryDequeue(out msg))
+        //         {
+        //             if (msg == "Stop Meter Server")
+        //             {
+        //                 GlobalMethods.ToLog("Stopping meterServerWriter");
+        //                 serverMessagesQueue.Clear();
+        //                 serverMessagesQueue = null;
+        //                 return;
+        //             }
                     
-                    batchMessages.Add(msg);
+        //             batchMessages.Add(msg);
 
-                    if (batchMessages.Count >= batchSize)
-                    {
-                        GlobalMethods.ToLog(">= " + batchMessages.Count + " " + batchSize);
-                        DataWriter.ProcessBatch(batchMessages);
-                        batchMessages.Clear();
-                    }
-                }
-                else
-                {
-                    if (batchMessages.Count > 0)
-                    {
-                        GlobalMethods.ToLog(">0 " + batchMessages.Count + " " + batchSize);
-                        DataWriter.ProcessBatch(batchMessages);
-                        batchMessages.Clear();
-                    }
+        //             if (batchMessages.Count >= batchSize)
+        //             {
+        //                 GlobalMethods.ToLog(">= " + batchMessages.Count + " " + batchSize);
+        //                 DataWriter.ProcessBatch(batchMessages);
+        //                 batchMessages.Clear();
+        //             }
+        //         }
+        //         else
+        //         {
+        //             if (batchMessages.Count > 0)
+        //             {
+        //                 GlobalMethods.ToLog(">0 " + batchMessages.Count + " " + batchSize);
+        //                 DataWriter.ProcessBatch(batchMessages);
+        //                 batchMessages.Clear();
+        //             }
                     
-                    waitHandle.Wait();
-                }
-            }
-        }
+        //             waitHandle.Wait();
+        //         }
+        //     }
+        // }
 
-        private void StartNamedPipe()
-        {
-            serverMessagesQueue = new ConcurrentQueue<string>();
-            string? msg = null;
+        // private void StartNamedPipe()
+        // {
+        //     serverMessagesQueue = new ConcurrentQueue<string>();
+        //     string? msg = null;
 
-            GlobalMethods.ToLog("Запуск сервера Meter...");
+        //     GlobalMethods.ToLog("Запуск сервера Meter...");
 
-            while (PipeServerActive == true)
-            {
-                using (NamedPipeServerStream pipeServer = new NamedPipeServerStream("MeterServer"))
-                {
-                    pipeServer.WaitForConnection();
-                    using (StreamReader sr = new StreamReader(pipeServer, Encoding.GetEncoding("windows-1251")))
-                    {
-                        msg = sr.ReadLine();
-                        if (msg != null){
-                            if (msg == "check")
-                            {
+        //     while (PipeServerActive == true)
+        //     {
+        //         using (NamedPipeServerStream pipeServer = new NamedPipeServerStream("MeterServer"))
+        //         {
+        //             pipeServer.WaitForConnection();
+        //             using (StreamReader sr = new StreamReader(pipeServer, Encoding.GetEncoding("windows-1251")))
+        //             {
+        //                 msg = sr.ReadLine();
+        //                 if (msg != null){
+        //                     if (msg == "check")
+        //                     {
 
-                            }
-                            else if (msg.Contains("size"))
-                            {
-                                msg = msg.Replace("size:", "");
-                                // Первое сообщение содержит размер пачки
-                                int.TryParse(msg, out batchSize);
-                                GlobalMethods.ToLog("size: " + batchSize);
-                            }
-                            else
-                            {
-                                serverMessagesQueue.Enqueue(msg);
-                                waitHandle.Set();
-                                msg = null;
-                            }
-                        }
-                    }
-                }
-            }
+        //                     }
+        //                     else if (msg.Contains("size"))
+        //                     {
+        //                         msg = msg.Replace("size:", "");
+        //                         // Первое сообщение содержит размер пачки
+        //                         int.TryParse(msg, out batchSize);
+        //                         GlobalMethods.ToLog("size: " + batchSize);
+        //                     }
+        //                     else
+        //                     {
+        //                         serverMessagesQueue.Enqueue(msg);
+        //                         waitHandle.Set();
+        //                         msg = null;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //     }
 
-            serverMessagesQueue.Enqueue("Stop Meter Server");
-            waitHandle.Set();
-            GlobalMethods.ToLog("Stopping meterServer");
-        }
+        //     serverMessagesQueue.Enqueue("Stop Meter Server");
+        //     waitHandle.Set();
+        //     GlobalMethods.ToLog("Stopping meterServer");
+        // }
 
-        private void StopNamedPipe()
-        {
-            PipeServerActive = false;
-            using (NamedPipeClientStream pipeServer = new NamedPipeClientStream("MeterServer"))
-            {
-                pipeServer.Connect();
-                using (StreamWriter sw = new StreamWriter(pipeServer))
-                {
-                    sw.WriteLine("Stop Meter Server");
-                }
-            }
-        }
+        // private void StopNamedPipe()
+        // {
+        //     PipeServerActive = false;
+        //     using (NamedPipeClientStream pipeServer = new NamedPipeClientStream("MeterServer"))
+        //     {
+        //         pipeServer.Connect();
+        //         using (StreamWriter sw = new StreamWriter(pipeServer))
+        //         {
+        //             sw.WriteLine("Stop Meter Server");
+        //         }
+        //     }
+        // }
+        #endregion
 
         private void Start()
         {
