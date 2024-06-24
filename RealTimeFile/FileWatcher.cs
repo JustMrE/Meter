@@ -213,7 +213,6 @@ namespace Meter.Forms
         public void Stop()
         {
             GlobalMethods.ToLog("Stoping FileWatcher.");
-            PipeServerActive = false;
             StopProcessQueue();
             meterServerWriter.Join();
             GlobalMethods.ToLog("FileWatcher stoped.");
@@ -369,6 +368,8 @@ namespace Meter.Forms
     
         void StopProcessQueue()
         {
+            PipeServerActive = false;
+            waitHandle.Set();
             serverMessagesQueue.Clear();
             serverMessagesQueue = null;
         }
