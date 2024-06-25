@@ -756,7 +756,7 @@ namespace Meter.Forms
             if (selectedButtons.Contains("Выделить")) cb.FindControl(Tag: "Выделить").Visible = true;
             if (selectedButtons.Contains("Переместить субъект")) cb.FindControl(Tag: "Переместить субъект").Visible = true;
             if (selectedButtons.Contains("Переименовать")) cb.FindControl(Tag: "Переименовать").Visible = true;
-            if (selectedButtons.Contains("Переименовать head")) cb.FindControl(Tag: "Переименовать").Visible = true;
+            if (selectedButtons.Contains("Переименовать head")) cb.FindControl(Tag: "Переименовать head").Visible = true;
             if (selectedButtons.Contains("Добавить код для макетТЭП")) cb.FindControl(Tag: "Добавить в макетТЭП").Visible = true;
             if (selectedButtons.Contains("Изменить код для макетТЭП")) cb.FindControl(Tag: "Изменить код макетТЭП").Visible = true;
             if (selectedButtons.Contains("Удалить код для макетТЭП")) cb.FindControl(Tag: "Удалить из макетТЭП").Visible = true;
@@ -928,7 +928,7 @@ namespace Meter.Forms
             if (selectedButtons.Contains("Изменить коэффициент счетчика")) cb.FindControl(Tag: "Изменить коэффициент счетчика").Visible = true;
             if (selectedButtons.Contains("Удалить по показаниям счетчика")) cb.FindControl(Tag: "Удалить по показаниям счетчика").Visible = true;
             if (selectedButtons.Contains("Сбросить")) cb.FindControl(Tag: "Сбросить").Visible = true;
-            if (selectedButtons.Contains("Сбросить mainSubtitle")) cb.FindControl(Tag: "Сбросить").Visible = true;
+            if (selectedButtons.Contains("Сбросить mainSubtitle")) cb.FindControl(Tag: "Сбросить mainSubtitle").Visible = true;
             if (selectedButtons.Contains("Special")) SpecialMenuMain();
             if (selectedButtons.Contains("Удалить субъект")) cb.FindControl(Tag: "Удалить субъект").Visible = true;
             if (selectedButtons.Contains("Удалить тип")) cb.FindControl(Tag: "Удалить тип").Visible = true;

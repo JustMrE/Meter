@@ -392,7 +392,7 @@ namespace Meter
 
             DB.childs[nameL1].childs["код"].UpdateFormulas(stopall);
             Excel.Range r = ((Excel.Range)DB.childs[nameL1].childs["код"].Body.Cells[1, 1]);
-            r.Value = 1;
+            r.Value = 2;
             Marshal.ReleaseComObject(r);
 
             DB.childs[nameL1].childs["основное"].UpdateFormulas(stopall);
@@ -404,8 +404,8 @@ namespace Meter
             DB.AddNewRange(nameL1, "ручное", stopall);
 
             DB.childs[nameL1].childs["код"].UpdateFormulas(stopall);
-            Excel.Range r = ((Excel.Range)DB.childs[nameL1].childs["код"].Body.Cells[1, 1]);
-            r.Value = 1;
+            Excel.Range r = (Excel.Range)DB.childs[nameL1].childs["код"].Body.Cells[1, 1];
+            r.Value = 2;
             Marshal.ReleaseComObject(r);
 
             DB.childs[nameL1].childs["основное"].UpdateFormulas(stopall);
@@ -424,7 +424,7 @@ namespace Meter
 
             DB.childs[nameL1].childs["код"].UpdateFormulas(stopall);
             Excel.Range r = ((Excel.Range)DB.childs[nameL1].childs["код"].Body.Cells[1, 1]);
-            r.Value = 1;
+            r.Value = 2;
             Marshal.ReleaseComObject(r);
 
             DB.childs[nameL1].childs["основное"].UpdateFormulas(stopall);
@@ -437,7 +437,7 @@ namespace Meter
 
             DB.childs[nameL1].childs["код"].UpdateFormulas(stopall);
             Excel.Range r = ((Excel.Range)DB.childs[nameL1].childs["код"].Body.Cells[1, 1]);
-            r.Value = 1;
+            r.Value = 2;
             Marshal.ReleaseComObject(r);
 
             DB.childs[nameL1].childs["основное"].UpdateFormulas(stopall);

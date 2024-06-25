@@ -155,7 +155,7 @@ namespace Meter
                         form.ShowDialog();
                     }
                 }
-            }, 7677);
+            }, 7677, tag: "Переименовать head");
             AddButtonToCommandBar("Добавить в макетТЭП", () =>
             {
                 ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
@@ -330,7 +330,7 @@ namespace Meter
             });
             AddButtonToCommandBar("Сбросить", () => {
                 RangeReferences.activeTable.ResetCell(RangeReferences.ActiveL1, RangeReferences.activeL2);
-            });
+            }, tag:"Сбросить mainSubtitle");
             SpecialMenuMain();
             AddButtonToCommandBar("Удалить субъект", () => RangeReferences.activeTable.RemoveSubject(), 330);
             AddButtonToCommandBar("Удалить тип", () => RangeReferences.activeTable.RemoveChild(RangeReferences.ActiveL1));
@@ -496,7 +496,7 @@ namespace Meter
         }
         public static void AddButtonToCommandBar(string caption, Action action, int? faceid = null, int type = 1, string tag = "", bool visible = false)
         {
-            tag = caption;
+            if (string.IsNullOrEmpty(tag)) tag = caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
                 ContextMenuClickLog(caption);
@@ -511,7 +511,7 @@ namespace Meter
         }
         public static void AddButtonToCommandBar(string caption, Action<string> action, string s1, int type = 1, string tag = "", bool visible = false)
         {
-            tag = caption;
+            if (string.IsNullOrEmpty(tag)) tag = caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
                 ContextMenuClickLog(caption);
@@ -525,7 +525,7 @@ namespace Meter
         }
         public static void AddButtonToCommandBar(string caption, Action<string, string> action, string s1, string s2, int type = 1, string tag = "", bool visible = false)
         {
-            tag = caption;
+            if (string.IsNullOrEmpty(tag)) tag = caption;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
                 ContextMenuClickLog(caption);
