@@ -59,7 +59,7 @@ namespace Meter.Forms
         protected virtual void NewMenuBase_Closing(object sender, EventArgs e)
         {
             listBox1.Items.Clear();
-            GlobalMethods.ReleseObject(cb);
+            GlobalMethods.ReleseObject(CustomCellMenu.cb);
             GlobalMethods.ReleseObject(_activeRange);
         }
         protected virtual void NewMenuBase_Activated(object sender, EventArgs e)
@@ -71,7 +71,7 @@ namespace Meter.Forms
         private void MenuBase_FormClosed(object sender, FormClosedEventArgs e)
         {
             ResetContextMenu();
-            GlobalMethods.ReleseObject(cb);
+            GlobalMethods.ReleseObject(CustomCellMenu.cb);
             GlobalMethods.ReleseObject(_activeRange);
         }
 

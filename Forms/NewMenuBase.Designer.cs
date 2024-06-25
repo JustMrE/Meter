@@ -961,12 +961,12 @@
         protected Button button3;
         protected Button button2;
         protected Button RepairMenu;
-        protected TextBox textBox1;
         protected TableLayoutPanel tableLayoutPanel1;
         protected TableLayoutPanel tableLayoutPanel4;
         protected TableLayoutPanel tableLayoutPanel3;
         protected TableLayoutPanel tableLayoutPanel2;
 
+        public TextBox textBox1;
         public Label lblMonth;
         public Label lblYear;
     }

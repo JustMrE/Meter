@@ -15,6 +15,7 @@ using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using System.Globalization;
 using System.Collections.Concurrent;
+using static Meter.CustomCellMenu;
 
 namespace Meter.Forms
 {
@@ -36,12 +37,11 @@ namespace Meter.Forms
         private const int WS_EX_TOOLWINDOW = 0x80;
         public IntPtr formHwnd;
 
-        protected delegate void CommandBarButtonClick(CommandBarButton commandBarButton, ref bool cancel);
         private static object[,] oldValsArray;
         private static string oldVal;
         protected static string token = "";
-        protected CommandBar cb;
-        protected Color activeColor;
+        //protected Color activeColor;
+        public Color activeColor;
         public static Excel.Range _activeRange;
         public static bool restartFlag = false;
         public static HashSet<string> editedFormulas = new ();
@@ -260,151 +260,6 @@ namespace Meter.Forms
                 }
             }
         }
-    
-        #region AddButtonToCommandBar
-        private void ContextMenuClickLog(string caption)
-        {
-            GlobalMethods.ToLog("Нажат пункт контекстного меню '" + caption + "'");
-        }
-        protected void AddButtonToCommandBar(string caption, Action action, int? faceid = null, int type = 1)
-        {
-            CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
-            {
-                ContextMenuClickLog(caption);
-                action.Invoke();
-            };
-            CommandBarButton b = (CommandBarButton)cb.Controls.Add(Type: type, Temporary: true);
-            b.Caption = caption;
-            if (faceid != null) b.FaceId = (int)faceid;
-            b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
-        }
-        protected void AddButtonToCommandBar(string caption, Action<string> action, string s1, int type = 1)
-        {
-            CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
-            {
-                ContextMenuClickLog(caption);
-                action.Invoke(s1);
-            };
-            CommandBarButton b = (CommandBarButton)cb.Controls.Add(Type: type, Temporary: true);
-            b.Caption = caption;
-            b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
-        }
-        protected void AddButtonToCommandBar(string caption, Action<string, string> action, string s1, string s2, int type = 1)
-        {
-            CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
-            {
-                ContextMenuClickLog(caption);
-                action.Invoke(s1, s2);
-            };
-            CommandBarButton b = (CommandBarButton)cb.Controls.Add(Type: type, Temporary: true);
-            b.Caption = caption;
-            b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
-        }
-
-        public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, Action action, int type = 1)
-        {
-            string pName = p.Caption;
-            CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
-            {
-                ContextMenuClickLog(pName + " => " + caption);
-                action.Invoke();
-            };
-            CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
-            b.Caption = caption;
-            b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
-        }
-        public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, Action<bool> action, bool b1, int type = 1)
-        {
-            string pName = p.Caption;
-            CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
-            {
-                ContextMenuClickLog(pName + " => " + caption);
-                action.Invoke(b1);
-            };
-            CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
-            b.Caption = caption;
-            b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
-        }
-        public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, Action<string> action, string s1, int type = 1)
-        {
-            string pName = p.Caption;
-            CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
-            {
-                ContextMenuClickLog(pName + " => " + caption);
-                action.Invoke(s1);
-            };
-            CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
-            b.Caption = caption;
-            b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
-        }
-        public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, Action<string, string> action, string s1, string s2, int type = 1)
-        {
-            string pName = p.Caption;
-            CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
-            {
-                ContextMenuClickLog(pName + " => " + caption);
-                action.Invoke(s1, s2);
-            };
-            CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
-            b.Caption = caption;
-            b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
-        }
-        public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, Action<string, string, bool> action, string s1, string s2, bool b1 = true, int type = 1)
-        {
-            string pName = p.Caption;
-            CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
-            {
-                ContextMenuClickLog(pName + " => " + caption);
-                action.Invoke(s1, s2, b1);
-            };
-            CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
-            b.Caption = caption;
-            b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
-        }
-        public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, Action<string, string, string?> action, string s1, string s2, string? s3 = null, int type = 1)
-        {
-            string pName = p.Caption;
-            CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
-            {
-                ContextMenuClickLog(pName + " => " + caption);
-                action.Invoke(s1, s2, s3);
-            };
-            CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
-            b.Caption = caption;
-            b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
-        }
-        public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, List<Action> action, int type = 1)
-        {
-            string pName = p.Caption;
-            CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
-            {
-                ContextMenuClickLog(pName + " => " + caption);
-                foreach (Action item in action)
-                {
-                    item.Invoke();
-                }
-            };
-            CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
-            b.Caption = caption;
-            b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);   
-        }
-        public void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, List<Action<string>> action, string s1, int type = 1)
-        {
-            string pName = p.Caption;
-            CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
-            {
-                ContextMenuClickLog(pName + " => " + caption);
-                foreach (Action<string> item in action)
-                {
-                    item.Invoke(s1);
-                }
-            };
-            CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: type, Temporary: true);
-            b.Caption = caption;
-            b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
-        }
-        #endregion
-    
         public virtual void DeactivateSheet()
         {
             ChangeVisible(false);
@@ -421,6 +276,7 @@ namespace Meter.Forms
             Main.instance.references.ActivateTable(range);
             PreContextMenu();
             MyContextMenu();
+            cb.ShowPopup();
         }
         public virtual void DblClick(Excel.Range range)
         {
@@ -583,17 +439,17 @@ namespace Meter.Forms
         private void NewMenuBase_FormClosed(object sender, FormClosedEventArgs e)
         {
             ResetContextMenu();
-            Marshal.ReleaseComObject(cb);
+            Marshal.ReleaseComObject(CustomCellMenu.cb);
             if (_activeRange != null) Marshal.ReleaseComObject(_activeRange);
         }
         
-        protected virtual void GotoDB()
+        public virtual void GotoDB()
         {
             //MessageBox.Show(RangeReferences.activeTable._name);
             Main.instance.wsDb.Activate();
             RangeReferences.activeTable.DB.Range.Select();
         }
-        protected virtual void SelectSubject()
+        public virtual void SelectSubject()
         {
             if (RangeReferences._activeObject != null) RangeReferences._activeObject.Range.Select();
         }
@@ -606,106 +462,13 @@ namespace Meter.Forms
         {
             if (Main.instance.references.references.ContainsKey(name)) Main.instance.references.references[name].PS.Range.Select();
         }
-        private void ChangeTypeMenuMain()
-        {
-            CommandBarPopup p = (CommandBarPopup)cb.Controls.Add(Type: MsoControlType.msoControlPopup, Temporary: true);
-            p.Caption = "Изменить";
-            foreach (string n in RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs.Keys)
-            {
-                if (n != "корректировка факт" && n != "код" && n != "основное" && n != "счетчик" && !RangeReferences.activeTable._activeChild._activeChild.HasItem(n, SymbolType.lower))
-                {
-                    AddButtonToPopUpCommandBar(ref p, n, RangeReferences.activeTable.ChangeType, RangeReferences.activeL2, n);
-                }
-            }
-
-            if (p.accChildCount == 0)
-                p.Delete();
-        }
-        private void ChangeTypeCellMenuMain()
-        {
-            CommandBarPopup p = (CommandBarPopup)cb.Controls.Add(Type: MsoControlType.msoControlPopup, Temporary: true);
-            p.Caption = "Изменить";
-            foreach (string n in RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs.Keys)
-            {
-                if (n != "корректировка факт" && n != "код" && n != "основное" && n != "счетчик" && !RangeReferences.activeTable._activeChild._activeChild.HasItem(n, SymbolType.lower))
-                {
-                    AddButtonToPopUpCommandBar(ref p, n, RangeReferences.activeTable.ChangeTypeCell, RangeReferences.activeL2, n);
-                }
-            }
-
-            if (p.accChildCount == 0)
-                p.Delete();
-        }
-        private void ChangeTypeMenuExtra()
-        {
-            CommandBarPopup p = (CommandBarPopup)cb.Controls.Add(Type: MsoControlType.msoControlPopup, Temporary: true);
-            p.Caption = "Изменить";
-            foreach (string n in RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs.Keys)
-            {
-                if (n != "код" && n != "основное" && n != "по плану")
-                {
-                    AddButtonToPopUpCommandBar(ref p, n, RangeReferences.activeTable.ChangeType, RangeReferences.activeL2, n.ToUpper());
-                }
-            }
-
-            if (p.accChildCount == 0)
-                p.Delete();
-        }
-        private void ShowTypeMenu()
-        {
-            CommandBarPopup p = (CommandBarPopup)cb.Controls.Add(Type: MsoControlType.msoControlPopup, Temporary: true);
-            p.Caption = "Показать";
-            foreach (string n in RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs.Keys)
-            {
-                if (n != "код" && n != "основное" && n != "по плану" && !RangeReferences.activeTable._activeChild._activeChild.HasItem(n, SymbolType.uper))
-                {
-                    AddButtonToPopUpCommandBar(ref p, n, RangeReferences.activeTable._activeChild.AddNewRange, RangeReferences.ActiveL1, n.ToUpper());
-                }
-            }
-            if (p.accChildCount == 0)
-                p.Delete();
-        }
-        private void HideType()
+        
+        public void HideType()
         {
             RangeReferences.activeTable._activeChild._activeChild._activeChild.Remove();
         }
-        protected void AddNewL1()
-        {
-            CommandBarPopup p = (CommandBarPopup)cb.Controls.Add(Type: MsoControlType.msoControlPopup, Temporary: true);
-            p.Caption = "Добавить новый";
-            foreach (string n in Main.instance.colors.main.Keys)
-            {
-                if (n != "subject" && n != "план" && !RangeReferences.activeTable.DB.HasItem(n))
-                {
-                    CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
-                    {
-                        RangeReferences.activeTable.AddNewDBL1StandartOther(n);
-                        RangeReferences.activeTable.AddNewPS(n, "ручное");
-                        RangeReferences.activeTable.PS.childs[n].childs["ручное"].ChangeCod();
-                    };
-                    CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: 1, Temporary: true);
-                    b.Caption = n;
-                    b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
-                }
-            }
-            if (p.accChildCount == 0)
-                p.Delete();
-        }
-        protected void AddNewL2()
-        {
-            CommandBarPopup p = (CommandBarPopup)cb.Controls.Add(Type: MsoControlType.msoControlPopup, Temporary: true);
-            p.Caption = "Добавить новый";
-            foreach (string n in Main.instance.colors.mainTitle.Keys)
-            {
-                if (n != "по плану" && n != "по счетчику" && n != "счетчик" && n != "утвержденный" && n != "корректировка" && n != "заявка" && !RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].HasItem(n))
-                {
-                    AddButtonToPopUpCommandBar(ref p, n, RangeReferences.activeTable.DB.AddNewRange, RangeReferences.ActiveL1, n);
-                }
-            }
-            if (p.accChildCount == 0)
-                p.Delete();
-        }
-        protected void EmcosSelect()
+        
+        public void EmcosSelect()
         {
             using (EmcosPicker emcosPicker = new EmcosPicker())
             {
@@ -717,7 +480,7 @@ namespace Meter.Forms
                 }
             }
         }
-        protected void EmcosRemove()
+        public void EmcosRemove()
         {
             RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].emcosID = null;
             RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].emcosMLID = null;
@@ -873,72 +636,37 @@ namespace Meter.Forms
             MessageBox.Show("Done!");
             
         }
-        public void RemoveOld()
-        {
-            CommandBarPopup p = (CommandBarPopup)cb.Controls.Add(Type: MsoControlType.msoControlPopup, Temporary: true);
-            p.Caption = "Удалить";
-            foreach (string n in RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs.Keys)
-            {
-                if (n != "код" && n != "основное" && n != "по плану" && n != "корректировка факт" && n != "ручное" && n != "счетчик" && n != "по счетчику")
-                {                        
-                    AddButtonToPopUpCommandBar(ref p, n, new List<Action>()
-                    {
-                        Main.instance.StopAll,
-                        () =>
-                        {
-                            if (RangeReferences.activeTable.PS.HasItem(n, SymbolType.lower))
-                            {
-                                RangeReferences.activeTable.ChangeType(n, "ручное");
-                            }
-                            if (RangeReferences.activeTable.PS.HasItem(n, SymbolType.uper))
-                            {
-                                RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].childs[n.ToUpper()].Remove();
-                            }
-                            if (n == "аскуэ")
-                            {
-                                RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].emcosID = null;
-                                RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].emcosMLID = null;
-                            }
-                        },
-                        () => 
-                        { 
-                            RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs[n].Remove(false); 
-                        },
-                        Main.instance.ResumeAll,
-                        RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].ChangeCod
-                    });
-                }
-            }
-            if (p.accChildCount == 0)
-                p.Delete();
-        }
+        
         protected void SpecialMenuMain()
         {
-            Action action;
+            cb.FindControl(Tag: "Special").Visible = true;
+            /*Action action;
 
-            CommandBarPopup p = (CommandBarPopup)cb.Controls.Add(Type: MsoControlType.msoControlPopup, Temporary: true);
+            CommandBarPopup p = (CommandBarPopup)CustomCellMenu.cb.Controls.Add(Type: MsoControlType.msoControlPopup, Temporary: true);
             p.Caption = "Special";
+            
             if (Main.instance.colors.main["subject"] == activeColor)
             {
-                AddButtonToPopUpCommandBar(ref p, "UpdateNames", RangeReferences.activeTable.UpdateNames);
+                //AddButtonToPopUpCommandBar(ref p, "UpdateNames", RangeReferences.activeTable.UpdateNames);
+                CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "UpdateNames", RangeReferences.activeTable.UpdateNames);
             }
-            AddButtonToPopUpCommandBar(ref p, "UpdateAllNames", Main.instance.references.UpdateAllNames);
-            AddButtonToPopUpCommandBar(ref p, "UpdateAllDBNames", Main.instance.references.UpdateAllDBNames);
-            AddButtonToPopUpCommandBar(ref p, "UpdateAllColors", Main.instance.references.UpdateAllColors);
-            AddButtonToPopUpCommandBar(ref p, "UpdateAllPSFormulas", Main.instance.references.UpdateAllPSFormulas);
-            AddButtonToPopUpCommandBar(ref p, "UpdateAllDBFormulas", Main.instance.references.UpdateAllDBFormulas);
-            AddButtonToPopUpCommandBar(ref p, "UpdateAllParents", Main.instance.references.UpdateAllParents,  true);
-            AddButtonToPopUpCommandBar(ref p, "UpdateAllReferencesPS", Main.instance.references.UpdateAllReferencesPS);
-            AddButtonToPopUpCommandBar(ref p, "UpdateAllReferencesDB", Main.instance.references.UpdateAllReferencesDB);
-            AddButtonToPopUpCommandBar(ref p, "UpdateAllLevels", Main.instance.references.UpdateAllLevels, true);
-            AddButtonToPopUpCommandBar(ref p, "CheckAllRanges", Main.instance.references.CheckAllRanges);
-            AddButtonToPopUpCommandBar(ref p, "ShowAllFormulas",() => {
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "UpdateAllNames", Main.instance.references.UpdateAllNames);
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "UpdateAllDBNames", Main.instance.references.UpdateAllDBNames);
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "UpdateAllColors", Main.instance.references.UpdateAllColors);
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "UpdateAllPSFormulas", Main.instance.references.UpdateAllPSFormulas);
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "UpdateAllDBFormulas", Main.instance.references.UpdateAllDBFormulas);
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "UpdateAllParents", Main.instance.references.UpdateAllParents, true);
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "UpdateAllReferencesPS", Main.instance.references.UpdateAllReferencesPS);
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "UpdateAllReferencesDB", Main.instance.references.UpdateAllReferencesDB);
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "UpdateAllLevels", Main.instance.references.UpdateAllLevels, true);
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "CheckAllRanges", Main.instance.references.CheckAllRanges);
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "ShowAllFormulas", () => {
                 Thread t = new Thread(() =>
                 {
                     AllFormulas form = new AllFormulas();
-                    form.FormClosed += (s, args) => 
-                    { 
-                        System.Windows.Forms.Application.ExitThread(); 
+                    form.FormClosed += (s, args) =>
+                    {
+                        System.Windows.Forms.Application.ExitThread();
                     };
                     form.Show();
                     System.Windows.Forms.Application.Run();
@@ -946,7 +674,7 @@ namespace Meter.Forms
                 t.SetApartmentState(ApartmentState.STA);
                 t.Start();
             });
-            AddButtonToPopUpCommandBar(ref p, "CheckDublicate", () => 
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "CheckDublicate", () =>
             {
                 Main.instance.references.CheckDublicates();
                 //ReferenceObject co = Main.instance.references.references.Values.Where(c => c != RangeReferences.activeTable && c.HasRangePS(RangeReferences.activeTable.PS.Range) == true).FirstOrDefault();
@@ -956,8 +684,8 @@ namespace Meter.Forms
                 //    MessageBox.Show(co._name + " " + RangeReferences.activeTable._name);
                 //}
             });
-            AddButtonToPopUpCommandBar(ref p, "UpdateHeadParents", Main.instance.heads.UpdateParents);
-            AddButtonToPopUpCommandBar(ref p, "CheckFormulas", () => {
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "UpdateHeadParents", Main.instance.heads.UpdateParents);
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "CheckFormulas", () => {
                 foreach (string s in Main.instance.formulas.formulas.Keys)
                 {
                     if (!RangeReferences.idDictionary.ContainsKey(s))
@@ -966,30 +694,31 @@ namespace Meter.Forms
                     }
                 }
             });
-            AddButtonToPopUpCommandBar(ref p, "testWriteMeters", () => 
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "testWriteMeters", () =>
             {
                 CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");
                 string format = "dd MMMM yyyy";
                 string data = "2023-02-" + this.textBox1.Text;
-                data = this.textBox1.Text.PadLeft(2,'0') + " " + this.lblMonth.Text + " " + this.lblYear.Text;
+                data = this.textBox1.Text.PadLeft(2, '0') + " " + this.lblMonth.Text + " " + this.lblYear.Text;
                 DateTime result;
                 DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
-                if (string.IsNullOrEmpty(this.textBox1.Text) ||  (Int32.Parse(this.textBox1.Text) <= 0 && Int32.Parse(this.textBox1.Text) > 31))
+                if (string.IsNullOrEmpty(this.textBox1.Text) || (Int32.Parse(this.textBox1.Text) <= 0 && Int32.Parse(this.textBox1.Text) > 31))
                 {
                     MessageBox.Show("Не введена дата записи!");
                     return;
                 }
                 MetersWriterTest.WriteMeters1(result);
             });
-            AddButtonToPopUpCommandBar(ref p, "Обновить счетчики", () => 
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "Обновить счетчики", () =>
             {
                 Main.instance.references.UpdateMeterAllDB();
             });
-            AddButtonToPopUpCommandBar(ref p, "Test", ()=>{
+            CustomCellMenu.AddButtonToPopUpCommandBar(ref p, "Test", () => {
                 EmcosWrite(new DateTime(2024, 06, 01), new DateTime(2024, 06, 19));
-            });
+            });*/
+
         }
-        protected void OpenForm()
+        public void OpenForm()
         {
             Thread t = new Thread(() =>
             {
@@ -1007,354 +736,222 @@ namespace Meter.Forms
         
         public void ResetContextMenu()
         {
-            foreach (int index in Main.menuIndexes)
-            {
-                cb = Main.instance.xlApp.CommandBars[index];
-                cb.Reset();
-            }
+            //foreach (int index in Main.menuIndexes)
+            //{
+            //    CustomCellMenu.cb = Main.instance.xlApp.CommandBars[index];
+            //    CustomCellMenu.cb.Reset();
+            //}
         }
         public void MyContextMenu()
         {
-            foreach (int index in Main.menuIndexes)
+            
+            foreach (CommandBarControl item in cb.Controls)
             {
-                //cb = Main.instance.xlApp.CommandBars[38];
-                cb = Main.instance.xlApp.CommandBars[index];
-                foreach (CommandBarControl item in cb.Controls)
+                item.Visible = false;
+            }
+
+            if (selectedButtons.Contains("Копировать")) cb.FindControl(Tag:"Копировать").Visible = true;
+            if (selectedButtons.Contains("Вставить")) cb.FindControl(Tag: "Вставить").Visible = true;
+            if (selectedButtons.Contains("GoTo DB")) cb.FindControl(Tag: "GoTo DB").Visible = true;
+            if (selectedButtons.Contains("Выделить")) cb.FindControl(Tag: "Выделить").Visible = true;
+            if (selectedButtons.Contains("Переместить субъект")) cb.FindControl(Tag: "Переместить субъект").Visible = true;
+            if (selectedButtons.Contains("Переименовать")) cb.FindControl(Tag: "Переименовать").Visible = true;
+            if (selectedButtons.Contains("Переименовать head")) cb.FindControl(Tag: "Переименовать").Visible = true;
+            if (selectedButtons.Contains("Добавить код для макетТЭП")) cb.FindControl(Tag: "Добавить в макетТЭП").Visible = true;
+            if (selectedButtons.Contains("Изменить код для макетТЭП")) cb.FindControl(Tag: "Изменить код макетТЭП").Visible = true;
+            if (selectedButtons.Contains("Удалить код для макетТЭП")) cb.FindControl(Tag: "Удалить из макетТЭП").Visible = true;
+
+            if (selectedButtons.Contains("Добавить код для ТЭП")) cb.FindControl(Tag: "Добавить в ТЭП").Visible = true;
+            if (selectedButtons.Contains("Изменить код для ТЭП")) cb.FindControl(Tag: "Изменить код ТЭП").Visible = true;
+            if (selectedButtons.Contains("Удалить код для ТЭП")) cb.FindControl(Tag: "Удалить из ТЭП").Visible = true;
+
+            if (selectedButtons.Contains("Добавить новый L1")) 
+            {
+                CommandBarPopup p = (CommandBarPopup)cb.FindControl(Tag: "AddNewL1");
+                p.Visible = true;
+                ClearPopupMenu(p);
+
+                foreach (string n in Main.instance.colors.main.Keys)
                 {
-                    item.Delete();
-                    Marshal.ReleaseComObject(item);
+                    if (n != "subject" && n != "план" && !RangeReferences.activeTable.DB.HasItem(n))
+                    {
+                        CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
+                        {
+                            RangeReferences.activeTable.AddNewDBL1StandartOther(n);
+                            RangeReferences.activeTable.AddNewPS(n, "ручное");
+                            RangeReferences.activeTable.PS.childs[n].childs["ручное"].ChangeCod();
+                        };
+                        CommandBarButton b = (CommandBarButton)p.Controls.Add(Type: 1, Temporary: true);
+                        b.Caption = n;
+                        b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
+                    }
+                }
+                if (p.accChildCount == 0)
+                    p.Visible = false;
+            }
+            if (selectedButtons.Contains("Добавить новый L2"))
+            {
+                CommandBarPopup p = (CommandBarPopup)cb.FindControl(Tag: "AddNewL2");
+                p.Visible = true;
+                ClearPopupMenu(p);
+                foreach (string n in Main.instance.colors.mainTitle.Keys)
+                {
+                    if (n != "по плану" && n != "по счетчику" && n != "счетчик" && n != "утвержденный" && n != "корректировка" && n != "заявка" && !RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].HasItem(n))
+                    {
+                        AddButtonToPopUpCommandBar(ref p, n, RangeReferences.activeTable.DB.AddNewRange, RangeReferences.ActiveL1, n);
+                    }
+                }
+                if (p.accChildCount == 0)
+                    p.Visible = false;
+            }
+            if (selectedButtons.Contains("Выбрать из EMCOS")) cb.FindControl(Tag: "Выбрать из EMCOS").Visible = true;
+            if (selectedButtons.Contains("Записать данные из EMCOS (Все дни)")) cb.FindControl(Tag: "Записать из EMCOS (Все дни)").Visible = true;
+            if (selectedButtons.Contains("Очистить данные из EMCOS (Все дни)")) cb.FindControl(Tag: "Очистить из EMCOS (Все дни)").Visible = true;
+            if (selectedButtons.Contains("Записать из EMCOS")) cb.FindControl(Tag: "Записать данные из EMCOS").Visible = true;
+            if (selectedButtons.Contains("Очистить из EMCOS")) cb.FindControl(Tag: "Очистить данные из EMCOS").Visible = true;
+            if (selectedButtons.Contains("Изменить из EMCOS")) cb.FindControl(Tag: "Изменить из EMCOS").Visible = true;
+            if (selectedButtons.Contains("Удалить из EMCOS")) cb.FindControl(Tag: "Удалить из EMCOS").Visible = true;
+            if (selectedButtons.Contains("Удалить")) 
+            {
+                CommandBarPopup p = (CommandBarPopup)cb.FindControl(Tag: "RemoveOld");
+                p.Visible = true;
+                ClearPopupMenu(p);
+                foreach (string n in RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs.Keys)
+                {
+                    if (n != "код" && n != "основное" && n != "по плану" && n != "корректировка факт" && n != "ручное" && n != "счетчик" && n != "по счетчику")
+                    {
+                        //AddButtonToPopUpCommandBar(ref p, n, new List<Action>()
+                        CustomCellMenu.AddButtonToPopUpCommandBar(ref p, n, new List<Action>()
+                        {
+                            Main.instance.StopAll,
+                            () =>
+                            {
+                                if (RangeReferences.activeTable.PS.HasItem(n, SymbolType.lower))
+                                {
+                                    RangeReferences.activeTable.ChangeType(n, "ручное");
+                                }
+                                if (RangeReferences.activeTable.PS.HasItem(n, SymbolType.uper))
+                                {
+                                    RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].childs[n.ToUpper()].Remove();
+                                }
+                                if (n == "аскуэ")
+                                {
+                                    RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].emcosID = null;
+                                    RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].emcosMLID = null;
+                                }
+                            },
+                            () =>
+                            {
+                                RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs[n].Remove(false);
+                            },
+                            Main.instance.ResumeAll,
+                            RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].ChangeCod
+                        });
+                    }
+                }
+                if (p.accChildCount == 0)
+                    p.Visible = false;
+            }
+            if (selectedButtons.Contains("Показать")) 
+            {
+                CommandBarPopup p = (CommandBarPopup)cb.FindControl(Tag: "ShowTypeMenu");
+                p.Visible = true;
+                ClearPopupMenu(p);
+                foreach (string n in RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs.Keys)
+                {
+                    if (n != "код" && n != "основное" && n != "по плану" && !RangeReferences.activeTable._activeChild._activeChild.HasItem(n, SymbolType.uper))
+                    {
+                        AddButtonToPopUpCommandBar(ref p, n, RangeReferences.activeTable._activeChild.AddNewRange, RangeReferences.ActiveL1, n.ToUpper());
+                    }
+                }
+                if (p.accChildCount == 0)
+                    p.Visible = false;
+            }
+            if (selectedButtons.Contains("Скрыть")) cb.FindControl(Tag: "Скрыть").Visible = true;
+            if (selectedButtons.Contains("Изменить main")) 
+            {
+                CommandBarPopup p = (CommandBarPopup)cb.FindControl(Tag: "ChangeTypeMenuMain");
+                p.Visible = true;
+                ClearPopupMenu(p);
+                foreach (string n in RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs.Keys)
+                {
+                    if (n != "корректировка факт" && n != "код" && n != "основное" && n != "счетчик" && !RangeReferences.activeTable._activeChild._activeChild.HasItem(n, SymbolType.lower))
+                    {
+                        AddButtonToPopUpCommandBar(ref p, n, RangeReferences.activeTable.ChangeType, RangeReferences.activeL2, n);
+                    }
                 }
 
-                if (selectedButtons.Contains("Копировать")) AddButtonToCommandBar("Копировать", () => 
-                {
-                    GlobalMethods.ToLog("Копирование диапазона: " + ((Excel.Range)Main.instance.xlApp.Selection).Address);
-                    ((Excel.Range)Main.instance.xlApp.Selection).Copy();
-                }, 0019);
-                if (selectedButtons.Contains("Вставить")) AddButtonToCommandBar("Вставить", () => 
-                {
-                    try
-                    {
-                        IDataObject idat = null;
-                        Invoke(new Action(() => idat = Clipboard.GetDataObject()));
-                        if (idat != null)
-                        {
-                            if (idat.GetDataPresent(DataFormats.Text))
-                            {
-                                string clipboardString = idat.GetData(DataFormats.Text) as string;
-                                // clipboardString = clipboardString.Replace(",", ".");
-
-                                string[] rows = clipboardString.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-                                int numRows = rows.Length;
-                                int numColumns = rows[0].Split('\t').Length;
-
-                                Excel.Range selectedRange = (Excel.Range)Main.instance.xlApp.Selection;
-                                int targetNumRows = selectedRange.Rows.Count;
-                                int targetNumColumns = selectedRange.Columns.Count;
-
-                                // Расширение выделенного диапазона, если необходимо
-                                if (targetNumRows < numRows || targetNumColumns < numColumns)
-                                {
-                                    Excel.Range expandedRange = selectedRange.Resize[numRows, numColumns];
-                                    selectedRange = expandedRange;
-                                    targetNumRows = selectedRange.Rows.Count;
-                                    targetNumColumns = selectedRange.Columns.Count;
-                                }
-
-                                object[,] dataArray = new object[targetNumRows, targetNumColumns];
-                                for (int i = 0; i < targetNumRows; i++)
-                                {
-                                    for (int j = 0; j < targetNumColumns; j++)
-                                    {
-                                        int sourceRow = i % numRows;
-                                        int sourceColumn = j % numColumns;
-                                        double val;
-                                        string strVal = rows[sourceRow].Split('\t')[sourceColumn];
-                                        if (double.TryParse(strVal, out val))
-                                        {
-                                            dataArray[i, j] = val;
-                                        }
-                                        else
-                                        {
-                                            dataArray[i, j] = null;
-                                        }
-                                        
-                                    }
-                                }
-                                selectedRange.Select();
-                                selectedRange.Value2 = dataArray;
-                                GlobalMethods.ToLog(" в диапазон: " + selectedRange.Address + "Вставлены значения: \n" + clipboardString );
-                            }
-                            else if (idat.GetDataPresent(DataFormats.StringFormat))
-                            {
-                                // string clipboardString = idat.GetData(DataFormats.StringFormat) as string;
-                                // // clipboardString = clipboardString.Replace("\r\n", "");
-                                // clipboardString = clipboardString.Replace(",", ".");
-                                // Main.instance.xlApp.ActiveCell.Value = clipboardString;
-                            }
-                            else if (idat.GetDataPresent(DataFormats.UnicodeText))
-                            {
-                                // string clipboardString = idat.GetData(DataFormats.UnicodeText) as string;
-                                // // clipboardString = clipboardString.Replace("\r\n", "");
-                                // clipboardString = clipboardString.Replace(",", ".");
-                                // Main.instance.xlApp.ActiveCell.Value = clipboardString;
-                            }
-                            else
-                            {
-                                MessageBox.Show("Ошибка вставки данных");
-                            }
-                        }
-                    }
-                    catch (Exception){}
-                }, 0022);
-                if (selectedButtons.Contains("GoTo DB")) AddButtonToCommandBar("GoTo DB", GotoDB, 2116);
-                if (selectedButtons.Contains("Выделить")) AddButtonToCommandBar("Выделить", () => 
-                {
-                    SelectSubject();
-                }, 118);
-                if (selectedButtons.Contains("Переместить субъект")) AddButtonToCommandBar("Переместить субъект", () => 
-                {
-                    using (TransferSubject form = new TransferSubject())
-                    {
-                        form.ShowDialog();
-                    }
-                });
-                if (selectedButtons.Contains("Переименовать")) AddButtonToCommandBar("Переименовать", () => 
-                {
-                    using (Rename form = new Rename(RangeReferences.activeTable))
-                    {
-                        form.ShowDialog();
-                    }
-                }, 7677);
-                if (selectedButtons.Contains("Переименовать head")) AddButtonToCommandBar("Переименовать", () => 
-                {
-                    HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
-                    if (ho != null)
-                    {
-                        using (Rename form = new Rename(ho))
-                        {
-                            form.ShowDialog();
-                        }
-                    }
-                }, 7677);
-                if (selectedButtons.Contains("Добавить код для макетТЭП")) AddButtonToCommandBar("Добавить в макетТЭП", () => 
-                {
-                    ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
-                    using (AddPlan form = new AddPlan(co))
-                    {
-                        form.ShowDialog();
-                    }
-                });
-                if (selectedButtons.Contains("Изменить код для макетТЭП")) AddButtonToCommandBar("Изменить код макетТЭП", () => 
-                {
-                    ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
-                    using (AddPlan form = new AddPlan(co))
-                    {
-                        form.ShowDialog();
-                    }
-                });
-                if (selectedButtons.Contains("Удалить код для макетТЭП")) AddButtonToCommandBar("Удалить из макетТЭП", () => 
-                {
-                    RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].RemoveFromMTEP();
-                    // int cod = (int)RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codMaketTEP;
-                    // Main.instance.wsMTEP.Range["A:A"].Find(cod).Interior.ColorIndex = 0;
-                    // Main.instance.wsMTEP.Range["A:A"].Find(cod).Offset[0, 2].Value = "";
-                    // RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codMaketTEP = null;
-                });
-
-                if (selectedButtons.Contains("Добавить код для ТЭП")) AddButtonToCommandBar("Добавить в ТЭП", () =>
-                {
-                    ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
-                    using (AddTEP form = new AddTEP(co))
-                    {
-                        form.ShowDialog();
-                    }
-                });
-                if (selectedButtons.Contains("Изменить код для ТЭП")) AddButtonToCommandBar("Изменить код ТЭП", () =>
-                {
-                    ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
-                    using (AddTEP form = new AddTEP(co))
-                    {
-                        form.ShowDialog();
-                    }
-                });
-                if (selectedButtons.Contains("Удалить код для ТЭП")) AddButtonToCommandBar("Удалить из ТЭП", () =>
-                {
-                    RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].RemoveFromTEP();
-                    // int cod = (int)RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codTEP;
-                    // string adr1 = Main.instance.wsTEPm.Range["5:5"].Find(What: cod, LookAt: Excel.XlLookAt.xlWhole).Address[false, false];
-                    // string adr2 = Main.instance.wsTEPm.Range["5:5"].Find(What: cod, LookAt: Excel.XlLookAt.xlWhole).Offset[0, 1].Address[false, false];
-                    // string adr = Regex.Replace(adr1, @"[^A-Z]+", String.Empty) + ":" + Regex.Replace(adr2, @"[^A-Z]+", String.Empty);
-
-                    // Main.instance.StopAll();
-                    // Main.instance.wsTEPn.Range[adr].Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
-                    // Main.instance.wsTEPm.Range[adr].Delete(Excel.XlDeleteShiftDirection.xlShiftToLeft);
-                    // Main.instance.ResumeAll();
-
-                    // RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codTEP = null;
-                });
-                
-                if (selectedButtons.Contains("Добавить новый L1")) AddNewL1();
-                if (selectedButtons.Contains("Добавить новый L2")) AddNewL2();
-                if (selectedButtons.Contains("Выбрать из EMCOS")) AddButtonToCommandBar("Выбрать из EMCOS", EmcosSelect);
-                if (selectedButtons.Contains("Записать данные из EMCOS (Все дни)")) AddButtonToCommandBar("Записать из EMCOS (Все дни)", () => 
-                {
-                    CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");
-                    string format = "dd MMMM yyyy";
-                    string data = "01" + " " + this.lblMonth.Text + " " + this.lblYear.Text;
-                    DateTime result;
-                    DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
-                    EmcosWrite(result, DateTime.Today.AddDays(-1), RangeReferences.activeTable);
-                });
-                if (selectedButtons.Contains("Очистить данные из EMCOS (Все дни)")) AddButtonToCommandBar("Очистить из EMCOS (Все дни)", () => 
-                {
-                    CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");
-                    string format = "dd MMMM yyyy";
-                    string data = "01" + " " + this.lblMonth.Text + " " + this.lblYear.Text;
-                    DateTime result;
-                    DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
-                    EmcosClear(result, DateTime.Today.AddDays(-1), RangeReferences.activeTable);
-                });
-                if (selectedButtons.Contains("Записать из EMCOS")) AddButtonToCommandBar("Записать данные из EMCOS", () => 
-                {
-                    CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");
-                    string format = "dd MMMM yyyy";
-                    string data = RangeReferences.activeTable.ActiveDay().ToString().PadLeft(2, '0') + " " + this.lblMonth.Text + " " + this.lblYear.Text;
-                    DateTime result;
-                    DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
-                    EmcosWrite(result, result, RangeReferences.activeTable);
-                });
-                if (selectedButtons.Contains("Очистить из EMCOS")) AddButtonToCommandBar("Очистить данные из EMCOS", () => 
-                {
-                    CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");
-                    string format = "dd MMMM yyyy";
-                    string data = RangeReferences.activeTable.ActiveDay().ToString().PadLeft(2, '0') + " " + this.lblMonth.Text + " " + this.lblYear.Text;
-                    DateTime result;
-                    DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
-                    EmcosClear(result, result, RangeReferences.activeTable);
-                });
-                if (selectedButtons.Contains("Изменить из EMCOS")) AddButtonToCommandBar("Изменить из EMCOS", EmcosSelect);
-                if (selectedButtons.Contains("Удалить из EMCOS")) AddButtonToCommandBar("Удалить из EMCOS", EmcosRemove);
-                if (selectedButtons.Contains("Удалить")) RemoveOld();
-                if (selectedButtons.Contains("Показать")) ShowTypeMenu();
-                if (selectedButtons.Contains("Скрыть")) AddButtonToCommandBar("Скрыть", HideType);
-                if (selectedButtons.Contains("Изменить main")) ChangeTypeMenuMain();
-                if (selectedButtons.Contains("Изменить mainSubtitle")) ChangeTypeCellMenuMain();
-                if (selectedButtons.Contains("Изменить extra")) ChangeTypeMenuExtra();
-                if (selectedButtons.Contains("Ввести корректировку")) AddButtonToCommandBar("Ввести корректировку", () =>
-                {
-                    using(Correct form = new Correct(RangeReferences.activeTable))
-                    {
-                        form.ShowDialog();
-                    }
-                }, 387);
-                if (selectedButtons.Contains("Добавить план")) AddButtonToCommandBar("Добавить план", () => 
-                {
-                    using (AddPlan form = new AddPlan(RangeReferences.activeTable))
-                    {
-                        form.ShowDialog();
-                    }
-                }, 213);
-                if (selectedButtons.Contains("Изменить код плана")) AddButtonToCommandBar("Изменить код плана", () => 
-                {
-                    using (AddPlan form = new AddPlan(RangeReferences.activeTable))
-                    {
-                        form.ShowDialog();
-                    }
-                }, 712);
-                if (selectedButtons.Contains("Удалить план")) AddButtonToCommandBar("Удалить план", () => 
-                {
-                    RangeReferences.activeTable.codPlan = null; 
-                    RangeReferences.activeTable.RemovePlan();
-                }, 214);
-                if (selectedButtons.Contains("Изменить формулу")) AddButtonToCommandBar("Изменить формулу", () =>
-                {
-                    OpenForm();
-                }, 385);
-                if (selectedButtons.Contains("Зависимые формулы")) AddButtonToCommandBar("Зависимые формулы", () => 
-                {
-                    Thread t = new Thread(() =>
-                    {
-                        AllFormulas form = new AllFormulas(RangeReferences.activeTable, RangeReferences.ActiveL1);
-                        form.FormClosed += (s, args) => 
-                        { 
-                            System.Windows.Forms.Application.ExitThread(); 
-                        };
-                        form.Show();
-                        System.Windows.Forms.Application.Run();
-                    });
-                    t.SetApartmentState(ApartmentState.STA);
-                    t.Start();
-                });
-                if (selectedButtons.Contains("Добавить по показаниям счетчика")) AddButtonToCommandBar("Добавить по показаниям счетчика",() => {
-                    RangeReferences.activeTable.AddMeter(RangeReferences.ActiveL1);
-                    }, 33);
-                if (selectedButtons.Contains("Ввести показания счетчика")) AddButtonToCommandBar("Ввести показания счетчика", () =>
-                    {
-                        using (SCH form = new SCH(RangeReferences.activeTable))
-                        {
-                            form.ShowDialog();
-                        }
-                    }, 205);
-                if (selectedButtons.Contains("Изменить коэффициент счетчика")) AddButtonToCommandBar("Изменить коэффициент счетчика", () =>
-                    {
-                        using (ChangeCoef form = new ChangeCoef(RangeReferences.activeTable))
-                        {
-                            form.ShowDialog();
-                        }
-                    }, 400);
-                if (selectedButtons.Contains("Удалить по показаниям счетчика")) AddButtonToCommandBar("Удалить по показаниям счетчика", () => { 
-                    RangeReferences.activeTable.RemoveMeter(RangeReferences.ActiveL1); 
-                    });
-                if (selectedButtons.Contains("Сбросить")) AddButtonToCommandBar("Сбросить", () => {
-                    RangeReferences.activeTable.Reset(RangeReferences.ActiveL1, RangeReferences.activeL2);
-                });
-                if (selectedButtons.Contains("Сбросить mainSubtitle")) AddButtonToCommandBar("Сбросить", () => {
-                    RangeReferences.activeTable.ResetCell(RangeReferences.ActiveL1, RangeReferences.activeL2);
-                });
-                if (selectedButtons.Contains("Special")) SpecialMenuMain();
-                if (selectedButtons.Contains("Удалить субъект"))AddButtonToCommandBar("Удалить субъект", () => RangeReferences.activeTable.RemoveSubject(), 330);
-                if (selectedButtons.Contains("Удалить тип"))AddButtonToCommandBar("Удалить тип", () => RangeReferences.activeTable.RemoveChild(RangeReferences.ActiveL1));
-
-                if (selectedButtons.Contains("Добавить отступ")) AddButtonToCommandBar("Добавить отступ", () =>
-                {
-                    HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
-                    if (ho != null)
-                    {
-                        ho.Indent(IndentDirection.right);
-                    }
-                }, faceid: 137);
-                if (selectedButtons.Contains("Удалить отступ")) AddButtonToCommandBar("Удалить отступ", () =>
-                {
-                    HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
-                    if (ho != null)
-                    {
-                        ho.Indent(IndentDirection.right);
-                    }
-                }, faceid: 138);
-                if (selectedButtons.Contains("Удалить head")) AddButtonToCommandBar("Удалить", () => 
-                {
-                    HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
-                    if (ho != null)
-                    {
-                        if (MessageBox.Show("Это удалит всех субъектов входящих в " + ho._name + "\nВы Уверены?", "", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
-                        {
-                            ho.Delete();
-                        }
-                    }
-                }, 1088);
+                if (p.accChildCount == 0)
+                    p.Visible = false;
             }
+            if (selectedButtons.Contains("Изменить mainSubtitle")) 
+            {
+                CommandBarPopup p = (CommandBarPopup)cb.FindControl(Tag: "ChangeTypeCellMenuMain");
+                p.Visible = true;
+                ClearPopupMenu(p);
+                foreach (string n in RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs.Keys)
+                {
+                    if (n != "корректировка факт" && n != "код" && n != "основное" && n != "счетчик" && !RangeReferences.activeTable._activeChild._activeChild.HasItem(n, SymbolType.lower))
+                    {
+                        AddButtonToPopUpCommandBar(ref p, n, RangeReferences.activeTable.ChangeTypeCell, RangeReferences.activeL2, n);
+                    }
+                }
+
+                if (p.accChildCount == 0)
+                    p.Visible = false;
+            }
+            if (selectedButtons.Contains("Изменить extra")) 
+            {
+                CommandBarPopup p = (CommandBarPopup)cb.FindControl(Tag: "ChangeTypeMenuExtra");
+                p.Visible = true;
+                ClearPopupMenu(p);
+                foreach (string n in RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].childs.Keys)
+                {
+                    if (n != "код" && n != "основное" && n != "по плану")
+                    {
+                        AddButtonToPopUpCommandBar(ref p, n, RangeReferences.activeTable.ChangeType, RangeReferences.activeL2, n.ToUpper());
+                        //AddButtonToPopUpCommandBar(ref p, n, RangeReferences.activeTable.ChangeType, RangeReferences.activeL2, n.ToUpper());
+                    }
+                }
+
+                if (p.accChildCount == 0)
+                    p.Visible = false;
+            }
+            if (selectedButtons.Contains("Ввести корректировку")) cb.FindControl(Tag: "Ввести корректировку").Visible = true;
+            if (selectedButtons.Contains("Добавить план")) cb.FindControl(Tag: "Добавить план").Visible = true;
+            if (selectedButtons.Contains("Изменить код плана")) cb.FindControl(Tag: "Изменить код плана").Visible = true;
+            if (selectedButtons.Contains("Удалить план")) cb.FindControl(Tag: "Удалить план").Visible = true;
+            if (selectedButtons.Contains("Изменить формулу")) cb.FindControl(Tag: "Изменить формулу").Visible = true;
+            if (selectedButtons.Contains("Зависимые формулы")) cb.FindControl(Tag: "Зависимые формулы").Visible = true;
+            if (selectedButtons.Contains("Добавить по показаниям счетчика")) cb.FindControl(Tag: "Добавить по показаниям счетчика").Visible = true;
+            if (selectedButtons.Contains("Ввести показания счетчика")) cb.FindControl(Tag: "Ввести показания счетчика").Visible = true;
+            if (selectedButtons.Contains("Изменить коэффициент счетчика")) cb.FindControl(Tag: "Изменить коэффициент счетчика").Visible = true;
+            if (selectedButtons.Contains("Удалить по показаниям счетчика")) cb.FindControl(Tag: "Удалить по показаниям счетчика").Visible = true;
+            if (selectedButtons.Contains("Сбросить")) cb.FindControl(Tag: "Сбросить").Visible = true;
+            if (selectedButtons.Contains("Сбросить mainSubtitle")) cb.FindControl(Tag: "Сбросить").Visible = true;
+            if (selectedButtons.Contains("Special")) SpecialMenuMain();
+            if (selectedButtons.Contains("Удалить субъект")) cb.FindControl(Tag: "Удалить субъект").Visible = true;
+            if (selectedButtons.Contains("Удалить тип")) cb.FindControl(Tag: "Удалить тип").Visible = true;
+
+            if (selectedButtons.Contains("Добавить отступ")) cb.FindControl(Tag: "Добавить отступ").Visible = true;
+            if (selectedButtons.Contains("Удалить отступ")) cb.FindControl(Tag: "Удалить отступ").Visible = true;
+            if (selectedButtons.Contains("Удалить head")) cb.FindControl(Tag: "Удалить").Visible = true;
         }
         public void ClearContextMenu()
         {
-            foreach (int index in Main.menuIndexes)
+            foreach (CommandBarControl item in CustomCellMenu.cb.Controls)
             {
-                //cb = Main.instance.xlApp.CommandBars[Main.menuIndexes[0]];
-                cb = Main.instance.xlApp.CommandBars[index];
-                foreach (CommandBarControl item in cb.Controls)
-                {
-                    item.Delete();
-                }
+                item.Visible = false;
             }
+            //foreach (int index in Main.menuIndexes)
+            //{
+            //    //cb = Main.instance.xlApp.CommandBars[Main.menuIndexes[0]];
+            //    //CustomCellMenu.cb = Main.instance.xlApp.CommandBars[index];
+            //    foreach (CommandBarControl item in CustomCellMenu.cb.Controls)
+            //    {
+            //        item.Delete();
+            //    }
+            //}
         }
     }
 }

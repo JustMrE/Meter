@@ -158,11 +158,11 @@ namespace Meter
             
             Start();
 
-            CreateCustomContextMenu();
-
             fileWatcher = new FileWatcher();
             fileWatcher.Start();
             fileWatcher.ProcessExistingFiles();
+
+            CustomCellMenu.CreateCustomContextMenu();
         }
         
         private void Start()
@@ -171,7 +171,6 @@ namespace Meter
             InitExcel();
             InitForms();
             InitExcelEvents();
-            menu.ClearContextMenu();
             filesToDelete = new List<string>();
         }
         
@@ -330,25 +329,6 @@ namespace Meter
             colors = new ColorsData();
             xlApp.Visible = false;
             SaveLoader.LoadAsync();
-            Dictionary<string, List<string>> cbs = new();
-            foreach (CommandBar item in xlApp.CommandBars)
-            {
-                List<string> cbcs = new();
-                foreach (CommandBarControl c in item.Controls)
-                {
-                    cbcs.Add(item.Name + " / " + c.Caption);
-                }
-                cbs.Add(item.Index.ToString(), cbcs);
-                if (item.Name == "Cell")
-                {
-                    menuIndexes.Add(item.Index);
-                }
-            }
-            using (StreamWriter sw = File.CreateText(@"D:\q\test.json"))
-            {
-                var json = JsonConvert.SerializeObject(cbs);
-                sw.Write(json);
-            }
             xlApp.Visible = true;
             RestoreExcel();
 
@@ -501,38 +481,9 @@ namespace Meter
         private void Application_BeforeRightClick(Excel.Range range, ref bool cancel)
         {
             cancel = true;
-            customContextMenu.ShowPopup();
-            //menu.RightClick(range);
-        }
-        private static CommandBar customContextMenu;
-        private void CreateCustomContextMenu()
-        {
-            try
-            {
-                // Получаем контекстное меню по умолчанию для ячеек
-                var cellMenu = xlApp.CommandBars["Cell"];
-
-                // Создаем новое пользовательское меню
-                customContextMenu = xlApp.CommandBars.Add("CustomCellMenu", MsoBarPosition.msoBarPopup, false, true);
-
-                // Добавляем пункт в пользовательское меню
-                var menuItem = (CommandBarButton)customContextMenu.Controls.Add(MsoControlType.msoControlButton, Type.Missing, Type.Missing, Type.Missing, true);
-                menuItem.Caption = "My Custom Item";
-                menuItem.Click += new _CommandBarButtonEvents_ClickEventHandler(MenuItem_Click);
-
-                // Добавляем пользовательское меню в список меню ячейки
-                customContextMenu.Visible = true;
-                cellMenu.Controls.Add(MsoControlType.msoControlPopup, Type.Missing, Type.Missing, Type.Missing, true);
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Error creating context menu: " + ex.Message);
-            }
-        }
-        private void MenuItem_Click(CommandBarButton Ctrl, ref bool CancelDefault)
-        {
-            Console.WriteLine("Custom menu item clicked!");
-            CancelDefault = true;
+            //CustomCellMenu.cb.ShowPopup();
+            //customContextMenu.ShowPopup();
+            menu.RightClick(range);
         }
         private void Application_DeactivateSheet()
         {
