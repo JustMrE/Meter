@@ -325,8 +325,16 @@ namespace Meter.Forms
             }
             else
             {
-                int row = Main.instance.heads.heads.Values.Select(n => n.Range.Row).Max();
-                row = row + 43;
+                int row;
+                if (Main.instance.heads.heads.Count != 0)
+                {
+                    row = Main.instance.heads.heads.Values.Select(n => n.Range.Row).Max();
+                    row = row + 43;
+                }
+                else
+                {
+                    row = 8;
+                }
                 Main.instance.StopAll();
                 Excel.Range r = (Excel.Range)Main.instance.wsCh.Cells[row, 2];
                 r.Value = nameL0;

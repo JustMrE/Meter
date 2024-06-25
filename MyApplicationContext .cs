@@ -98,7 +98,7 @@ namespace Meter
                 var tasks = new List<Task>();
 
                 GlobalMethods.ToLog("Инициализация закрытия книги...");
-                if (MeterSettings.CloseAutoSave == false)
+                if (MeterSettings.Instance.CloseAutoSave == false)
                 {
                     SaveBeforeClose();
                     if (filesToDelete.Count != 0)
@@ -152,14 +152,14 @@ namespace Meter
             //Without such a global event, we have to register each Form when it is created
             //This means that any forms created outside of the ApplicationContext will not prevent the 
             //application close.
-            // dontsave = false;
-            GlobalMethods.closeAutoSave = false;
 
             GlobalMethods.dpiX = Graphics.FromHwnd(IntPtr.Zero).DpiX;
             GlobalMethods.dpiY = Graphics.FromHwnd(IntPtr.Zero).DpiY;
             
             Start();
-            
+
+            CreateCustomContextMenu();
+
             fileWatcher = new FileWatcher();
             fileWatcher.Start();
             fileWatcher.ProcessExistingFiles();
@@ -201,7 +201,7 @@ namespace Meter
         private void OpenMonthMethod(string thisYear, string thisMonth, string selectedYear, string selectedMonth, string file)
         {
             StopAll();
-            string sourceFolder = MeterSettings.DBDir + @"\TEMP";
+            string sourceFolder = MeterSettings.Instance.DBDir + @"\TEMP";
             if (Directory.Exists(sourceFolder))
             {
                 Directory.Delete(sourceFolder, true);
@@ -294,7 +294,7 @@ namespace Meter
             xlApp = null;
             xlApp = new Excel.ApplicationClass();
             xlApp.Visible = false;
-            wb = xlApp.Workbooks.Open(MeterSettings.MeterFile);
+            wb = xlApp.Workbooks.Open(MeterSettings.Instance.MeterFile);
             wb.Activate();
             xlApp.Visible = false;
             foreach (Excel.Worksheet ws in wb.Worksheets)
@@ -330,12 +330,24 @@ namespace Meter
             colors = new ColorsData();
             xlApp.Visible = false;
             SaveLoader.LoadAsync();
+            Dictionary<string, List<string>> cbs = new();
             foreach (CommandBar item in xlApp.CommandBars)
             {
+                List<string> cbcs = new();
+                foreach (CommandBarControl c in item.Controls)
+                {
+                    cbcs.Add(item.Name + " / " + c.Caption);
+                }
+                cbs.Add(item.Index.ToString(), cbcs);
                 if (item.Name == "Cell")
                 {
                     menuIndexes.Add(item.Index);
                 }
+            }
+            using (StreamWriter sw = File.CreateText(@"D:\q\test.json"))
+            {
+                var json = JsonConvert.SerializeObject(cbs);
+                sw.Write(json);
             }
             xlApp.Visible = true;
             RestoreExcel();
@@ -488,7 +500,39 @@ namespace Meter
         }
         private void Application_BeforeRightClick(Excel.Range range, ref bool cancel)
         {
-            menu.RightClick(range);
+            cancel = true;
+            customContextMenu.ShowPopup();
+            //menu.RightClick(range);
+        }
+        private static CommandBar customContextMenu;
+        private void CreateCustomContextMenu()
+        {
+            try
+            {
+                // Получаем контекстное меню по умолчанию для ячеек
+                var cellMenu = xlApp.CommandBars["Cell"];
+
+                // Создаем новое пользовательское меню
+                customContextMenu = xlApp.CommandBars.Add("CustomCellMenu", MsoBarPosition.msoBarPopup, false, true);
+
+                // Добавляем пункт в пользовательское меню
+                var menuItem = (CommandBarButton)customContextMenu.Controls.Add(MsoControlType.msoControlButton, Type.Missing, Type.Missing, Type.Missing, true);
+                menuItem.Caption = "My Custom Item";
+                menuItem.Click += new _CommandBarButtonEvents_ClickEventHandler(MenuItem_Click);
+
+                // Добавляем пользовательское меню в список меню ячейки
+                customContextMenu.Visible = true;
+                cellMenu.Controls.Add(MsoControlType.msoControlPopup, Type.Missing, Type.Missing, Type.Missing, true);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error creating context menu: " + ex.Message);
+            }
+        }
+        private void MenuItem_Click(CommandBarButton Ctrl, ref bool CancelDefault)
+        {
+            Console.WriteLine("Custom menu item clicked!");
+            CancelDefault = true;
         }
         private void Application_DeactivateSheet()
         {
@@ -661,7 +705,7 @@ namespace Meter
         private void ArhivateNew(string year, string month, bool withoutSave = false)
         {
             if (withoutSave == false) SaveWB();
-            string sourceFolder = MeterSettings.DBDir + @"\current";
+            string sourceFolder = MeterSettings.Instance.DBDir + @"\current";
             string tempDirectory = Path.Combine(Path.GetTempPath(), DateTime.Today.ToString("MMMM", GlobalMethods.culture));
             Directory.CreateDirectory(tempDirectory);
             foreach (string dirPath in Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories))
@@ -681,7 +725,7 @@ namespace Meter
                 }
                 File.Copy(filePath, newFilePath, true);
             }
-            string archPath = MeterSettings.DBDir + @"\arch";
+            string archPath = MeterSettings.Instance.DBDir + @"\arch";
             if (!Directory.Exists(archPath))
             {
                 Directory.CreateDirectory(archPath);
@@ -708,10 +752,10 @@ namespace Meter
             thisYear = menu.lblYear.Text;
             selectedMonth = DateTime.Today.ToString("MMMM", GlobalMethods.culture);
             selectedYear = DateTime.Today.ToString("yyyy");
-            file = MeterSettings.DBDir + @"\arch\" + selectedYear + @"\" + selectedMonth + @".zip";
+            file = MeterSettings.Instance.DBDir + @"\arch\" + selectedYear + @"\" + selectedMonth + @".zip";
 
             SaveWB();
-            string sourceFolder = MeterSettings.DBDir + @"\current";
+            string sourceFolder = MeterSettings.Instance.DBDir + @"\current";
             string tempDirectory = Path.Combine(Path.GetTempPath(), GlobalMethods.username + " " + DateTime.Today.ToString("MMMM", GlobalMethods.culture));
             Directory.CreateDirectory(tempDirectory);
             foreach (string dirPath in Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories))
@@ -727,7 +771,7 @@ namespace Meter
                 }
                 File.Copy(filePath, newFilePath, true);
             }
-            string archPath = MeterSettings.DBDir + @"\temparch";
+            string archPath = MeterSettings.Instance.DBDir + @"\temparch";
             if (!Directory.Exists(archPath))
             {
                 Directory.CreateDirectory(archPath);
@@ -765,9 +809,9 @@ namespace Meter
             thisYear = menu.lblYear.Text;
             selectedMonth = DateTime.Today.ToString("MMMM", GlobalMethods.culture);
             selectedYear = DateTime.Today.ToString("yyyy");
-            file = MeterSettings.DBDir + @"\arch\" + selectedYear + @"\" + selectedMonth + @".zip";
+            file = MeterSettings.Instance.DBDir + @"\arch\" + selectedYear + @"\" + selectedMonth + @".zip";
 
-            string sourceFolder = MeterSettings.DBDir + @"\current";
+            string sourceFolder = MeterSettings.Instance.DBDir + @"\current";
             string tempDirectory = Path.Combine(Path.GetTempPath(), GlobalMethods.username + " " + DateTime.Today.ToString("MMMM", GlobalMethods.culture));
             Directory.CreateDirectory(tempDirectory);
             foreach (string dirPath in Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories))
@@ -783,7 +827,7 @@ namespace Meter
                 }
                 File.Copy(filePath, newFilePath, true);
             }
-            string archPath = MeterSettings.DBDir + @"\temparch";
+            string archPath = MeterSettings.Instance.DBDir + @"\temparch";
             if (!Directory.Exists(archPath))
             {
                 Directory.CreateDirectory(archPath);

@@ -158,7 +158,7 @@ namespace Meter.Forms
         {
             if (textBox1.Text == "dontsave")
             {
-                Main.dontsave = true;
+                MeterSettings.Instance.CloseAutoSave = true;
             }
             Action action = Close;
             if (InvokeRequired)
@@ -1017,7 +1017,7 @@ namespace Meter.Forms
         {
             foreach (int index in Main.menuIndexes)
             {
-                //cb = Main.instance.xlApp.CommandBars[Main.menuIndexes[0]];
+                //cb = Main.instance.xlApp.CommandBars[38];
                 cb = Main.instance.xlApp.CommandBars[index];
                 foreach (CommandBarControl item in cb.Controls)
                 {

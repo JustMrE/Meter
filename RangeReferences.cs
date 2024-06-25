@@ -202,7 +202,7 @@ namespace Meter
                 {
                     iderrors.Add(IDErrors1[i].Range.Address + ", " + IDErrors2[i].Range.Address);
                 }
-                string file = System.IO.Path.GetDirectoryName(MeterSettings.DBDir) + @"\DB\IDErrors.json";
+                string file = System.IO.Path.GetDirectoryName(MeterSettings.Instance.DBDir) + @"\DB\IDErrors.json";
                 using (StreamWriter writer = File.CreateText(file))
                 {
                     JsonSerializer serializer = new JsonSerializer();
@@ -231,7 +231,7 @@ namespace Meter
                 {
                     iderrors.Add(IDErrors1[i].Range.Address + ", " + IDErrors2[i].Range.Address);
                 }
-                string file = System.IO.Path.GetDirectoryName(MeterSettings.DBDir) + @"\DB\IDErrors.json";
+                string file = System.IO.Path.GetDirectoryName(MeterSettings.Instance.DBDir) + @"\DB\IDErrors.json";
                 using (StreamWriter writer = File.CreateText(file))
                 {
                     JsonSerializer serializer = new JsonSerializer();
@@ -307,7 +307,7 @@ namespace Meter
             Main.instance.ResumeAll();
             MessageBox.Show("Done!\n" + (watch.ElapsedMilliseconds / 1000) + " sec");
 
-            string file = System.IO.Path.GetDirectoryName(MeterSettings.DBDir) + @"\DB\errors.json";
+            string file = System.IO.Path.GetDirectoryName(MeterSettings.Instance.DBDir) + @"\DB\errors.json";
             using (StreamWriter writer = File.CreateText(file))
             {
                 JsonSerializer serializer = new JsonSerializer();
@@ -337,7 +337,7 @@ namespace Meter
             Main.instance.ResumeAll();
             MessageBox.Show("Done!\n" + (watch.ElapsedMilliseconds / 1000) + " sec");
 
-            string file = System.IO.Path.GetDirectoryName(MeterSettings.DBDir) + @"\DB\errors.json";
+            string file = System.IO.Path.GetDirectoryName(MeterSettings.Instance.DBDir) + @"\DB\errors.json";
             using (StreamWriter writer = File.CreateText(file))
             {
                 JsonSerializer serializer = new JsonSerializer();

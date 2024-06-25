@@ -17,8 +17,8 @@ namespace Meter
 {
     public static class GlobalMethods
     {
-        public static string username;
-        public static bool closeAutoSave;
+        public static string username = string.Empty;
+        public static bool closeDontSave;
         public static CultureInfo culture = new CultureInfo("ru-RU");
         public static float dpiX, dpiY;
         private static readonly object fileLock = new object();
@@ -70,7 +70,7 @@ namespace Meter
         {
             lock (errFileLock)
             {
-                using (StreamWriter writer = new StreamWriter(MeterSettings.ErrLogFile, true))
+                using (StreamWriter writer = new StreamWriter(MeterSettings.Instance.ErrLogFile, true))
                 {
                     writer.WriteLine(DateTime.Now + " " + username + " ERROR " + " " + msg);
                 }
@@ -80,7 +80,7 @@ namespace Meter
         {
             lock (fileLock)
             {
-                using (StreamWriter writer = new StreamWriter(MeterSettings.LogFile, true))
+                using (StreamWriter writer = new StreamWriter(MeterSettings.Instance.LogFile, true))
                 {
                     writer.WriteLine(DateTime.Now + " " + username + " INFO " + " " + msg);
                 }
@@ -90,7 +90,7 @@ namespace Meter
         {
             lock (fileLock)
             {
-                using (StreamWriter writer = new StreamWriter(MeterSettings.LogFile, true))
+                using (StreamWriter writer = new StreamWriter(MeterSettings.Instance.LogFile, true))
                 {
                     writer.WriteLine(DateTime.Now + " " + username + " ERROR " + " " + msg);
                 }
@@ -135,13 +135,13 @@ namespace Meter
         }
         public static void ClearLogs()
         {
-            if (File.Exists(MeterSettings.LogFile))
+            if (File.Exists(MeterSettings.Instance.LogFile))
             {
-                using (File.CreateText(MeterSettings.LogFile));
+                using (File.CreateText(MeterSettings.Instance.LogFile));
             }
-            if (File.Exists(MeterSettings.ErrLogFile))
+            if (File.Exists(MeterSettings.Instance.ErrLogFile))
             {
-                using (File.CreateText(MeterSettings.ErrLogFile));
+                using (File.CreateText(MeterSettings.Instance.ErrLogFile));
             }
             ToLog("Логи очищены");
         }

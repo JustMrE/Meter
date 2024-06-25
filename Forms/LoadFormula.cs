@@ -19,9 +19,9 @@ namespace Meter
         public LoadFormula()
         {
             InitializeComponent();
-            path1 = MeterSettings.DBDir + @"\saves";
+            path1 = MeterSettings.Instance.DBDir + @"\saves";
             if (!Directory.Exists(path1)) Directory.CreateDirectory(path1);
-            path1 = MeterSettings.DBDir + @"\saves\formulas";
+            path1 = MeterSettings.Instance.DBDir + @"\saves\formulas";
             if (!Directory.Exists(path1)) Directory.CreateDirectory(path1);
             List<string> filePaths1 = Directory.GetFiles(path1, "*.json").ToList();
             foreach (string path in filePaths1)

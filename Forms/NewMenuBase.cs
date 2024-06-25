@@ -136,11 +136,11 @@ namespace Meter.Forms
             }
             if (textBox1.Text == "dontsave")
             {
-                Main.dontsave = true;
+                MeterSettings.Instance.CloseAutoSave = true;
             }
             else
             {
-                Main.dontsave = false;
+                MeterSettings.Instance.CloseAutoSave = false;
             }
         }
 

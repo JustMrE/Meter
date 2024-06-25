@@ -179,9 +179,21 @@ namespace Meter.Forms
 
         public FileWatcher()
         {
-            this.path = "X:\\MeterWorker";
+            if (GlobalMethods.username == "darck")
+            {
+                this.path = "D:\\MeterWorker";
+            }
+            else
+            {
+                this.path = "X:\\MeterWorker";
+            }
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+                File.SetAttributes(this.path, FileAttributes.Hidden);
+            }
+
             serverMessagesQueue = new ConcurrentQueue<List<PipeValue>>();
-            this.path = path;
             watcher = new FileSystemWatcher(path)
             {
                 Filter = "*.json",

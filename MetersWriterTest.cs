@@ -337,7 +337,7 @@ namespace Meter
         }
         public static void WriteMeters1(DateTime date)
         {
-            string dict = MeterSettings.DBDir + @"\current\Словарь ТИ факт.xlsx";
+            string dict = MeterSettings.Instance.DBDir + @"\current\Словарь ТИ факт.xlsx";
             string path;
             string archPath = "";
             if (false)

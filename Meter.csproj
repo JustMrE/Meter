@@ -9,11 +9,21 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="StandarResources\**" />
+    <EmbeddedResource Remove="StandarResources\**" />
+    <None Remove="StandarResources\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="Resources\heads.json" />
+    <None Remove="Resources\meter.xlsx" />
+    <None Remove="Resources\standartColors.json" />
     <None Remove="Resources\trash.png" />
     <None Remove="Resources\Без имени-1.png" />
     <None Remove="Resources\Без имени-2.png" />
     <None Remove="Resources\Без имени-21.png" />
     <None Remove="Resources\Без имени-22.png" />
+    <None Remove="Resources\Словарь ТИ факт.xlsx" />
   </ItemGroup>
 
   <ItemGroup>
@@ -24,11 +34,21 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Resources\heads.json" />
+    <Resource Include="Resources\meter.xlsx">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
+    <Resource Include="Resources\standartColors.json">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
     <Resource Include="Resources\trash.png" />
     <Resource Include="Resources\Без имени-1.png" />
     <Resource Include="Resources\Без имени-2.png" />
     <Resource Include="Resources\Без имени-21.png" />
     <Resource Include="Resources\Без имени-22.png" />
+    <Resource Include="Resources\Словарь ТИ факт.xlsx">
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+    </Resource>
   </ItemGroup>
 
   <ItemGroup>

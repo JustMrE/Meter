@@ -139,12 +139,20 @@ namespace Meter
             ////Application.Run(new Menu());
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            
-            MeterSettings.settingsFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\settings";
-            if (!MeterSettings.Load()) return;
 
-            openedFlagFile = MeterSettings.DBDir + @"\opened";
+            MeterSettings.Instance.SettingsFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\settings";
+            if (!File.Exists(MeterSettings.Instance.SettingsFile) || !MeterSettings.Instance.Load())
+            {
+                Setup settings = new Setup();
+                DialogResult result = settings.ShowDialog();
+                if (result != DialogResult.OK)
+                {
+                    return;
+                }
+            }
+
             #if !DEBUG
+            openedFlagFile = MeterSettings.Instance.DBDir + @"\opened";
             if (File.Exists(openedFlagFile))
             {
                 string newUserName = File.ReadAllText(openedFlagFile);
@@ -161,13 +169,13 @@ namespace Meter
             }
             #endif
 
-            using (StreamWriter writer = new (MeterSettings.LogFile, true)) 
+            using (StreamWriter writer = new (MeterSettings.Instance.LogFile, true)) 
             {
                 writer.WriteLine();
                 writer.WriteLine();
                 writer.WriteLine(DateTime.Now +  " Счетчики открыты пользователем " + GlobalMethods.username);
             }
-            using (StreamWriter writer = new (MeterSettings.ErrLogFile, true)) 
+            using (StreamWriter writer = new (MeterSettings.Instance.ErrLogFile, true)) 
             {
                 writer.WriteLine();
                 writer.WriteLine();
