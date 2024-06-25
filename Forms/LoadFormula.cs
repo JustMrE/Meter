@@ -4,6 +4,7 @@ using Excel = Microsoft.Office.Interop.Excel;
 using System.Runtime.InteropServices;
 using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
+using Meter.Forms;
 
 namespace Meter
 {
@@ -18,9 +19,9 @@ namespace Meter
         public LoadFormula()
         {
             InitializeComponent();
-            path1 = Main.dir + @"\saves";
+            path1 = MeterSettings.DBDir + @"\saves";
             if (!Directory.Exists(path1)) Directory.CreateDirectory(path1);
-            path1 = Main.dir + @"\saves\formulas";
+            path1 = MeterSettings.DBDir + @"\saves\formulas";
             if (!Directory.Exists(path1)) Directory.CreateDirectory(path1);
             List<string> filePaths1 = Directory.GetFiles(path1, "*.json").ToList();
             foreach (string path in filePaths1)

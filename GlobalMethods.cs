@@ -11,13 +11,14 @@ using System.Drawing;
 using System.Text.RegularExpressions;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
 using System.Diagnostics;
+using Meter.Forms;
 
 namespace Meter
 {
     public static class GlobalMethods
     {
-        public static string logFile, errLogFile;
         public static string username;
+        public static bool closeAutoSave;
         public static CultureInfo culture = new CultureInfo("ru-RU");
         public static float dpiX, dpiY;
         private static readonly object fileLock = new object();
@@ -49,7 +50,6 @@ namespace Meter
             }
             //Main.instance.ResumeAll();
         }
-    
         public static void ReleseObject(object o)
         {
             if (o is not null)
@@ -65,39 +65,37 @@ namespace Meter
             }
         }
         
+        #region Logs
         public static void Err(string msg)
         {
             lock (errFileLock)
             {
-                using (StreamWriter writer = new StreamWriter(errLogFile, true))
+                using (StreamWriter writer = new StreamWriter(MeterSettings.ErrLogFile, true))
                 {
                     writer.WriteLine(DateTime.Now + " " + username + " ERROR " + " " + msg);
                 }
             }
         }
-
         public static void ToLog(string msg)
         {
             lock (fileLock)
             {
-                using (StreamWriter writer = new StreamWriter(logFile, true))
+                using (StreamWriter writer = new StreamWriter(MeterSettings.LogFile, true))
                 {
                     writer.WriteLine(DateTime.Now + " " + username + " INFO " + " " + msg);
                 }
             }
         }
-
         public static void ToLogError(string msg)
         {
             lock (fileLock)
             {
-                using (StreamWriter writer = new StreamWriter(logFile, true))
+                using (StreamWriter writer = new StreamWriter(MeterSettings.LogFile, true))
                 {
                     writer.WriteLine(DateTime.Now + " " + username + " ERROR " + " " + msg);
                 }
             }
         }
-
         public static void ToLog(object sender)
         {
             ToLog("Нажато " + ((Control)sender).Name);
@@ -110,7 +108,6 @@ namespace Meter
         {
             ToLog("В списке " + ((Control)sender).Name + " выбран " + selectedItem.ToString());
         }
-
         public static void ToLog(Form form, object sender)
         {
             ToLog("Нажато " + ((Control)sender).Name + " на форме " + form.Name);
@@ -136,18 +133,18 @@ namespace Meter
             }
             ToLog("Открыта форма " + form.Name);
         }
-
         public static void ClearLogs()
         {
-            if (File.Exists(logFile))
+            if (File.Exists(MeterSettings.LogFile))
             {
-                using (File.CreateText(logFile));
+                using (File.CreateText(MeterSettings.LogFile));
             }
-            if (File.Exists(errLogFile))
+            if (File.Exists(MeterSettings.ErrLogFile))
             {
-                using (File.CreateText(errLogFile));
+                using (File.CreateText(MeterSettings.ErrLogFile));
             }
             ToLog("Логи очищены");
         }
+        #endregion
     }
 }

@@ -128,7 +128,7 @@ namespace Meter.Forms
             DateTime newMonthDate = date.AddMonths(1);
             string newMonthYear = newMonthDate.ToString("yyyy");
             string newMonth = newMonthDate.ToString("MMMM", GlobalMethods.culture);
-            string file = Main.dir + @"\arch\" + newMonthYear + @"\" + newMonth + @".zip";
+            string file = MeterSettings.DBDir + @"\arch\" + newMonthYear + @"\" + newMonth + @".zip";
 
             if (File.Exists(file))
             {
@@ -161,12 +161,12 @@ namespace Meter.Forms
             {
                 Process.Start( new ProcessStartInfo()
                 {
-                    FileName = GlobalMethods.logFile,
+                    FileName = MeterSettings.LogFile,
                     UseShellExecute = true
                 });
                 Process.Start( new ProcessStartInfo()
                 {
-                    FileName = GlobalMethods.errLogFile,
+                    FileName = MeterSettings.ErrLogFile,
                     UseShellExecute = true
                 });
             }

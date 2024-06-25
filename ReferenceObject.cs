@@ -617,9 +617,9 @@ namespace Meter
 
             RangeReferences.idDictionary.Remove(ID);
             Main.instance.references.references.Remove(_name);
-            if (File.Exists(Main.dir + @"\current\references\" + ID + ".json"))
+            if (File.Exists(MeterSettings.DBDir + @"\current\references\" + ID + ".json"))
             {
-                Main.filesToDelete.Add(Main.dir + @"\current\references\" + ID + ".json");
+                Main.filesToDelete.Add(MeterSettings.DBDir + @"\current\references\" + ID + ".json");
             }
             ID = null;
 

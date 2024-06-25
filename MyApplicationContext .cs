@@ -47,10 +47,10 @@ namespace Meter
         public RangeReferences references;
         public HeadReferences heads;
         public Formula formulas;
-        public static bool dontsave;
-        public static string dir;
+        // public static bool dontsave;
+        // public static string dir;
+        // string file;
         public static List<int> menuIndexes = new ();
-        string file;
         bool restarted;
         public static bool loading = false;
         private static object[,] oldValsArray;
@@ -98,7 +98,7 @@ namespace Meter
                 var tasks = new List<Task>();
 
                 GlobalMethods.ToLog("Инициализация закрытия книги...");
-                if (dontsave == false)
+                if (MeterSettings.CloseAutoSave == false)
                 {
                     SaveBeforeClose();
                     if (filesToDelete.Count != 0)
@@ -146,21 +146,14 @@ namespace Meter
         {
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 
-            #region oldPipes
-            // meterServer = new Thread(StartNamedPipe);
-            // meterServer.Start();
-
-            // meterServerWriter = new Thread(ProcessQueue);
-            // meterServerWriter.Start();
-            #endregion
-
             instance = this;
             //If WinForms exposed a global event that fires whenever a new Form is created,
             //we could use that event to register for the form's `FormClosed` event.
             //Without such a global event, we have to register each Form when it is created
             //This means that any forms created outside of the ApplicationContext will not prevent the 
             //application close.
-            dontsave = false;
+            // dontsave = false;
+            GlobalMethods.closeAutoSave = false;
 
             GlobalMethods.dpiX = Graphics.FromHwnd(IntPtr.Zero).DpiX;
             GlobalMethods.dpiY = Graphics.FromHwnd(IntPtr.Zero).DpiY;
@@ -171,125 +164,10 @@ namespace Meter
             fileWatcher.Start();
             fileWatcher.ProcessExistingFiles();
         }
-
-        #region oldPipes
-        // void ProcessQueue()
-        // {
-        //     List<string> batchMessages = new List<string>();
-    
-        //     while (PipeServerActive)
-        //     {
-        //         string msg;
-                
-        //         if (serverMessagesQueue != null && serverMessagesQueue.TryDequeue(out msg))
-        //         {
-        //             if (msg == "Stop Meter Server")
-        //             {
-        //                 GlobalMethods.ToLog("Stopping meterServerWriter");
-        //                 serverMessagesQueue.Clear();
-        //                 serverMessagesQueue = null;
-        //                 return;
-        //             }
-                    
-        //             batchMessages.Add(msg);
-
-        //             if (batchMessages.Count >= batchSize)
-        //             {
-        //                 GlobalMethods.ToLog(">= " + batchMessages.Count + " " + batchSize);
-        //                 DataWriter.ProcessBatch(batchMessages);
-        //                 batchMessages.Clear();
-        //             }
-        //         }
-        //         else
-        //         {
-        //             if (batchMessages.Count > 0)
-        //             {
-        //                 GlobalMethods.ToLog(">0 " + batchMessages.Count + " " + batchSize);
-        //                 DataWriter.ProcessBatch(batchMessages);
-        //                 batchMessages.Clear();
-        //             }
-                    
-        //             waitHandle.Wait();
-        //         }
-        //     }
-        // }
-
-        // private void StartNamedPipe()
-        // {
-        //     serverMessagesQueue = new ConcurrentQueue<string>();
-        //     string? msg = null;
-
-        //     GlobalMethods.ToLog("Запуск сервера Meter...");
-
-        //     while (PipeServerActive == true)
-        //     {
-        //         using (NamedPipeServerStream pipeServer = new NamedPipeServerStream("MeterServer"))
-        //         {
-        //             pipeServer.WaitForConnection();
-        //             using (StreamReader sr = new StreamReader(pipeServer, Encoding.GetEncoding("windows-1251")))
-        //             {
-        //                 msg = sr.ReadLine();
-        //                 if (msg != null){
-        //                     if (msg == "check")
-        //                     {
-
-        //                     }
-        //                     else if (msg.Contains("size"))
-        //                     {
-        //                         msg = msg.Replace("size:", "");
-        //                         // Первое сообщение содержит размер пачки
-        //                         int.TryParse(msg, out batchSize);
-        //                         GlobalMethods.ToLog("size: " + batchSize);
-        //                     }
-        //                     else
-        //                     {
-        //                         serverMessagesQueue.Enqueue(msg);
-        //                         waitHandle.Set();
-        //                         msg = null;
-        //                     }
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     serverMessagesQueue.Enqueue("Stop Meter Server");
-        //     waitHandle.Set();
-        //     GlobalMethods.ToLog("Stopping meterServer");
-        // }
-
-        // private void StopNamedPipe()
-        // {
-        //     PipeServerActive = false;
-        //     using (NamedPipeClientStream pipeServer = new NamedPipeClientStream("MeterServer"))
-        //     {
-        //         pipeServer.Connect();
-        //         using (StreamWriter sw = new StreamWriter(pipeServer))
-        //         {
-        //             sw.WriteLine("Stop Meter Server");
-        //         }
-        //     }
-        // }
-        #endregion
-
+        
         private void Start()
         {
             restarted = false;
-            string file1 = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\db.txt";
-            if (File.Exists(file1))
-            {
-                dir = File.ReadAllText(file1);
-            }
-
-            // dir = Process.GetCurrentProcess().MainModule.FileName ;
-            // dir = System.IO.Path.GetDirectoryName(dir) + @"\DB"; 
-            file = dir + @"\current\meter.xlsx";
-            if (!File.Exists(file))
-            {
-                dir = System.Reflection.Assembly.GetExecutingAssembly().Location;
-                dir = System.IO.Path.GetDirectoryName(dir) + @"\DB"; 
-                file = dir + @"\current\meter.xlsx";
-            }
-            
             InitExcel();
             InitForms();
             InitExcelEvents();
@@ -323,7 +201,7 @@ namespace Meter
         private void OpenMonthMethod(string thisYear, string thisMonth, string selectedYear, string selectedMonth, string file)
         {
             StopAll();
-            string sourceFolder = dir + @"\TEMP";
+            string sourceFolder = MeterSettings.DBDir + @"\TEMP";
             if (Directory.Exists(sourceFolder))
             {
                 Directory.Delete(sourceFolder, true);
@@ -416,7 +294,7 @@ namespace Meter
             xlApp = null;
             xlApp = new Excel.ApplicationClass();
             xlApp.Visible = false;
-            wb = xlApp.Workbooks.Open(file);
+            wb = xlApp.Workbooks.Open(MeterSettings.MeterFile);
             wb.Activate();
             xlApp.Visible = false;
             foreach (Excel.Worksheet ws in wb.Worksheets)
@@ -783,7 +661,7 @@ namespace Meter
         private void ArhivateNew(string year, string month, bool withoutSave = false)
         {
             if (withoutSave == false) SaveWB();
-            string sourceFolder = dir + @"\current";
+            string sourceFolder = MeterSettings.DBDir + @"\current";
             string tempDirectory = Path.Combine(Path.GetTempPath(), DateTime.Today.ToString("MMMM", GlobalMethods.culture));
             Directory.CreateDirectory(tempDirectory);
             foreach (string dirPath in Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories))
@@ -803,7 +681,7 @@ namespace Meter
                 }
                 File.Copy(filePath, newFilePath, true);
             }
-            string archPath = dir + @"\arch";
+            string archPath = MeterSettings.DBDir + @"\arch";
             if (!Directory.Exists(archPath))
             {
                 Directory.CreateDirectory(archPath);
@@ -830,10 +708,10 @@ namespace Meter
             thisYear = menu.lblYear.Text;
             selectedMonth = DateTime.Today.ToString("MMMM", GlobalMethods.culture);
             selectedYear = DateTime.Today.ToString("yyyy");
-            file = dir + @"\arch\" + selectedYear + @"\" + selectedMonth + @".zip";
+            file = MeterSettings.DBDir + @"\arch\" + selectedYear + @"\" + selectedMonth + @".zip";
 
             SaveWB();
-            string sourceFolder = dir + @"\current";
+            string sourceFolder = MeterSettings.DBDir + @"\current";
             string tempDirectory = Path.Combine(Path.GetTempPath(), GlobalMethods.username + " " + DateTime.Today.ToString("MMMM", GlobalMethods.culture));
             Directory.CreateDirectory(tempDirectory);
             foreach (string dirPath in Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories))
@@ -849,7 +727,7 @@ namespace Meter
                 }
                 File.Copy(filePath, newFilePath, true);
             }
-            string archPath = dir + @"\temparch";
+            string archPath = MeterSettings.DBDir + @"\temparch";
             if (!Directory.Exists(archPath))
             {
                 Directory.CreateDirectory(archPath);
@@ -887,9 +765,9 @@ namespace Meter
             thisYear = menu.lblYear.Text;
             selectedMonth = DateTime.Today.ToString("MMMM", GlobalMethods.culture);
             selectedYear = DateTime.Today.ToString("yyyy");
-            file = dir + @"\arch\" + selectedYear + @"\" + selectedMonth + @".zip";
+            file = MeterSettings.DBDir + @"\arch\" + selectedYear + @"\" + selectedMonth + @".zip";
 
-            string sourceFolder = dir + @"\current";
+            string sourceFolder = MeterSettings.DBDir + @"\current";
             string tempDirectory = Path.Combine(Path.GetTempPath(), GlobalMethods.username + " " + DateTime.Today.ToString("MMMM", GlobalMethods.culture));
             Directory.CreateDirectory(tempDirectory);
             foreach (string dirPath in Directory.GetDirectories(sourceFolder, "*", SearchOption.AllDirectories))
@@ -905,7 +783,7 @@ namespace Meter
                 }
                 File.Copy(filePath, newFilePath, true);
             }
-            string archPath = dir + @"\temparch";
+            string archPath = MeterSettings.DBDir + @"\temparch";
             if (!Directory.Exists(archPath))
             {
                 Directory.CreateDirectory(archPath);

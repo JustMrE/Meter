@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using Meter.Forms;
 
 namespace Meter
 {
@@ -7,24 +8,29 @@ namespace Meter
         /// <summary>
         ///  The main entry point for the application.
         /// </summary>
-        [STAThread]
+        /*[STAThread]
         static void Main()
         {
+            string? dir = null;
+            string? db = null;
+            bool pathExists = false;
+
+            string openedFlagFile;
+            string logFile;
+            string errLogFile;
+            string username;
+
+            string dbPathInfoFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\db.txt";
             //// To customize application configuration such as set high DPI settings or default font,
             //// see https://aka.ms/applicationconfiguration.
             ////ApplicationConfiguration.Initialize();
             ////Application.Run(new Menu());
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
-            string? dir = null;
-            string? db = null;
-            bool pathExists = false;
-
-            string f = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\db.txt";
-            if (File.Exists(f))
+            
+            if (File.Exists(dbPathInfoFile))
             {
-                dir = File.ReadAllText(f);
+                dir = File.ReadAllText(dbPathInfoFile);
                 if (Directory.Exists(dir))
                 {
                     db = dir;
@@ -50,16 +56,11 @@ namespace Meter
                 {
                     return;
                 }
-
                 dir = selectionPath;
                 db = null;
-
-                // MessageBox.Show(dir);
-
                 if (!string.IsNullOrEmpty(dir))
                 {
                     db = Path.GetDirectoryName(dir) + @"\DB";
-                    // MessageBox.Show(db);
                     if (!Directory.Exists(db))
                     {
                         MessageBox.Show("База данных не найдена!");
@@ -75,14 +76,15 @@ namespace Meter
                 }
             }
 
-            string file1 = db + @"\opened.txt";
-            string logFile = db + @"\current\log.log";
-            string errLogFile = db + @"\current\errlog.log";
-            string username = Environment.UserName;
+            openedFlagFile = db + @"\opened.txt";
+            logFile = db + @"\current\log.log";
+            errLogFile = db + @"\current\errlog.log";
+            username = Environment.UserName;
+
             #if !DEBUG
-            if (File.Exists(file1))
+            if (File.Exists(openedFlagFile))
             {
-                string newUserName = File.ReadAllText(file1);
+                string newUserName = File.ReadAllText(openedFlagFile);
                 if (!string.IsNullOrEmpty(newUserName))
                 {
                     MessageBox.Show("Счетчики уже открыты пользователем " + newUserName);
@@ -96,10 +98,10 @@ namespace Meter
             GlobalMethods.errLogFile = errLogFile;
 
             #if !DEBUG
-            using (StreamWriter writer = File.CreateText(file1))
+            using (StreamWriter writer = File.CreateText(openedFlagFile))
             {
                 writer.Write(username);
-                File.SetAttributes(file1, File.GetAttributes(file1) | FileAttributes.Hidden);
+                File.SetAttributes(openedFlagFile, File.GetAttributes(openedFlagFile) | FileAttributes.Hidden);
             }
             #endif
 
@@ -121,8 +123,64 @@ namespace Meter
             Application.Run(myAppContext);
 
             #if !DEBUG
-            File.Delete(file1);
+            File.Delete(openedFlagFile);
             #endif
-        }    
+        }*/
+
+        [STAThread]
+        static void Main()
+        {
+            GlobalMethods.username = Environment.UserName;
+            string openedFlagFile = string.Empty;
+
+            //// To customize application configuration such as set high DPI settings or default font,
+            //// see https://aka.ms/applicationconfiguration.
+            ////ApplicationConfiguration.Initialize();
+            ////Application.Run(new Menu());
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            
+            MeterSettings.settingsFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\settings";
+            if (!MeterSettings.Load()) return;
+
+            openedFlagFile = MeterSettings.DBDir + @"\opened";
+            #if !DEBUG
+            if (File.Exists(openedFlagFile))
+            {
+                string newUserName = File.ReadAllText(openedFlagFile);
+                if (!string.IsNullOrEmpty(newUserName))
+                {
+                    MessageBox.Show("Счетчики уже открыты пользователем " + newUserName);
+                    return;
+                }
+            }
+            using (StreamWriter writer = File.CreateText(openedFlagFile))
+            {
+                writer.Write(GlobalMethods.username);
+                File.SetAttributes(openedFlagFile, File.GetAttributes(openedFlagFile) | FileAttributes.Hidden);
+            }
+            #endif
+
+            using (StreamWriter writer = new (MeterSettings.LogFile, true)) 
+            {
+                writer.WriteLine();
+                writer.WriteLine();
+                writer.WriteLine(DateTime.Now +  " Счетчики открыты пользователем " + GlobalMethods.username);
+            }
+            using (StreamWriter writer = new (MeterSettings.ErrLogFile, true)) 
+            {
+                writer.WriteLine();
+                writer.WriteLine();
+                writer.WriteLine(DateTime.Now +  " Счетчики открыты пользователем " + GlobalMethods.username);
+            }
+
+
+            MyApplicationContext myAppContext = new ();
+            Application.Run(myAppContext);
+
+            #if !DEBUG
+            File.Delete(openedFlagFile);
+            #endif
+        }
     }
 }

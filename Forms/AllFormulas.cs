@@ -140,9 +140,9 @@ namespace Meter.Forms
                 DialogResult ans = MessageBox.Show("Ошибка! Отсутствует формула или субъект!\nУдалить эту формулу?","", MessageBoxButtons.YesNo);
                 if (ans == DialogResult.Yes)
                 {
-                    if (File.Exists(Main.dir + @"\current\formulas\" + item.Text + ".json"))
+                    if (File.Exists(MeterSettings.DBDir + @"\current\formulas\" + item.Text + ".json"))
                     {
-                        Main.filesToDelete.Add(Main.dir + @"\current\formulas\" + item.Text + ".json");
+                        Main.filesToDelete.Add(MeterSettings.DBDir + @"\current\formulas\" + item.Text + ".json");
                         listView0.Items.Remove(item);
                         list.Remove(item);
                         Main.instance.formulas.formulas.Remove(item.Text);

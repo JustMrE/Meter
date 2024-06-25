@@ -57,7 +57,7 @@ namespace Meter.Forms
         private void Check()
         {
             archMap.Clear();
-            archPath = Main.dir + @"\arch";
+            archPath = MeterSettings.DBDir + @"\arch";
             if (!Directory.Exists(archPath))
             {
                 DisableAll();

@@ -4,6 +4,7 @@ using Microsoft.Office.Interop.Excel;
 using Newtonsoft.Json;
 using Excel = Microsoft.Office.Interop.Excel;
 using Main = Meter.MyApplicationContext;
+using Meter.Forms;
 
 namespace Meter
 {
@@ -336,7 +337,7 @@ namespace Meter
         }
         public static void WriteMeters1(DateTime date)
         {
-            string dict = Main.dir + @"\current\Словарь ТИ факт.xlsx";
+            string dict = MeterSettings.DBDir + @"\current\Словарь ТИ факт.xlsx";
             string path;
             string archPath = "";
             if (false)

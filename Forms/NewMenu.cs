@@ -281,7 +281,7 @@ namespace Meter.Forms
                 txtForCDU += item + "\t" + Math.Round((double)dict[item], 3) + "\n";
             }
             
-            using (StreamWriter sw = new StreamWriter(Main.dir + "\\Рапорт.txt"))
+            using (StreamWriter sw = new StreamWriter(MeterSettings.DBDir + "\\Рапорт.txt"))
             {
                 sw.Write(txtForCDU);
             }
