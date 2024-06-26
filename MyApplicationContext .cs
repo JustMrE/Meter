@@ -47,24 +47,12 @@ namespace Meter
         public RangeReferences references;
         public HeadReferences heads;
         public Formula formulas;
-        // public static bool dontsave;
-        // public static string dir;
-        // string file;
         public static List<int> menuIndexes = new ();
         bool restarted;
         public static bool loading = false;
         private static object[,] oldValsArray;
         private static string oldVal;
         FileWatcher fileWatcher;
-
-        #region oldPipes
-        // public static bool PipeServerActive = true;
-        // Thread meterServer;
-        // Thread meterServerWriter;
-        // private int batchSize = 0; // Переменная для хранения размера пачки
-        // static ConcurrentQueue<string> serverMessagesQueue;
-        // private static ManualResetEventSlim waitHandle = new ();
-        #endregion
 
         #region Excel events
             public Excel.WorkbookEvents_BeforeCloseEventHandler Event_BeforeClose;
@@ -87,18 +75,10 @@ namespace Meter
             if (System.Windows.Forms.Application.OpenForms.Count == 0)
             {
                 fileWatcher.Stop();
-                #region oldPipes
-                // GlobalMethods.ToLog("Остановка сервера Meter...");
-                // StopNamedPipe();
-                // meterServer.Join();
-                // meterServerWriter.Join();
-                // GlobalMethods.ToLog("Cервер Meter остановлен");
-                #endregion
-
                 var tasks = new List<Task>();
 
                 GlobalMethods.ToLog("Инициализация закрытия книги...");
-                if (MeterSettings.Instance.CloseAutoSave == false)
+                if (MeterSettings.Instance.CloseAutoSave == true)
                 {
                     SaveBeforeClose();
                     if (filesToDelete.Count != 0)
@@ -343,14 +323,6 @@ namespace Meter
             foreach (NewMenuBase form in menues)
             {
                 form.FormClosed += onFormClosed;
-                // form.Disposed += (object sender, EventArgs e) => 
-                // {
-                //     if (menues.Contains(form))
-                //     {
-                //         menues.Remove(form);
-                //     }
-                //     onFormClosed(sender, e);
-                // };
             }
             menu = menues[0] as NewMenuBase;
             menu.Show();
@@ -449,19 +421,6 @@ namespace Meter
             wb.Save();
             SaveLoader.SaveAsync();
             xlApp.EnableEvents = true;
-        }
-
-        void Worksheet_KeyDown(Excel.Range target, Excel.Application application, System.Windows.Forms.Keys keycode, ref bool shift)
-        {
-            if (shift && keycode == System.Windows.Forms.Keys.V)
-            {
-                // Отключаем стандартное поведение вставки (Ctrl+V)
-                application.CutCopyMode = 0;
-                MessageBox.Show("Paste command");
-                // Выполняем вашу специальную логику вставки
-                // Например, вызываем ваш метод для вставки данных
-                // YourCustomPasteLogic();
-            }
         }
         public void Application_BeforeClose(ref bool cancel)
         {

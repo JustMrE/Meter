@@ -161,6 +161,7 @@
             textBox1.TextChanged += TextBox1_TextChanged;
             textBox1.LostFocus += TextBox1_LostFocus;
             textBox1.KeyPress += TextBox1_KeyPress;
+            textBox1.KeyUp += TextBox1_KeyUp;
             // 
             // RepairMenu
             // 

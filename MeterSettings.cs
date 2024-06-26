@@ -28,7 +28,7 @@ namespace Meter.Forms
             MeterFile = string.Empty;
             LogFile = string.Empty;
             ErrLogFile = string.Empty;
-            CloseAutoSave = false;
+            CloseAutoSave = true;
         }
 
         public bool Load()
@@ -53,64 +53,6 @@ namespace Meter.Forms
                 return false;
             }
             return true;
-            /*if (File.Exists(SettingsFile))
-            {
-                try
-                {
-                    var jsonString = File.ReadAllText(SettingsFile);
-                    var loadedSettings = JsonConvert.DeserializeObject<MeterSettings>(jsonString);
-
-                    // Обновление текущего экземпляра свойствами из десериализованного объекта
-                    if (loadedSettings != null)
-                    {
-                        CopyPropertiesFrom(loadedSettings);
-                    }
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    //Console.WriteLine($"Error loading settings: {ex.Message}");
-                    return false;
-                }
-            }
-            else
-            {
-                string pathToMeter;
-                OpenFileDialog folderBrowserDialog = new()
-                {
-                    Title = "Выберите запускаемый файл счетчиков (Meter.exe)"
-                };
-                if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
-                {
-                    pathToMeter = folderBrowserDialog.FileName;
-                }
-                else
-                {
-                    return false;
-                }
-                DBDir = pathToMeter;
-                if (!string.IsNullOrEmpty(DBDir))
-                {
-                    DBDir = Path.GetDirectoryName(DBDir) + @"\DB";
-                    if (!Directory.Exists(DBDir))
-                    {
-                        MessageBox.Show("База данных не найдена!");
-                        return false;
-                    }
-                    else
-                    {
-                        MeterFile = DBDir + @"\current\meter.xlsx";
-                        LogFile = DBDir + @"\current\log.log";
-                        ErrLogFile = DBDir + @"\current\errlog.log";
-                        CloseAutoSave = false;
-
-                        Save();
-                        return true;
-                    }
-                }
-                //Console.WriteLine("Settings file not found.");
-                return false;
-            }*/
         }
         
         public void Save()

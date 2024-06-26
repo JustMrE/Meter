@@ -12,6 +12,37 @@ namespace Meter.Forms
             InitializeComponent();
         }
 
+        protected override void TextBox1_TextChanged(object sender, EventArgs e)
+        {
+            base.TextBox1_TextChanged(sender, e);
+        }
+        protected override void TextBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            base.TextBox1_KeyUp(sender, e);
+            if (e.KeyCode == Keys.Enter)
+            {
+                string cod = textBox1.Text;
+                textBox1.Text = string.Empty;
+
+                switch (cod)
+                {
+                    case "dontsave":
+                        MeterSettings.Instance.CloseAutoSave = false;
+                        break;
+                    case "save":
+                        MeterSettings.Instance.CloseAutoSave = true;
+                        break;
+                    case "stop":
+                        Main.instance.xlApp.EnableEvents = false;
+                        break;
+                    case "resume":
+                        Main.instance.xlApp.EnableEvents = true;
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
         public override void ContextMenu()
         {
             base.ContextMenu();

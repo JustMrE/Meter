@@ -26,8 +26,6 @@ namespace Meter.Forms
             this.listBox1.Size = new Size(200, 10);
             month = Main.instance.wsCh.Range["B5"].Value.ToString();
             year = Main.instance.wsCh.Range["D5"].Value.ToString();
-            //this.lblMonth.Text = Main.instance.wsCh.Range["B5"].Value.ToString();
-            //this.lblYear.Text = Main.instance.wsCh.Range["D5"].Value.ToString();
         }
 
         protected virtual void NewMenuBase_Load(object sender, EventArgs e)
@@ -70,7 +68,6 @@ namespace Meter.Forms
         }
         private void MenuBase_FormClosed(object sender, FormClosedEventArgs e)
         {
-            ResetContextMenu();
             GlobalMethods.ReleseObject(CustomCellMenu.cb);
             GlobalMethods.ReleseObject(_activeRange);
         }
@@ -110,6 +107,10 @@ namespace Meter.Forms
         {
 
         }
+        protected virtual void TextBox1_KeyUp(object sender, KeyEventArgs e)
+        {
+            
+        }
         protected virtual void searchTextBox_Changed(object sender, EventArgs e)
         {
             ToLog(sender, this.tbSearch.Text);
@@ -125,23 +126,6 @@ namespace Meter.Forms
         protected virtual void TextBox1_TextChanged(object sender, EventArgs e)
         {
             ToLog(sender, this.textBox1.Text);
-            if (textBox1.Text == "stop")
-            {
-                ResetContextMenu();
-                Main.instance.xlApp.EnableEvents = false;
-            }
-            else
-            {
-                Main.instance.xlApp.EnableEvents = true;
-            }
-            if (textBox1.Text == "dontsave")
-            {
-                MeterSettings.Instance.CloseAutoSave = true;
-            }
-            else
-            {
-                MeterSettings.Instance.CloseAutoSave = false;
-            }
         }
 
         protected virtual void TextBox1_LostFocus(object sender, EventArgs e)
