@@ -150,82 +150,86 @@ namespace Meter
             }, 118);
             AddButtonToCommandBar("Переместить субъект", "Переместить субъект", () =>
             {
-                // Thread t = new Thread(() =>
-                // {
-                //     TransferSubject form = new TransferSubject();
-                //     form.FormClosed += (s, args) =>
-                //     {
-                //         System.Windows.Forms.Application.ExitThread();
-                //     };
-                //     form.Show();
-                //     System.Windows.Forms.Application.Run();
-                // });
-                // t.SetApartmentState(ApartmentState.STA);
-                // t.Start();
-                using (TransferSubject form = new TransferSubject())
+                if (Main.instance.menu != null && Main.instance.menu.InvokeRequired)
                 {
-                    form.ShowDialog();
+                    Main.instance.menu.Invoke(new Action(() =>
+                    {
+                        using (TransferSubject form = new ())
+                        {
+                            form.ShowDialog();
+                        }
+                    }));
                 }
-            });
-            AddButtonToCommandBar("Переименовать", "Переименовать", () =>
-            {
-                // Thread t = new Thread(() =>
-                // {
-                //     Rename form = new (RangeReferences.activeTable);
-                //     form.FormClosed += (s, args) =>
-                //     {
-                //         System.Windows.Forms.Application.ExitThread();
-                //     };
-                //     form.Show();
-                //     System.Windows.Forms.Application.Run();
-                // });
-                // t.SetApartmentState(ApartmentState.STA);
-                // t.Start();
-                using (Rename form = new Rename(RangeReferences.activeTable))
+                else
                 {
-                    form.ShowDialog();
-                }
-            }, 7677);
-            AddButtonToCommandBar("Переименовать", "Переименовать head", () =>
-            {
-                // HeadObject ho = Main.instance.heads.HeadByRange(NewMenuBase._activeRange);
-                // Thread t = new Thread(() =>
-                // {
-                //     Rename form = new (ho);
-                //     form.FormClosed += (s, args) =>
-                //     {
-                //         System.Windows.Forms.Application.ExitThread();
-                //     };
-                //     form.Show();
-                //     System.Windows.Forms.Application.Run();
-                // });
-                // t.SetApartmentState(ApartmentState.STA);
-                // t.Start();
-                HeadObject ho = Main.instance.heads.HeadByRange(NewMenuBase._activeRange);
-                if (ho != null)
-                {
-                    using (Rename form = new Rename(ho))
+                    using (TransferSubject form = new ())
                     {
                         form.ShowDialog();
                     }
                 }
+                // using (TransferSubject form = new TransferSubject())
+                // {
+                //     form.ShowDialog();
+                // }
+            });
+            AddButtonToCommandBar("Переименовать", "Переименовать", () =>
+            {
+                if (Main.instance.menu != null && Main.instance.menu.InvokeRequired)
+                {
+                    Main.instance.menu.Invoke(new Action(() =>
+                    {
+                        using (Rename form = new (RangeReferences.activeTable))
+                        {
+                            form.Show();
+                        }
+                    }));
+                }
+                else
+                {
+                    using (Rename form = new (RangeReferences.activeTable))
+                    {
+                        form.Show();
+                    }
+                }
+
+                // using (Rename form = new Rename(RangeReferences.activeTable))
+                // {
+                //     form.ShowDialog();
+                // }
+            }, 7677);
+            AddButtonToCommandBar("Переименовать", "Переименовать head", () =>
+            {
+                HeadObject ho = Main.instance.heads.HeadByRange(NewMenuBase._activeRange);
+                if (Main.instance.menu != null && Main.instance.menu.InvokeRequired)
+                {
+                    Main.instance.menu.Invoke(new Action(() =>
+                    {
+                        using (Rename form = new (ho))
+                        {
+                            form.ShowDialog();
+                        }
+                    }));
+                }
+                else
+                {
+                    using (Rename form = new (ho))
+                    {
+                        form.ShowDialog();
+                    }
+                }
+
+                // HeadObject ho = Main.instance.heads.HeadByRange(NewMenuBase._activeRange);
+                // if (ho != null)
+                // {
+                //     using (Rename form = new Rename(ho))
+                //     {
+                //         form.ShowDialog();
+                //     }
+                // }
             }, 7677);
             
             AddButtonToCommandBar("Добавить в макетТЭП", "Добавить код для макетТЭП", () =>
             {
-                // ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
-                // Thread t = new Thread(() =>
-                // {
-                //     AddPlan form = new (co);
-                //     form.FormClosed += (s, args) =>
-                //     {
-                //         System.Windows.Forms.Application.ExitThread();
-                //     };
-                //     form.Show();
-                //     System.Windows.Forms.Application.Run();
-                // });
-                // t.SetApartmentState(ApartmentState.STA);
-                // t.Start();
                 ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
                 using (AddPlan form = new AddPlan(co))
                 {
@@ -234,24 +238,30 @@ namespace Meter
             });
             AddButtonToCommandBar("Изменить код макетТЭП", "Изменить код для макетТЭП", () =>
             {
-                // ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
-                // Thread t = new Thread(() =>
-                // {
-                //     AddPlan form = new (co);
-                //     form.FormClosed += (s, args) =>
-                //     {
-                //         System.Windows.Forms.Application.ExitThread();
-                //     };
-                //     form.Show();
-                //     System.Windows.Forms.Application.Run();
-                // });
-                // t.SetApartmentState(ApartmentState.STA);
-                // t.Start();
                 ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
-                using (AddPlan form = new AddPlan(co))
+                if (Main.instance.menu != null && Main.instance.menu.InvokeRequired)
                 {
-                    form.ShowDialog();
+                    Main.instance.menu.Invoke(new Action(() =>
+                    {
+                        using (AddPlan form = new AddPlan(co))
+                        {
+                            form.ShowDialog();
+                        }
+                    }));
                 }
+                else
+                {
+                    using (AddPlan form = new AddPlan(co))
+                    {
+                        form.ShowDialog();
+                    }
+                }
+
+                // ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
+                // using (AddPlan form = new AddPlan(co))
+                // {
+                //     form.ShowDialog();
+                // }
             });
             AddButtonToCommandBar("Удалить из макетТЭП", "Удалить код для макетТЭП", () =>
             {
@@ -259,45 +269,57 @@ namespace Meter
             });
             AddButtonToCommandBar("Добавить в ТЭП", "Добавить код для ТЭП", () =>
             {
-                // ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
-                // Thread t = new Thread(() =>
-                // {
-                //     AddTEP form = new (co);
-                //     form.FormClosed += (s, args) =>
-                //     {
-                //         System.Windows.Forms.Application.ExitThread();
-                //     };
-                //     form.Show();
-                //     System.Windows.Forms.Application.Run();
-                // });
-                // t.SetApartmentState(ApartmentState.STA);
-                // t.Start();
                 ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
-                using (AddTEP form = new AddTEP(co))
+                if (Main.instance.menu != null && Main.instance.menu.InvokeRequired)
                 {
-                    form.ShowDialog();
+                    Main.instance.menu.Invoke(new Action(() =>
+                    {
+                        using (AddTEP form = new AddTEP(co))
+                        {
+                            form.ShowDialog();
+                        }
+                    }));
                 }
+                else
+                {
+                    using (AddTEP form = new AddTEP(co))
+                    {
+                        form.ShowDialog();
+                    }
+                }
+
+                // ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
+                // using (AddTEP form = new AddTEP(co))
+                // {
+                //     form.ShowDialog();
+                // }
             });
             AddButtonToCommandBar("Изменить код ТЭП", "Изменить код для ТЭП", () =>
             {
-                // ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
-                // Thread t = new Thread(() =>
-                // {
-                //     AddTEP form = new (co);
-                //     form.FormClosed += (s, args) =>
-                //     {
-                //         System.Windows.Forms.Application.ExitThread();
-                //     };
-                //     form.Show();
-                //     System.Windows.Forms.Application.Run();
-                // });
-                // t.SetApartmentState(ApartmentState.STA);
-                // t.Start();
                 ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
-                using (AddTEP form = new AddTEP(co))
+                if (Main.instance.menu != null && Main.instance.menu.InvokeRequired)
                 {
-                    form.ShowDialog();
+                    Main.instance.menu.Invoke(new Action(() =>
+                    {
+                        using (AddTEP form = new AddTEP(co))
+                        {
+                            form.ShowDialog();
+                        }
+                    }));
                 }
+                else
+                {
+                    using (AddTEP form = new AddTEP(co))
+                    {
+                        form.ShowDialog();
+                    }
+                }
+
+                // ChildObject co = RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1];
+                // using (AddTEP form = new AddTEP(co))
+                // {
+                //     form.ShowDialog();
+                // }
             });
             AddButtonToCommandBar("Удалить из ТЭП", "Удалить код для ТЭП", () =>
             {
@@ -337,7 +359,7 @@ namespace Meter
                 if (p.accChildCount == 0) p.Visible = false;
             });
             AddButtonToCommandBar("Выбрать из EMCOS", "Выбрать из EMCOS", Main.instance.menu.EmcosSelect);
-            AddButtonToCommandBar("Записать из EMCOS (Все дни)", "Записать из EMCOS (Все дни)", () =>
+            AddButtonToCommandBar("Записать из EMCOS (Все дни)", "Записать данные из EMCOS (Все дни)", () =>
             {
                 CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");
                 string format = "dd MMMM yyyy";
@@ -346,7 +368,7 @@ namespace Meter
                 DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
                 Main.instance.menu.EmcosWrite(result, DateTime.Today.AddDays(-1), RangeReferences.activeTable);
             });
-            AddButtonToCommandBar("Очистить из EMCOS (Все дни)", "Очистить из EMCOS (Все дни)", () =>
+            AddButtonToCommandBar("Очистить из EMCOS (Все дни)", "Очистить данные из EMCOS (Все дни)", () =>
             {
                 CultureInfo provider = CultureInfo.CreateSpecificCulture("ru-RU");
                 string format = "dd MMMM yyyy";
@@ -411,7 +433,7 @@ namespace Meter
                     }
                 }
                 if (p.accChildCount == 0) p.Visible = false;
-            });//RemoveOld();
+            });
             AddPopupToCommandBar("Показать", "Показать", (p) => 
             {
                 ClearPopupMenu(p);
@@ -423,7 +445,7 @@ namespace Meter
                     }
                 }
                 if (p.accChildCount == 0) p.Visible = false;
-            });//ShowTypeMenu();
+            });
             AddButtonToCommandBar("Скрыть", "Скрыть", Main.instance.menu.HideType);
             AddPopupToCommandBar("Изменить", "Изменить main", (p) => 
             {
@@ -436,7 +458,7 @@ namespace Meter
                     }
                 }
                 if (p.accChildCount == 0) p.Visible = false;
-            });//ChangeTypeMenuMain();
+            });
             AddPopupToCommandBar("Изменить", "Изменить mainSubtitle", (p) => 
             {
                 ClearPopupMenu(p);
@@ -448,7 +470,7 @@ namespace Meter
                     }
                 }
                 if (p.accChildCount == 0) p.Visible = false;
-            });//ChangeTypeCellMenuMain();
+            });
             AddPopupToCommandBar("Изменить", "Изменить extra", (p) => 
             {
                 ClearPopupMenu(p);
@@ -460,63 +482,81 @@ namespace Meter
                     }
                 }
                 if (p.accChildCount == 0) p.Visible = false;
-            });//ChangeTypeMenuExtra();
+            });
             AddButtonToCommandBar("Ввести корректировку", "Ввести корректировку", () =>
             {
-                // Thread t = new Thread(() =>
-                // {
-                //     Correct form = new (RangeReferences.activeTable);
-                //     form.FormClosed += (s, args) =>
-                //     {
-                //         System.Windows.Forms.Application.ExitThread();
-                //     };
-                //     form.Show();
-                //     System.Windows.Forms.Application.Run();
-                // });
-                // t.SetApartmentState(ApartmentState.STA);
-                // t.Start();
-                using (Correct form = new Correct(RangeReferences.activeTable))
+                if (Main.instance.menu != null && Main.instance.menu.InvokeRequired)
                 {
-                    form.ShowDialog();
+                    Main.instance.menu.Invoke(new Action(() =>
+                    {
+                        using (Correct form = new Correct(RangeReferences.activeTable))
+                        {
+                            form.ShowDialog();
+                        }
+                    }));
                 }
+                else
+                {
+                    using (Correct form = new Correct(RangeReferences.activeTable))
+                    {
+                        form.ShowDialog();
+                    }
+                }
+
+                // using (Correct form = new Correct(RangeReferences.activeTable))
+                // {
+                //     form.ShowDialog();
+                // }
             }, 387);
             AddButtonToCommandBar("Добавить план", "Добавить план", () =>
             {
-                // Thread t = new Thread(() =>
-                // {
-                //     AddPlan form = new (RangeReferences.activeTable);
-                //     form.FormClosed += (s, args) =>
-                //     {
-                //         System.Windows.Forms.Application.ExitThread();
-                //     };
-                //     form.Show();
-                //     System.Windows.Forms.Application.Run();
-                // });
-                // t.SetApartmentState(ApartmentState.STA);
-                // t.Start();
-                using (AddPlan form = new AddPlan(RangeReferences.activeTable))
+                if (Main.instance.menu != null && Main.instance.menu.InvokeRequired)
                 {
-                    form.ShowDialog();
+                    Main.instance.menu.Invoke(new Action(() =>
+                    {
+                        using (AddPlan form = new AddPlan(RangeReferences.activeTable))
+                        {
+                            form.ShowDialog();
+                        }
+                    }));
                 }
+                else
+                {
+                    using (AddPlan form = new AddPlan(RangeReferences.activeTable))
+                    {
+                        form.ShowDialog();
+                    }
+                }
+
+                // using (AddPlan form = new AddPlan(RangeReferences.activeTable))
+                // {
+                //     form.ShowDialog();
+                // }
             }, 213);
             AddButtonToCommandBar("Изменить код плана", "Изменить код плана", () =>
             {
-                // Thread t = new Thread(() =>
-                // {
-                //     AddPlan form = new (RangeReferences.activeTable);
-                //     form.FormClosed += (s, args) =>
-                //     {
-                //         System.Windows.Forms.Application.ExitThread();
-                //     };
-                //     form.Show();
-                //     System.Windows.Forms.Application.Run();
-                // });
-                // t.SetApartmentState(ApartmentState.STA);
-                // t.Start();
-                using (AddPlan form = new AddPlan(RangeReferences.activeTable))
+                if (Main.instance.menu != null && Main.instance.menu.InvokeRequired)
                 {
-                    form.ShowDialog();
+                    Main.instance.menu.Invoke(new Action(() =>
+                    {
+                        using (AddPlan form = new AddPlan(RangeReferences.activeTable))
+                        {
+                            form.ShowDialog();
+                        }
+                    }));
                 }
+                else
+                {
+                    using (AddPlan form = new AddPlan(RangeReferences.activeTable))
+                    {
+                        form.ShowDialog();
+                    }
+                }
+
+                // using (AddPlan form = new AddPlan(RangeReferences.activeTable))
+                // {
+                //     form.ShowDialog();
+                // }
             }, 712);
             AddButtonToCommandBar("Удалить план", "Удалить план", () =>
             {
@@ -525,63 +565,86 @@ namespace Meter
             }, 214);
             AddButtonToCommandBar("Изменить формулу", "Изменить формулу", () =>
             {
-                Main.instance.menu.OpenForm();
+                Main.instance.menu.Invoke(new Action(() => 
+                {
+                    FormulaEditor form = new FormulaEditor(ref RangeReferences.activeTable, RangeReferences.ActiveL1);
+                    form.Show();
+                }));
+                // Thread t = new Thread(() =>
+                // {
+                //     using (FormulaEditor form = new FormulaEditor(ref RangeReferences.activeTable, RangeReferences.ActiveL1))
+                //     {
+                //         form.FormClosed += (s, args) => 
+                //         { 
+                //             Application.ExitThread(); 
+                //         };
+                //         form.Show();
+                //         Application.Run();
+                //     }
+                // });
+                // t.SetApartmentState(ApartmentState.STA);
+                // t.Start();
             }, 385);
             AddButtonToCommandBar("Зависимые формулы", "Зависимые формулы", () =>
             {
-                Thread t = new Thread(() =>
+                Main.instance.menu.Invoke(new Action(() => 
                 {
                     AllFormulas form = new AllFormulas(RangeReferences.activeTable, RangeReferences.ActiveL1);
-                    form.FormClosed += (s, args) =>
-                    {
-                        System.Windows.Forms.Application.ExitThread();
-                    };
                     form.Show();
-                    System.Windows.Forms.Application.Run();
-                });
-                t.SetApartmentState(ApartmentState.STA);
-                t.Start();
+                }));
             });
             AddButtonToCommandBar("Добавить по показаниям счетчика", "Добавить по показаниям счетчика", () => {
                 RangeReferences.activeTable.AddMeter(RangeReferences.ActiveL1);
             }, 33);
             AddButtonToCommandBar("Ввести показания счетчика", "Ввести показания счетчика", () =>
             {
-                // Thread t = new Thread(() =>
-                // {
-                //     SCH form = new (RangeReferences.activeTable);
-                //     form.FormClosed += (s, args) =>
-                //     {
-                //         System.Windows.Forms.Application.ExitThread();
-                //     };
-                //     form.Show();
-                //     System.Windows.Forms.Application.Run();
-                // });
-                // t.SetApartmentState(ApartmentState.STA);
-                // t.Start();
-                using (SCH form = new SCH(RangeReferences.activeTable))
+                if (Main.instance.menu != null && Main.instance.menu.InvokeRequired)
                 {
-                    form.ShowDialog();
+                    Main.instance.menu.Invoke(new Action(() =>
+                    {
+                        using (SCH form = new SCH(RangeReferences.activeTable))
+                        {
+                            form.ShowDialog();
+                        }
+                    }));
                 }
+                else
+                {
+                    using (SCH form = new SCH(RangeReferences.activeTable))
+                    {
+                        form.ShowDialog();
+                    }
+                }
+
+                // using (SCH form = new SCH(RangeReferences.activeTable))
+                // {
+                //     form.ShowDialog();
+                // }
             }, 205);
             AddButtonToCommandBar("Изменить коэффициент счетчика", "Изменить коэффициент счетчика", () =>
             {
-                // Thread t = new Thread(() =>
-                // {
-                //     ChangeCoef form = new (RangeReferences.activeTable);
-                //     form.FormClosed += (s, args) =>
-                //     {
-                //         System.Windows.Forms.Application.ExitThread();
-                //     };
-                //     form.Show();
-                //     System.Windows.Forms.Application.Run();
-                // });
-                // t.SetApartmentState(ApartmentState.STA);
-                // t.Start();
-                using (ChangeCoef form = new ChangeCoef(RangeReferences.activeTable))
+                if (Main.instance.menu != null && Main.instance.menu.InvokeRequired)
                 {
-                    form.ShowDialog();
+                    Main.instance.menu.Invoke(new Action(() =>
+                    {
+                        using (ChangeCoef form = new ChangeCoef(RangeReferences.activeTable))
+                        {
+                            form.ShowDialog();
+                        }
+                    }));
                 }
+                else
+                {
+                    using (ChangeCoef form = new ChangeCoef(RangeReferences.activeTable))
+                    {
+                        form.ShowDialog();
+                    }
+                }
+
+                // using (ChangeCoef form = new ChangeCoef(RangeReferences.activeTable))
+                // {
+                //     form.ShowDialog();
+                // }
             }, 400);
             AddButtonToCommandBar("Удалить по показаниям счетчика", "Удалить по показаниям счетчика", () => {
                 RangeReferences.activeTable.RemoveMeter(RangeReferences.ActiveL1);
@@ -645,18 +708,25 @@ namespace Meter
             AddButtonToPopUpCommandBar(ref p, "UpdateAllLevels", Main.instance.references.UpdateAllLevels, true);
             AddButtonToPopUpCommandBar(ref p, "CheckAllRanges", Main.instance.references.CheckAllRanges);
             AddButtonToPopUpCommandBar(ref p, "ShowAllFormulas", () => {
-                Thread t = new Thread(() =>
+                Main.instance.menu.Invoke(new Action(() => 
                 {
                     AllFormulas form = new AllFormulas();
-                    form.FormClosed += (s, args) =>
-                    {
-                        System.Windows.Forms.Application.ExitThread();
-                    };
                     form.Show();
-                    System.Windows.Forms.Application.Run();
-                });
-                t.SetApartmentState(ApartmentState.STA);
-                t.Start();
+                }));
+                // Thread t = new Thread(() =>
+                // {
+                //     using (AllFormulas form = new AllFormulas())
+                //     {
+                //         form.FormClosed += (s, args) =>
+                //         {
+                //             Application.ExitThread();
+                //         };
+                //         form.Show();
+                //         Application.Run();
+                //     }
+                // });
+                // t.SetApartmentState(ApartmentState.STA);
+                // t.Start();
             });
             AddButtonToPopUpCommandBar(ref p, "CheckDublicate", () =>
             {

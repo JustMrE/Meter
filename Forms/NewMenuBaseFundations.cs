@@ -171,7 +171,7 @@ namespace Meter.Forms
         {
             // cb = Main.instance.xlApp.CommandBars[Main.menuIndexes[0]];
             selectedButtons.Clear();
-            RecreateCustomContextMenu();
+            // RecreateCustomContextMenu();
             ContextMenu();
         }
         public virtual void ContextMenu()
@@ -216,8 +216,8 @@ namespace Meter.Forms
                 }
                 if (RangeReferences.activeTable.DB.HasItem("аскуэ"))
                 {
-                    selectedButtons.Add("Записать из EMCOS");
-                    selectedButtons.Add("Очистить из EMCOS");
+                    selectedButtons.Add("Записать данные из EMCOS");
+                    selectedButtons.Add("Очистить данные из EMCOS");
                 }
                 
             }
@@ -632,21 +632,6 @@ namespace Meter.Forms
             MessageBox.Show("Done!");
             
         }
-        public void OpenForm()
-        {
-            Thread t = new Thread(() =>
-            {
-                FormulaEditor form = new FormulaEditor(ref RangeReferences.activeTable, RangeReferences.ActiveL1);
-                form.FormClosed += (s, args) => 
-                { 
-                    System.Windows.Forms.Application.ExitThread(); 
-                };
-                form.Show();
-                System.Windows.Forms.Application.Run();
-            });
-            t.SetApartmentState(ApartmentState.STA);
-            t.Start();
-        }
         public void MyContextMenu()
         {
             
@@ -667,6 +652,15 @@ namespace Meter.Forms
             {
                 item.Visible = false;
             }
+        }
+        public void Test()
+        {
+            Invoke(new MethodInvoker(() =>
+            {
+                // Создаем и открываем форму в потоке2
+                FormulaEditor form = new FormulaEditor(ref RangeReferences.activeTable, RangeReferences.ActiveL1);
+                form.Show();
+            }));
         }
     }
 }

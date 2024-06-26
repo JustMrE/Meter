@@ -19,6 +19,7 @@ namespace Meter.Forms
     public partial class NewMenuBase : MyFormBase
     {
         public static string? month = null, year = null;
+        public static Thread NonModalFormsThread;
 
         public NewMenuBase()
         {

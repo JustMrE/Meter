@@ -50,7 +50,12 @@ namespace Meter.Forms
                 dbFolder = folderDialog.SelectedPath;
                 string meterFile = dbFolder + @"\current\meter.xlsx";
                 string logFilePath = dbFolder + @"\current";
-                //if (!File.Exists(meterFile))
+
+                MeterSettings.Instance.DBDir = dbFolder;
+                MeterSettings.Instance.MeterFile = meterFile;
+                MeterSettings.Instance.LogFile = logFilePath + @"\log.log";
+                MeterSettings.Instance.ErrLogFile = logFilePath + @"\errlog.log";
+                
                 if (!MeterSettings.Instance.CheckDBFiles())
                 {
                     MessageBox.Show("Не найден Excel файл в папке БД, либо БД повреждена!\nБудет создан новый файл счетчиков\n(Скопируйте нужные не поврежденные данные перед продолжением!)","",MessageBoxButtons.OK,MessageBoxIcon.Warning);
@@ -70,10 +75,6 @@ namespace Meter.Forms
                     this.tbDB.Text = dbFolder;
                     this.tbMeter.Text = meterFile;
                     this.tbLogPath.Text = logFilePath;
-                    MeterSettings.Instance.DBDir = dbFolder;
-                    MeterSettings.Instance.MeterFile = meterFile;
-                    MeterSettings.Instance.LogFile = logFilePath + @"\log.log";
-                    MeterSettings.Instance.ErrLogFile = logFilePath + @"\errlog.log";
                 }
             }
         }
@@ -125,8 +126,8 @@ namespace Meter.Forms
             this.tbMeter.Text = meterFile;
             this.tbLogPath.Text = current;
 
-            this.gbMeter.Visible = true;
-            this.gbLogPath.Visible = true;
+            // this.gbMeter.Visible = true;
+            // this.gbLogPath.Visible = true;
         }
     }
 }
