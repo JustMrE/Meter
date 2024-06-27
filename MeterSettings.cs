@@ -28,7 +28,7 @@ namespace Meter.Forms
             MeterFile = string.Empty;
             LogFile = string.Empty;
             ErrLogFile = string.Empty;
-            CloseAutoSave = true;
+            CloseAutoSave = false;
         }
 
         public bool Load()

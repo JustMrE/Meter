@@ -18,6 +18,7 @@ namespace Meter
         public static Dictionary<string, int> CommandBarIndexes = new ();
         public static Dictionary<string, Action<CommandBarPopup>> CommandBarActions = new ();
         public static CommandBar cb;
+        public static HashSet<string> selectedButtons = new ();
         public static void CreateCustomContextMenu()
         {
             try
@@ -28,7 +29,7 @@ namespace Meter
                 // Создаем новое пользовательское меню
                 cb = Main.instance.xlApp.CommandBars.Add("CustomCellMenu", MsoBarPosition.msoBarPopup, false, true);
 
-                AddButtonsToMenu();
+                // AddButtonsToMenu();
                 //// Добавляем пункт в пользовательское меню
                 //var menuItem = (CommandBarButton)customContextMenu.Controls.Add(MsoControlType.msoControlButton, Type.Missing, Type.Missing, Type.Missing, true);
                 //menuItem.Caption = "My Custom Item";
@@ -44,12 +45,11 @@ namespace Meter
             }
         }
 
-        public static void RecreateCustomContextMenu()
+        public static void SetCustomContextMenuButtons()
         {
             DeleteButtonsFromMenu();
             AddButtonsToMenu();
         }
-
         static void DeleteButtonsFromMenu()
         {
             CommandBarIndexes.Clear();
@@ -768,12 +768,21 @@ namespace Meter
         }
 
         #region AddButtonToCommandBar
+        static bool Check(string strID)
+        {
+            if (selectedButtons.Contains(strID))
+            {
+                return true;
+            }
+            return false;
+        }
         private static void ContextMenuClickLog(string caption)
         {
             GlobalMethods.ToLog("Нажат пункт контекстного меню '" + caption + "'");
         }
-        public static void AddButtonToCommandBar(string caption, string strID, Action action, int? faceid = null, int type = 1, bool visible = false)
+        public static void AddButtonToCommandBar(string caption, string strID, Action action, int? faceid = null, int type = 1, bool visible = true)
         {
+            if (!Check(strID)) return;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
                 ContextMenuClickLog(caption);
@@ -786,8 +795,9 @@ namespace Meter
             if (faceid != null) b.FaceId = (int)faceid;
             b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
         }
-        public static void AddButtonToCommandBar(string caption, string strID, Action<string> action, string s1, int type = 1, bool visible = false)
+        public static void AddButtonToCommandBar(string caption, string strID, Action<string> action, string s1, int? faceid = null, int type = 1, bool visible = true)
         {
+            if (!Check(strID)) return;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
                 ContextMenuClickLog(caption);
@@ -799,8 +809,9 @@ namespace Meter
             CommandBarIndexes.Add(strID, b.Index);
             b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
         }
-        public static void AddButtonToCommandBar(string caption, string strID, Action<string, string> action, string s1, string s2, int type = 1, bool visible = false)
+        public static void AddButtonToCommandBar(string caption, string strID, Action<string, string> action, string s1, string s2, int? faceid = null, int type = 1, bool visible = true)
         {
+            if (!Check(strID)) return;
             CommandBarButtonClick newAction = (CommandBarButton commandBarButton, ref bool cancel) =>
             {
                 ContextMenuClickLog(caption);
@@ -812,22 +823,23 @@ namespace Meter
             CommandBarIndexes.Add(strID, b.Index);
             b.Click += new _CommandBarButtonEvents_ClickEventHandler(newAction);
         }
-        public static void AddPopupToCommandBar(string caption, string strID, int type = 10, bool visible = false)
+        public static void AddPopupToCommandBar(string caption, string strID, int type = 10, bool visible = true)
         {
+            if (!Check(strID)) return;
             CommandBarPopup p = (CommandBarPopup)cb.Controls.Add(Type: type, Temporary: true);
             p.Caption = caption;
             p.Visible = visible;
             CommandBarIndexes.Add(strID, p.Index);
         }
-        public static void AddPopupToCommandBar(string caption, string strID, Action<CommandBarPopup> action, int type = 10, bool visible = false)
+        public static void AddPopupToCommandBar(string caption, string strID, Action<CommandBarPopup> action, int type = 10, bool visible = true)
         {
+            if (!Check(strID)) return;
             CommandBarPopup p = (CommandBarPopup)cb.Controls.Add(Type: type, Temporary: true);
             p.Caption = caption;
             p.Visible = visible;
             CommandBarIndexes.Add(strID, p.Index);
             CommandBarActions.Add(strID, action);
         }
-
 
         public static void AddButtonToPopUpCommandBar(ref CommandBarPopup p, string caption, Action action, int type = 1)
         {

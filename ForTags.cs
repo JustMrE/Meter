@@ -11,5 +11,6 @@ namespace Meter
         public string text;
         public string ID { get; set; }
         public ButtonsType type { get; set; }
+
     }
 }

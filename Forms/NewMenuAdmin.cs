@@ -21,26 +21,9 @@ namespace Meter.Forms
             base.TextBox1_KeyUp(sender, e);
             if (e.KeyCode == Keys.Enter)
             {
-                string cod = textBox1.Text;
+                string cmd = textBox1.Text;
                 textBox1.Text = string.Empty;
-
-                switch (cod)
-                {
-                    case "dontsave":
-                        MeterSettings.Instance.CloseAutoSave = false;
-                        break;
-                    case "save":
-                        MeterSettings.Instance.CloseAutoSave = true;
-                        break;
-                    case "stop":
-                        Main.instance.xlApp.EnableEvents = false;
-                        break;
-                    case "resume":
-                        Main.instance.xlApp.EnableEvents = true;
-                        break;
-                    default:
-                        break;
-                }
+                AdminCommands.RunCommand(cmd);
             }
         }
         public override void ContextMenu()
@@ -48,8 +31,8 @@ namespace Meter.Forms
             base.ContextMenu();
             if (Main.instance.colors.subColors.ContainsValue(activeColor))
             {
-                selectedButtons.Add("Удалить head");
-                selectedButtons.Add("Переименовать head");
+                CustomCellMenu.selectedButtons.Add("Удалить head");
+                CustomCellMenu.selectedButtons.Add("Переименовать head");
             }
             if (Main.instance.colors.main.ContainsValue(activeColor) && Main.instance.colors.main["subject"] != activeColor)
             {
@@ -57,30 +40,30 @@ namespace Meter.Forms
                 {
                     if (RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codMaketTEP == null)
                     {
-                        selectedButtons.Add("Добавить код для макетТЭП");
+                        CustomCellMenu.selectedButtons.Add("Добавить код для макетТЭП");
                     }
                     else
                     {
-                        selectedButtons.Add("Изменить код для макетТЭП");
-                        selectedButtons.Add("Удалить код для макетТЭП");
+                        CustomCellMenu.selectedButtons.Add("Изменить код для макетТЭП");
+                        CustomCellMenu.selectedButtons.Add("Удалить код для макетТЭП");
                     }
 
                     if (RangeReferences.activeTable.PS.childs[RangeReferences.ActiveL1].codTEP == null)
                     {
-                        selectedButtons.Add("Добавить код для ТЭП");
+                        CustomCellMenu.selectedButtons.Add("Добавить код для ТЭП");
                     }
                     else
                     {
-                        selectedButtons.Add("Изменить код для ТЭП");
-                        selectedButtons.Add("Удалить код для ТЭП");
+                        CustomCellMenu.selectedButtons.Add("Изменить код для ТЭП");
+                        CustomCellMenu.selectedButtons.Add("Удалить код для ТЭП");
                     }
                     if (!RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].HasItem("счетчик"))
                     {
-                        selectedButtons.Add("Добавить по показаниям счетчика");
+                        CustomCellMenu.selectedButtons.Add("Добавить по показаниям счетчика");
                     }
                     else
                     {
-                        selectedButtons.Add("Удалить по показаниям счетчика");
+                        CustomCellMenu.selectedButtons.Add("Удалить по показаниям счетчика");
                     }
                 }
             
@@ -88,43 +71,43 @@ namespace Meter.Forms
             }
             if (Main.instance.colors.main["subject"] == activeColor)
             {
-                selectedButtons.Add("Переместить субъект");
-                selectedButtons.Add("GoTo DB");
-                selectedButtons.Add("Переименовать");
-                selectedButtons.Add("Добавить новый L1");
+                CustomCellMenu.selectedButtons.Add("Переместить субъект");
+                CustomCellMenu.selectedButtons.Add("GoTo DB");
+                CustomCellMenu.selectedButtons.Add("Переименовать");
+                CustomCellMenu.selectedButtons.Add("Добавить новый L1");
                 if (RangeReferences.activeTable.DB.HasItem("план"))
                 {
-                    selectedButtons.Add("Изменить код плана");
-                    selectedButtons.Add("Удалить план");
+                    CustomCellMenu.selectedButtons.Add("Изменить код плана");
+                    CustomCellMenu.selectedButtons.Add("Удалить план");
                 }
                 else
                 {
-                    selectedButtons.Add("Добавить план");
+                    CustomCellMenu.selectedButtons.Add("Добавить план");
                 }
-                selectedButtons.Add("Удалить субъект");
+                CustomCellMenu.selectedButtons.Add("Удалить субъект");
             }
             if (activeColor == Main.instance.colors.main["прием"] || activeColor == Main.instance.colors.main["отдача"] || activeColor == Main.instance.colors.main["сальдо"])
             {
-                selectedButtons.Add("Добавить новый L2");
-                selectedButtons.Add("Удалить");
+                CustomCellMenu.selectedButtons.Add("Добавить новый L2");
+                CustomCellMenu.selectedButtons.Add("Удалить");
                 if (RangeReferences.activeTable.PS.childs.Count > 1)
                 {
-                    selectedButtons.Add("Удалить тип");
+                    CustomCellMenu.selectedButtons.Add("Удалить тип");
                 }
             }
             if (Main.instance.colors.mainTitle.ContainsValue(activeColor) && RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].HasItem("аскуэ")) 
             {
                 if (RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].emcosID == null)
                 {
-                    selectedButtons.Add("Выбрать из EMCOS");
+                    CustomCellMenu.selectedButtons.Add("Выбрать из EMCOS");
                 }
                 else
                 {
-                    selectedButtons.Add("Изменить из EMCOS");
-                    selectedButtons.Add("Удалить из EMCOS");
+                    CustomCellMenu.selectedButtons.Add("Изменить из EMCOS");
+                    CustomCellMenu.selectedButtons.Add("Удалить из EMCOS");
                 }
             }
-            selectedButtons.Add("Special");
+            CustomCellMenu.selectedButtons.Add("Special");
         }
         public override void FormClose()
         {

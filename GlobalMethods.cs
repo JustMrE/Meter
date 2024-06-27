@@ -96,6 +96,16 @@ namespace Meter
                 }
             }
         }
+        public static void ToLogWarn(string msg)
+        {
+            lock (fileLock)
+            {
+                using (StreamWriter writer = new StreamWriter(MeterSettings.Instance.LogFile, true))
+                {
+                    writer.WriteLine(DateTime.Now + " " + username + " WARN " + " " + msg);
+                }
+            }
+        }
         public static void ToLog(object sender)
         {
             ToLog("Нажато " + ((Control)sender).Name);

@@ -45,8 +45,6 @@ namespace Meter.Forms
         public static Excel.Range _activeRange;
         public static bool restartFlag = false;
         public static HashSet<string> editedFormulas = new ();
-        public static HashSet<string> selectedButtons = new ();
-
         
         private void RegexSearch()
         {
@@ -166,97 +164,6 @@ namespace Meter.Forms
                 action();
             }
         }
-    
-        public virtual void PreContextMenu()
-        {
-            // cb = Main.instance.xlApp.CommandBars[Main.menuIndexes[0]];
-            selectedButtons.Clear();
-            // RecreateCustomContextMenu();
-            ContextMenu();
-        }
-        public virtual void ContextMenu()
-        {
-            GlobalMethods.ToLog("Открыто контекстное меню");
-            selectedButtons.Add("Копировать");
-            IDataObject clipboardData = null;
-            Invoke(new Action(() => clipboardData = Clipboard.GetDataObject()));
-            if (clipboardData != null && clipboardData.GetFormats().Length > 0) selectedButtons.Add("Вставить");
-            if (Main.instance.colors.subColors.ContainsValue(activeColor))
-            {
-                HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
-                if (ho != null)
-                {
-                    if (ho.GetParent != null && ho.LastColumn.Column != ho.GetParent.LastColumn.Column)
-                    {
-                        if (ho.HasIndent(IndentDirection.right) == true)
-                        {
-                            selectedButtons.Add("Удалить отступ");
-                        }
-                        else
-                        {
-                            selectedButtons.Add("Добавить отступ");
-                        }
-                    }
-                }
-                
-            }
-            if (Main.instance.colors.mainTitle.ContainsValue(activeColor))
-            {
-                selectedButtons.Add("Изменить main");
-                selectedButtons.Add("Сбросить");
-            }
-            if (Main.instance.colors.mainSubtitle.ContainsValue(activeColor))
-            {
-                selectedButtons.Add("Изменить mainSubtitle");
-                selectedButtons.Add("Сбросить mainSubtitle");
-                selectedButtons.Add("Ввести корректировку");
-                if (RangeReferences.activeTable.DB.HasItem("по счетчику"))
-                {
-                    selectedButtons.Add("Ввести показания счетчика");
-                }
-                if (RangeReferences.activeTable.DB.HasItem("аскуэ"))
-                {
-                    selectedButtons.Add("Записать данные из EMCOS");
-                    selectedButtons.Add("Очистить данные из EMCOS");
-                }
-                
-            }
-            if (Main.instance.colors.extraTitle.ContainsValue(activeColor))
-            {
-                selectedButtons.Add("Изменить extra");
-                selectedButtons.Add("Скрыть");
-            }
-            if (Main.instance.colors.main.ContainsValue(activeColor) && Main.instance.colors.main["subject"] != activeColor)
-            {
-                selectedButtons.Add("Показать");
-                if (RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].HasItem("формула"))
-                {
-                    selectedButtons.Add("Изменить формулу");
-                }
-                // if (!RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].HasItem("счетчик"))
-                // {
-                //     selectedButtons.Add("Добавить по показаниям счетчика");
-                // }
-                // else
-                // {
-                //     selectedButtons.Add("Удалить по показаниям счетчика");
-                // }
-                selectedButtons.Add("Зависимые формулы");
-            }
-            if (activeColor == Main.instance.colors.main["subject"])
-            {
-                selectedButtons.Add("Выделить");
-                if (RangeReferences.activeTable.DB.HasItem("аскуэ"))
-                {
-                    selectedButtons.Add("Записать данные из EMCOS (Все дни)");
-                    selectedButtons.Add("Очистить данные из EMCOS (Все дни)");
-                }
-                if (RangeReferences.activeTable.DB.HasItem("по счетчику"))
-                {
-                    selectedButtons.Add("Изменить коэффициент счетчика");
-                }
-            }
-        }
         public virtual void DeactivateSheet()
         {
             ChangeVisible(false);
@@ -271,9 +178,7 @@ namespace Meter.Forms
             _activeRange = range;
             activeColor = _activeRange.ColorRGB();
             Main.instance.references.ActivateTable(range);
-            PreContextMenu();
             MyContextMenu();
-            cb.ShowPopup();
         }
         public virtual void DblClick(Excel.Range range)
         {
@@ -632,35 +537,101 @@ namespace Meter.Forms
             MessageBox.Show("Done!");
             
         }
+        
         public void MyContextMenu()
         {
-            
-            foreach (CommandBarControl item in cb.Controls)
-            {
-                item.Visible = false;
-            }
-
+            selectedButtons.Clear();
+            ContextMenu();
+            SetCustomContextMenuButtons();
             foreach (string bn in selectedButtons)
             {
                 cb.Controls[CommandBarIndexes[bn]].Visible = true;
                 if (CommandBarActions.ContainsKey(bn)) CommandBarActions[bn].Invoke((CommandBarPopup)cb.Controls[CommandBarIndexes[bn]]);
             }
+            cb.ShowPopup();
         }
-        public void ClearContextMenu()
+        public virtual void ContextMenu()
         {
-            foreach (CommandBarControl item in CustomCellMenu.cb.Controls)
+            GlobalMethods.ToLog("Открыто контекстное меню");
+            selectedButtons.Add("Копировать");
+            IDataObject clipboardData = null;
+            Invoke(new Action(() => clipboardData = Clipboard.GetDataObject()));
+            if (clipboardData != null && clipboardData.GetFormats().Length > 0) selectedButtons.Add("Вставить");
+            if (Main.instance.colors.subColors.ContainsValue(activeColor))
             {
-                item.Visible = false;
+                HeadObject ho = Main.instance.heads.HeadByRange(_activeRange);
+                if (ho != null)
+                {
+                    if (ho.GetParent != null && ho.LastColumn.Column != ho.GetParent.LastColumn.Column)
+                    {
+                        if (ho.HasIndent(IndentDirection.right) == true)
+                        {
+                            selectedButtons.Add("Удалить отступ");
+                        }
+                        else
+                        {
+                            selectedButtons.Add("Добавить отступ");
+                        }
+                    }
+                }
+                
             }
-        }
-        public void Test()
-        {
-            Invoke(new MethodInvoker(() =>
+            if (Main.instance.colors.mainTitle.ContainsValue(activeColor))
             {
-                // Создаем и открываем форму в потоке2
-                FormulaEditor form = new FormulaEditor(ref RangeReferences.activeTable, RangeReferences.ActiveL1);
-                form.Show();
-            }));
+                selectedButtons.Add("Изменить main");
+                selectedButtons.Add("Сбросить");
+            }
+            if (Main.instance.colors.mainSubtitle.ContainsValue(activeColor))
+            {
+                selectedButtons.Add("Изменить mainSubtitle");
+                selectedButtons.Add("Сбросить mainSubtitle");
+                selectedButtons.Add("Ввести корректировку");
+                if (RangeReferences.activeTable.DB.HasItem("по счетчику"))
+                {
+                    selectedButtons.Add("Ввести показания счетчика");
+                }
+                if (RangeReferences.activeTable.DB.HasItem("аскуэ"))
+                {
+                    selectedButtons.Add("Записать данные из EMCOS");
+                    selectedButtons.Add("Очистить данные из EMCOS");
+                }
+                
+            }
+            if (Main.instance.colors.extraTitle.ContainsValue(activeColor))
+            {
+                selectedButtons.Add("Изменить extra");
+                selectedButtons.Add("Скрыть");
+            }
+            if (Main.instance.colors.main.ContainsValue(activeColor) && Main.instance.colors.main["subject"] != activeColor)
+            {
+                selectedButtons.Add("Показать");
+                if (RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].HasItem("формула"))
+                {
+                    selectedButtons.Add("Изменить формулу");
+                }
+                // if (!RangeReferences.activeTable.DB.childs[RangeReferences.ActiveL1].HasItem("счетчик"))
+                // {
+                //     selectedButtons.Add("Добавить по показаниям счетчика");
+                // }
+                // else
+                // {
+                //     selectedButtons.Add("Удалить по показаниям счетчика");
+                // }
+                selectedButtons.Add("Зависимые формулы");
+            }
+            if (activeColor == Main.instance.colors.main["subject"])
+            {
+                selectedButtons.Add("Выделить");
+                if (RangeReferences.activeTable.DB.HasItem("аскуэ"))
+                {
+                    selectedButtons.Add("Записать данные из EMCOS (Все дни)");
+                    selectedButtons.Add("Очистить данные из EMCOS (Все дни)");
+                }
+                if (RangeReferences.activeTable.DB.HasItem("по счетчику"))
+                {
+                    selectedButtons.Add("Изменить коэффициент счетчика");
+                }
+            }
         }
     }
 }

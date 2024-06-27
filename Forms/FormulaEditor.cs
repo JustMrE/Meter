@@ -142,6 +142,20 @@ namespace Meter.Forms
             }
         }
 
+        private void FormulaEditor_Closing(object sender, EventArgs e)
+        {
+            NewMenuBase.editedFormulas.Remove(myID);
+            // foreach (ListViewItem item in list)
+            // {
+            //     item.Tag = null;
+            // }
+            
+            // listView1.Items.Clear();
+            // list.Clear();
+            // listView1.Dispose();
+            // list = null;
+        }
+
         private void listView1_MouseDown(object sender, MouseEventArgs e)
         {
             listView1.InitializeDragAndDrop()
@@ -778,10 +792,6 @@ namespace Meter.Forms
             }
             //flowLayoutPanel1.Controls.Clear();
         }
-        private void FormulaEditor_Closing(object sender, EventArgs e)
-        {
-            NewMenuBase.editedFormulas.Remove(myID);
-        }
 
         private void SubjectContextMenu(Control b)
         {
@@ -997,6 +1007,5 @@ namespace Meter.Forms
                 }
             }
         }
-
     }
 }

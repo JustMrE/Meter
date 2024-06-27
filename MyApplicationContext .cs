@@ -151,6 +151,7 @@ namespace Meter
             InitExcel();
             InitForms();
             InitExcelEvents();
+            AdminCommands.SetupCommands();
             filesToDelete = new List<string>();
         }
         
@@ -440,8 +441,6 @@ namespace Meter
         private void Application_BeforeRightClick(Excel.Range range, ref bool cancel)
         {
             cancel = true;
-            //CustomCellMenu.cb.ShowPopup();
-            //customContextMenu.ShowPopup();
             menu.RightClick(range);
         }
         private void Application_DeactivateSheet()
