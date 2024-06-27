@@ -1,4 +1,6 @@
-﻿namespace Meter.Forms
+﻿using Meter.Properties;
+
+namespace Meter.Forms
 {
     partial class NewMenuBase
     {
@@ -75,7 +77,7 @@
             btnAdmin = new Button();
             tableLayoutPanel1 = new TableLayoutPanel();
             tableLayoutPanel4 = new TableLayoutPanel();
-            btnL3 = new Button();
+            btnSettings = new Button();
             checkBox1 = new CheckBox();
             checkBox2 = new CheckBox();
             tableLayoutPanel3 = new TableLayoutPanel();
@@ -703,7 +705,7 @@
             tableLayoutPanel4.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             tableLayoutPanel4.ColumnCount = 1;
             tableLayoutPanel4.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel4.Controls.Add(btnL3, 0, 0);
+            tableLayoutPanel4.Controls.Add(btnSettings, 0, 0);
             tableLayoutPanel4.Controls.Add(checkBox1, 0, 1);
             tableLayoutPanel4.Controls.Add(checkBox2, 0, 2);
             tableLayoutPanel4.Location = new Point(305, 0);
@@ -717,13 +719,17 @@
             // 
             // btnL3
             // 
-            btnL3.AutoSize = true;
-            btnL3.Location = new Point(3, 3);
-            btnL3.Name = "btnL3";
-            btnL3.Size = new Size(29, 25);
-            btnL3.TabIndex = 56;
-            btnL3.Text = "L3";
-            btnL3.UseVisualStyleBackColor = true;
+            btnSettings.AutoSize = true;
+            btnSettings.Location = new Point(3, 3);
+            btnSettings.Name = "btnL3";
+            btnSettings.Size = new Size(29, 25);
+            btnSettings.TabIndex = 56;
+            //btnL3.Text = "L3";
+            btnSettings.Text = "";
+            btnSettings.BackgroundImage = Resources.settings;
+            btnSettings.BackgroundImageLayout = ImageLayout.Stretch;
+            btnSettings.UseVisualStyleBackColor = true;
+            btnSettings.Click += BtnSettings_Click;
             // 
             // checkBox1
             // 
@@ -905,7 +911,6 @@
             ResumeLayout(false);
             PerformLayout();
         }
-
         #endregion
         protected FlowLayoutPanel flpButtons;
         // protected ListBox listBox1;
@@ -914,7 +919,7 @@
         protected Button btnFromArhive;
         protected Button button46;
         protected Button button47;
-        protected Button btnL3;
+        protected Button btnSettings;
         protected TextBox tbSearch;
 
         protected CheckBox checkBox1;

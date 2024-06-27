@@ -327,18 +327,16 @@ namespace Meter.Forms
                 string newNameL1 = co.GetParent<ChildObject>()._name;
                 ReferenceObject ro = co.GetFirstParent;
 
-                Thread t = new Thread(() =>
+                FormulaEditor form = new FormulaEditor(ref ro, newNameL1);
+                form.Show();
+                if (this.CheckBox19.Checked)
                 {
-                    FormulaEditor form = new FormulaEditor(ref ro, newNameL1);
-                    form.FormClosed += (s, args) =>
+                    form.Shown += (s, args) => 
                     {
-                        System.Windows.Forms.Application.ExitThread();
+                        form.MonthCalendar20.SetDate(MonthCalendar20.SelectionRange.Start);
+                        form.CheckBox19.Checked = true;
                     };
-                    form.Show();
-                    System.Windows.Forms.Application.Run();
-                });
-                t.SetApartmentState(ApartmentState.STA);
-                t.Start();
+                }
             }
         }
 
@@ -455,7 +453,15 @@ namespace Meter.Forms
                             if (item is Button button)
                             {
                                 bool match = Regex.IsMatch(button.Text, pattern: search, ro);
-                                button.BackColor = match ? Color.LightSkyBlue : SystemColors.Control;
+                                if (match)
+                                {
+                                    item.SetBorder(Color.LightSkyBlue, 3);
+                                }
+                                else
+                                {
+                                    item.RemoveBorder();
+                                }
+                                //button.BackColor = match ? Color.LightSkyBlue : SystemColors.Control;
                             }
                         }
                     }
@@ -465,7 +471,8 @@ namespace Meter.Forms
                         {
                             foreach (Control item in flowLayoutPanel1.Controls)
                             {
-                                item.BackColor = SystemColors.Control;
+                                //item.BackColor = SystemColors.Control;
+                                item.RemoveBorder();
                             }
                         }));
                     }
@@ -475,9 +482,10 @@ namespace Meter.Forms
             {
                 this.Invoke((MethodInvoker)(() =>
                 {
-                    foreach (Control item in flowLayoutPanel1.Controls)
+                    foreach (Button item in flowLayoutPanel1.Controls)
                     {
-                        item.BackColor = SystemColors.Control;
+                        item.RemoveBorder();
+                        //item.BackColor = SystemColors.Control;
                     }
                 }));
             }
@@ -842,7 +850,7 @@ namespace Meter.Forms
                 newFormula += "{" + item.Text + "} ";
             }
 
-            Thread t = new Thread(() =>
+            Main.instance.menu.Invoke(() => 
             {
                 SaveFormula saveFormula = new(formulaForSave);
                 saveFormula.FormClosed += (s, args) =>
@@ -851,19 +859,15 @@ namespace Meter.Forms
                     {
                         GlobalMethods.ToLog("Экспортирована формула " + newFormula + "'");
                     }
-                    System.Windows.Forms.Application.ExitThread();
                 };
                 saveFormula.Show();
-                System.Windows.Forms.Application.Run();
             });
-            t.SetApartmentState(ApartmentState.STA);
-            t.Start();
         }
 
         private void btnLoad_Click(object sender, EventArgs e)
         {
             List<ForTags> loadedFormula;
-            Thread t = new Thread(() =>
+            Main.instance.menu.Invoke(() =>
             {
                 LoadFormula loadFormula = new();
                 loadFormula.FormClosed += (s, args) =>
@@ -915,13 +919,9 @@ namespace Meter.Forms
                         });
                         GlobalMethods.ToLog("Импортирована формула " + newFormula + "'");
                     }
-                    System.Windows.Forms.Application.ExitThread();
                 };
                 loadFormula.Show();
-                System.Windows.Forms.Application.Run();
             });
-            t.SetApartmentState(ApartmentState.STA);
-            t.Start();
         }
 
         private void CheckBox19_CheckedChanged(object sender, EventArgs e)
@@ -992,7 +992,7 @@ namespace Meter.Forms
                     Excel.Range r = null;
                     if (item.SpecialTag().ID != null)
                     {
-                        r = ((Excel.Range)((ChildObject)RangeReferences.idDictionary[item.SpecialTag().ID]).RangeByDay(MonthCalendar20.SelectionRange.Start.Day));
+                        r = ((ChildObject)RangeReferences.idDictionary[item.SpecialTag().ID]).RangeByDay(MonthCalendar20.SelectionRange.Start.Day);
                         if (string.IsNullOrEmpty(r.Value.ToString()))
                         {
                             item.BackColor = Color.Red;

@@ -570,20 +570,6 @@ namespace Meter
                     FormulaEditor form = new FormulaEditor(ref RangeReferences.activeTable, RangeReferences.ActiveL1);
                     form.Show();
                 }));
-                // Thread t = new Thread(() =>
-                // {
-                //     using (FormulaEditor form = new FormulaEditor(ref RangeReferences.activeTable, RangeReferences.ActiveL1))
-                //     {
-                //         form.FormClosed += (s, args) => 
-                //         { 
-                //             Application.ExitThread(); 
-                //         };
-                //         form.Show();
-                //         Application.Run();
-                //     }
-                // });
-                // t.SetApartmentState(ApartmentState.STA);
-                // t.Start();
             }, 385);
             AddButtonToCommandBar("Зависимые формулы", "Зависимые формулы", () =>
             {

@@ -376,6 +376,11 @@ namespace Meter.Forms
         {
             ToLog(sender);
         }
+        protected virtual void BtnSettings_Click(object sender, EventArgs e)
+        {
+            Settings form = new Settings();
+            form.ShowDialog();
+        }
         #endregion
     }
 }

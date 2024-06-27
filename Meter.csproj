@@ -17,6 +17,7 @@
   <ItemGroup>
     <None Remove="Resources\heads.json" />
     <None Remove="Resources\meter.xlsx" />
+    <None Remove="Resources\settings.png" />
     <None Remove="Resources\standartColors.json" />
     <None Remove="Resources\trash.png" />
     <None Remove="Resources\Без имени-1.png" />
@@ -38,6 +39,7 @@
     <Resource Include="Resources\meter.xlsx">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>
+    <Resource Include="Resources\settings.png" />
     <Resource Include="Resources\standartColors.json">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Resource>

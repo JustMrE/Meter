@@ -111,18 +111,11 @@ namespace Meter.Forms
             ChildObject co = co1.GetParent<ChildObject>();
             ReferenceObject ro = co.GetFirstParent;
 
-            Thread t = new Thread(() =>
+            Main.instance.menu.Invoke(() => 
             {
                 FormulaEditor form = new FormulaEditor(ref ro, newNameL1);
-                form.FormClosed += (s, args) =>
-                {
-                    System.Windows.Forms.Application.ExitThread();
-                };
                 form.Show();
-                System.Windows.Forms.Application.Run();
             });
-            t.SetApartmentState(ApartmentState.STA);
-            t.Start();
         }
 
         private void listBox0_DoubleClick(object? sender, EventArgs e)

@@ -15,6 +15,12 @@ namespace Meter.Forms
         public string LogFile { get; set; }
         public string ErrLogFile { get; set; }
         public bool CloseAutoSave { get; set; }
+        public bool CloseSaveResponce { get; set; }
+
+        public string EmcosLogin { get; set; }
+        public string EmcosPassword { get; set; }
+        public string EmcosUrl { get; set; }
+        public string EmcosHost { get; set; }
 
         public static MeterSettings Instance 
         {

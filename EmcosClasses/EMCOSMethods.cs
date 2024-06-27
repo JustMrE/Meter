@@ -2,70 +2,54 @@ using System.Net;
 using System.Text;
 using Meter;
 using Newtonsoft.Json;
+using Meter.Forms;
 
 namespace Emcos
 {
     public static class EmcosMethods 
     {
-        private static string _uri = @"http://10.0.144.11:8080/ec3api/v1";
-        private static string host = @"10.0.144.11:8080";
+        // private static string _uri = @"http://10.0.144.11:8080/ec3api/v1";
+        // private static string host = @"10.0.144.11:8080";
         private static HttpClient client = new HttpClient();
-        private static string? username = null, password = null;
         private static string? token = null;
 
         static EmcosMethods()
         {
-            #if DEBUG
-            username = "a_bagdatova";
-            password = "z123456";
-            #endif
+            // #if DEBUG
+            // MeterSettings.Instance.EmcosLogin = "a_bagdatova";
+            // MeterSettings.Instance.EmcosPassword = "z123456";
+            // #endif
         }
-        public static string Username 
-        {
-            get 
-            {
-                return username != null ? username : "";
-            }
-            set 
-            {
-                username = value;
-            }
-        }
-        public static string Password 
-        {
-            get 
-            {
-                return password != null ? password : "";
-            }
-            set 
-            {
-                password = value;
-            }
-        }
-        
-        public static void SetUserPass(string username, string password)
-        {
-            Username = username;
-            Password = password;
-        }
+
         public static bool LoginToEmcos()
         {
-            string uri = _uri + "/user/login";
+            GlobalMethods.ToLog("Авторизация в EMCOS");
+            string uri = MeterSettings.Instance.EmcosUrl + "/user/login";
 
-            if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
+            if (!string.IsNullOrEmpty(MeterSettings.Instance.EmcosLogin) && !string.IsNullOrEmpty(MeterSettings.Instance.EmcosPassword))
             {
-                string jsonRequest = string.Format("{{\"username\":\"{0}\",\"password\":\"{1}\"}}", username, password);
-                var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
-
-                var responce = client.PostAsync(uri, content).Result;
-                if (responce.IsSuccessStatusCode)
+                try
                 {
-                    var jsonResoponse = responce.Content.ReadAsStringAsync().Result;
-                    LoginRoot loginResponce = JsonConvert.DeserializeObject<LoginRoot>(jsonResoponse);
-                    token = loginResponce.data.token;
-                    return true;
+                    string jsonRequest = string.Format("{{\"username\":\"{0}\",\"password\":\"{1}\"}}", MeterSettings.Instance.EmcosLogin, MeterSettings.Instance.EmcosPassword);
+                    var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+
+                    var responce = client.PostAsync(uri, content).Result;
+                    if (responce.IsSuccessStatusCode)
+                    {
+                        var jsonResoponse = responce.Content.ReadAsStringAsync().Result;
+                        LoginRoot loginResponce = JsonConvert.DeserializeObject<LoginRoot>(jsonResoponse);
+                        token = loginResponce.data.token;
+                        return true;
+                    }
                 }
+                catch (System.Exception)
+                {
+                    GlobalMethods.ToLog("Не удалось подключиться к EMCOS.");
+                    return false;
+                }
+                
             }
+            GlobalMethods.ToLog("Не записаны логин и пароль для EMCOS");
             return false;
         }
         public static float? GetValue(DateTime dataFrom, DateTime dataTo, ChildObject childObject)
@@ -157,7 +141,8 @@ namespace Emcos
         */
         private static List<DataDatum> GetValues(DateTime dataFrom, DateTime dataTo, int pointID, int mlID)
         {
-            string uri = _uri + "/archives/point";
+            GlobalMethods.ToLog($"Считывание данных из EMCOS для {pointID} за даты с {dataFrom.ToString("dd.MM.yyyy")} по {dataTo.ToString("dd.MM.yyyy")}");
+            string uri = MeterSettings.Instance.EmcosUrl + "/archives/point";
 
             // string mlID = "[1040,1041]";
             int mdID = 12, aggsID = 13;
@@ -169,7 +154,7 @@ namespace Emcos
                 Method = HttpMethod.Post,
                 Headers =
                 {
-                    {HttpRequestHeader.Host.ToString(), host},
+                    {HttpRequestHeader.Host.ToString(), MeterSettings.Instance.EmcosHost},
                     {HttpRequestHeader.Connection.ToString(), "keep-alive"},
                     {HttpRequestHeader.ContentLength.ToString(), jsonRequest.Length.ToString()},
                     {HttpRequestHeader.Accept.ToString(),"appplication/json, text/plain, */*"},

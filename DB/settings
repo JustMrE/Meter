@@ -1,0 +1,13 @@
+{
+    "SettingsFile": "D:\\VSProjects\\Meter\\bin\\Debug\\net6.0-windows\\settings",
+    "DBDir": "D:\\VSProjects\\Meter\\DB",
+    "MeterFile": "D:\\VSProjects\\Meter\\DB\\current\\meter.xlsx",
+    "LogFile": "D:\\VSProjects\\Meter\\DB\\current\\log.log",
+    "ErrLogFile": "D:\\VSProjects\\Meter\\DB\\current\\errlog.log",
+    "CloseAutoSave": false,
+    "CloseSaveResponce": false,
+    "EmcosLogin": "a_bagdatova",
+    "EmcosPassword": "z123456",
+    "EmcosUrl": "http://10.0.144.11:8080/ec3api/v1",
+    "EmcosHost": "10.0.144.11:8080"
+}

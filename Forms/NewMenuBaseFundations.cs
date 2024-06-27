@@ -466,11 +466,12 @@ namespace Meter.Forms
                 }
                 Main.instance.ResumeAll();
                 splashScreen.Close();
-                MessageBox.Show("Done!");
+                MessageBox.Show("Готово!");
             }
             else
             {
-                MessageBox.Show("Done!\nCan't login to EMCOS.");
+                GlobalMethods.ToLogWarn("Не удалось авторизоваться в EMCOS.");
+                MessageBox.Show("Готово!\nНе удалось авторизоваться в EMCOS.");
             }
         }
         public void EmcosClear(DateTime from, DateTime to, ReferenceObject ro = null)

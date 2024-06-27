@@ -75,5 +75,37 @@ namespace Meter
                 return null;
             }
         }
+
+        public static void SetBorder(this Control control, Color borderColor, int borderSize)
+        {
+            RemoveBorder(control); // Удаляем предыдущую границу, если она была установлена
+
+            control.SpecialTag().borderColor = borderColor;
+            control.SpecialTag().borderSize = borderSize;
+            control.Paint += PaintBorder;
+
+            control.Invalidate(); // Вызов перерисовки элемента управления
+        }
+
+        // Метод для отключения границы
+        public static void RemoveBorder(this Control control)
+        {
+            control.Paint -= PaintBorder;
+            control.Invalidate(); // Вызов перерисовки элемента управления
+        }
+
+        private static void PaintBorder(object sender, PaintEventArgs e)
+        {
+            Control control = sender as Control;
+            if (control != null)
+            {
+                using (Pen pen = new Pen(control.SpecialTag().borderColor, control.SpecialTag().borderSize))
+                {
+                    pen.Alignment = System.Drawing.Drawing2D.PenAlignment.Inset;
+                    e.Graphics.DrawRectangle(pen, 0, 0, control.ClientSize.Width - 1, control.ClientSize.Height - 1);
+                }
+            }
+        }
+
     }
 }
