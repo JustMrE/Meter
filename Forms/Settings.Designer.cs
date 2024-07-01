@@ -1,4 +1,5 @@
-﻿namespace Meter.Forms
+﻿
+namespace Meter.Forms
 {
     partial class Settings
     {
@@ -41,6 +42,12 @@
             tbMeter = new TextBox();
             btnSetMeter = new Button();
             gbDB = new GroupBox();
+            gbOldMeter = new GroupBox();
+            tbOldMeter = new TextBox();
+            btnSetOldMeter = new Button();
+            gbMetersPath = new GroupBox();
+            tbMetersPath = new TextBox();
+            btnSetMetersPath = new Button();
             btnResetDB = new Button();
             tbDB = new TextBox();
             btnSetDB = new Button();
@@ -84,6 +91,7 @@
             tabPage1.Controls.Add(gbLogPath);
             tabPage1.Controls.Add(gbMeter);
             tabPage1.Controls.Add(gbDB);
+            tabPage1.Controls.Add(gbOldMeter);
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
@@ -232,6 +240,68 @@
             btnSetDB.Text = "...";
             btnSetDB.UseVisualStyleBackColor = true;
             btnSetDB.Click += btnSetDB_Click;
+
+            // 
+            // gbOldMeter
+            // 
+            gbOldMeter.Controls.Add(tbOldMeter);
+            gbOldMeter.Controls.Add(btnSetOldMeter);
+            gbOldMeter.Enabled = false;
+            gbOldMeter.Location = new Point(6, 213);
+            gbOldMeter.Name = "gbOldMeter";
+            gbOldMeter.Size = new Size(756, 56);
+            gbOldMeter.TabStop = false;
+            gbOldMeter.Text = "Старые счетчики";
+            // gbOldMeter.AutoSize = true;
+            // gbOldMeter.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            // 
+            // tbOldMeter
+            // 
+            tbOldMeter.Enabled = false;
+            tbOldMeter.Location = new Point(6, 22);
+            tbOldMeter.Name = "tbOldMeter";
+            tbOldMeter.Size = new Size(647, 23);
+            // 
+            // btnSetOldMeter
+            // 
+            btnSetOldMeter.BackgroundImageLayout = ImageLayout.None;
+            btnSetOldMeter.Location = new Point(659, 22);
+            btnSetOldMeter.Name = "btnSetOldMeter";
+            btnSetOldMeter.Size = new Size(27, 23);
+            btnSetOldMeter.Text = "...";
+            btnSetOldMeter.UseVisualStyleBackColor = true;
+            btnSetOldMeter.Click += btnSetOldMeter_Click;
+            // 
+            // gbMetersPath
+            // 
+            gbMetersPath.Controls.Add(tbOldMeter);
+            gbMetersPath.Controls.Add(btnSetOldMeter);
+            gbMetersPath.Enabled = false;
+            gbMetersPath.Location = new Point(6, 273);
+            gbMetersPath.Name = "gbMetersPath";
+            gbMetersPath.Size = new Size(756, 56);
+            gbMetersPath.TabStop = false;
+            gbMetersPath.Text = "Путь к старым счетчикам";
+            // gbMetersPath.AutoSize = true;
+            // gbMetersPath.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            // 
+            // tbMetersPath
+            // 
+            tbMetersPath.Enabled = false;
+            tbMetersPath.Location = new Point(6, 22);
+            tbMetersPath.Name = "tbMetersPath";
+            tbMetersPath.Size = new Size(647, 23);
+            // 
+            // btnSetMetersPath
+            // 
+            btnSetMetersPath.BackgroundImageLayout = ImageLayout.None;
+            btnSetMetersPath.Location = new Point(659, 22);
+            btnSetMetersPath.Name = "btnSetMetersPath";
+            btnSetMetersPath.Size = new Size(27, 23);
+            btnSetMetersPath.Text = "...";
+            btnSetMetersPath.UseVisualStyleBackColor = true;
+            btnSetMetersPath.Click += btnSetMetersPath_Click;
+
             // 
             // tabPage2
             // 
@@ -389,7 +459,7 @@
             gbAuth.PerformLayout();
             ResumeLayout(false);
         }
-
+        
         #endregion
 
         private TabControl tabControl1;
@@ -421,5 +491,12 @@
         private Label lEmcosUrl;
         private Label lEmcosHost;
         private TextBox tbEmcosUrl;
+
+        private GroupBox gbOldMeter;
+        private TextBox tbOldMeter;
+        private Button btnSetOldMeter;
+        private GroupBox gbMetersPath;
+        private TextBox tbMetersPath;
+        private Button btnSetMetersPath;
     }
 }

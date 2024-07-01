@@ -133,5 +133,15 @@ namespace Meter.Forms
         {
             EmcosHost = tbEmcosHost.Text;
         }
+    
+        private void btnSetMetersPath_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnSetOldMeter_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

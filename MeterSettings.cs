@@ -7,29 +7,46 @@ namespace Meter.Forms
 {
     public class MeterSettings
     {
-        static MeterSettings _Instance = new MeterSettings();
+        static MeterSettings _Instance;// = new MeterSettings();
 
+        [JsonIgnore]
         public string SettingsFile { get; set; }
+        public bool CloseAutoSave { get; set; }
+        public bool CloseSaveResponce { get; set; }
         public string DBDir { get; set; }
         public string MeterFile { get; set; }
         public string LogFile { get; set; }
         public string ErrLogFile { get; set; }
-        public bool CloseAutoSave { get; set; }
-        public bool CloseSaveResponce { get; set; }
+        public string OldMeterFile { get; set; }
+        public string OtherMetersPath { get; set; }
 
         public string EmcosLogin { get; set; }
         public string EmcosPassword { get; set; }
         public string EmcosUrl { get; set; }
         public string EmcosHost { get; set; }
 
+
+
         public static MeterSettings Instance 
         {
-            get { return _Instance; }
+            get 
+            { 
+                if (_Instance != null)
+                {
+                    return _Instance;
+                }
+                else
+                {
+                    _Instance = new MeterSettings();
+                    return _Instance; 
+                }
+            }
         }
 
         public MeterSettings ()
         {
-            SettingsFile = string.Empty;
+            // _Instance = this;
+            // SettingsFile = settings;
             DBDir = string.Empty;
             MeterFile = string.Empty;
             LogFile = string.Empty;
@@ -43,13 +60,14 @@ namespace Meter.Forms
             {
                 var jsonString = File.ReadAllText(SettingsFile);
                 var loadedSettings = JsonConvert.DeserializeObject<MeterSettings>(jsonString);
+                loadedSettings.SettingsFile = this.SettingsFile;
 
                 // Обновление текущего экземпляра свойствами из десериализованного объекта
                 if (loadedSettings != null)
                 {
-                    CopyPropertiesFrom(loadedSettings);
+                    Instance.CopyPropertiesFrom(loadedSettings);
                 }
-                if (!CheckDBFiles())
+                if (!Instance.CheckDBFiles())
                 {
                     return false;
                 }

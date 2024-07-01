@@ -140,6 +140,7 @@ namespace Meter
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            // new MeterSettings(System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\settings");
             MeterSettings.Instance.SettingsFile = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location) + @"\settings";
             if (!File.Exists(MeterSettings.Instance.SettingsFile) || !MeterSettings.Instance.Load())
             {
