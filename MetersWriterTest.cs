@@ -45,7 +45,8 @@ namespace Meter
             {
                 Visible = false
             };
-            w1 = xlApp.Workbooks.Open(@"X:\OPER\счетчики.xls");
+            // w1 = xlApp.Workbooks.Open(@"X:\OPER\счетчики.xls");
+            w1 = xlApp.Workbooks.Open(MeterSettings.Instance.OldMeterFile);
             ws1 = w1.Worksheets[wsName] as Excel.Worksheet;
 
             Main.instance.StopAll();
@@ -340,15 +341,16 @@ namespace Meter
             string dict = MeterSettings.Instance.DBDir + @"\current\Словарь ТИ факт.xlsx";
             string path;
             string archPath = "";
-            if (false)
-            {
-                path = "H2";
-                archPath = date.Year + "\\" + date.ToString("MMMM", GlobalMethods.culture) + "\\";
-            }
-            else
-            {
-                path = "H1";
-            }
+            path = MeterSettings.Instance.OtherMetersPath;
+            // if (false)
+            // {
+            //     path = "H2";
+            //     archPath = date.Year + "\\" + date.ToString("MMMM", GlobalMethods.culture) + "\\";
+            // }
+            // else
+            // {
+            //     path = "H1";
+            // }
             
             // path = "H1";
             // string path = "H2";
@@ -377,7 +379,7 @@ namespace Meter
             w1 = xlApp.Workbooks.Open(dict);
             for (int i = 3; i <= w1.Worksheets.Count; i++)
             {
-                dict2.Add((string)((Excel.Worksheet)w1.Worksheets[i]).Range[path].Value + archPath + (string)((Excel.Worksheet)w1.Worksheets[i]).Range[fName].Value, ReadTIDict((Excel.Worksheet)w1.Worksheets[i]));
+                dict2.Add(path + "\\" + (string)((Excel.Worksheet)w1.Worksheets[i]).Range[fName].Value, ReadTIDict((Excel.Worksheet)w1.Worksheets[i]));
             }
             w1.Close(false);
             w1 = null;

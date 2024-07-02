@@ -405,7 +405,7 @@ namespace Meter.Forms
                 ConcurrentBag<ConcurrentBag<EMCOSObject>> emcosValues = new ();
                 List<DateTime> dates = new List<DateTime>();
 
-                for (DateTime d = from; d.Day <= to.Day; d = d.AddDays(1))
+                for (DateTime d = from; d <= to; d = d.AddDays(1))
                 {
                     dates.Add(d);
                 }

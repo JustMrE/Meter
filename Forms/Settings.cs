@@ -22,13 +22,13 @@ namespace Meter.Forms
         string EMCOSPassword { get; set; }
         string EmcosUrl { get; set; }
         string EmcosHost { get; set; }
+        string OldMeter { get; set; }
+        string OtherMetersPath { get; set; }
 
         public Settings()
         {
             InitializeComponent();
         }
-
-
 
         private void btnSetDB_Click(object sender, EventArgs e)
         {
@@ -70,20 +70,11 @@ namespace Meter.Forms
             MeterSettings.Instance.EmcosPassword = EMCOSPassword;
             MeterSettings.Instance.EmcosUrl = EmcosUrl;
             MeterSettings.Instance.EmcosHost = EmcosHost;
+            MeterSettings.Instance.OldMeterFile = OldMeter;
+            MeterSettings.Instance.OtherMetersPath = OtherMetersPath;
             MeterSettings.Instance.Save();
             this.DialogResult = DialogResult.OK;
             Close();
-        }
-
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            this.DialogResult = DialogResult.Cancel;
-            Close();
-        }
-
-        private void cbSaveOnClose_CheckedChanged(object sender, EventArgs e)
-        {
-            CloseAutoSave = cbSaveOnClose.Checked;
         }
 
         private void Settings_Shown(object sender, EventArgs e)
@@ -98,8 +89,22 @@ namespace Meter.Forms
             this.tbEmcosPass.Text = EMCOSPassword = MeterSettings.Instance.EmcosPassword;
             this.tbEmcosUrl.Text = EmcosUrl = MeterSettings.Instance.EmcosUrl;
             this.tbEmcosHost.Text = EmcosHost = MeterSettings.Instance.EmcosHost;
+            this.tbOldMeter.Text = OldMeter = MeterSettings.Instance.OldMeterFile;
+            this.tbMetersPath.Text = OtherMetersPath = MeterSettings.Instance.OtherMetersPath;
         }
 
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            this.DialogResult = DialogResult.Cancel;
+            Close();
+        }
+
+        private void cbSaveOnClose_CheckedChanged(object sender, EventArgs e)
+        {
+            CloseAutoSave = cbSaveOnClose.Checked;
+        }
+        
         private void cbCloseSaveResponce_CheckedChanged(object sender, EventArgs e)
         {
             CloseSaveResponce = cbCloseSaveResponce.Checked;
@@ -136,12 +141,22 @@ namespace Meter.Forms
     
         private void btnSetMetersPath_Click(object sender, EventArgs e)
         {
-
+            FolderBrowserDialog folderDialog = new FolderBrowserDialog();
+            if (folderDialog.ShowDialog() == DialogResult.OK)
+            {
+                OtherMetersPath = folderDialog.SelectedPath;
+                this.tbMetersPath.Text = OtherMetersPath;
+            }
         }
 
         private void btnSetOldMeter_Click(object sender, EventArgs e)
         {
-
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == DialogResult.OK)
+            {
+                OldMeter = openFileDialog.FileName;
+                this.tbOldMeter.Text = OldMeter;
+            }
         }
     }
 }

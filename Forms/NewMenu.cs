@@ -70,7 +70,6 @@ namespace Meter.Forms
         }
 
         #region  Buttons
-
         //Emcos
         protected override void Button2_Click(object sender, EventArgs e)
         {
@@ -83,7 +82,6 @@ namespace Meter.Forms
             DateTime.TryParseExact(data, format, provider, DateTimeStyles.None, out result);
             EmcosWrite(result, result);
         }
-
         //Write Meters
         protected override void Button3_Click(object sender, EventArgs e)
         {
@@ -157,13 +155,11 @@ namespace Meter.Forms
             stopWatch.Stop();
             MessageBox.Show("Done! " + (stopWatch.ElapsedMilliseconds / 1000) + " sec.");
         }
-        
         //Write W89
         protected override void Button6_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Запись формы W89");
         }
-
         protected override void btnAdmin_Click(object sender, EventArgs e)
         {
             base.btnAdmin_Click(sender, e);

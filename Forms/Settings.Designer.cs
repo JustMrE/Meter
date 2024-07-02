@@ -42,12 +42,15 @@ namespace Meter.Forms
             tbMeter = new TextBox();
             btnSetMeter = new Button();
             gbDB = new GroupBox();
+
             gbOldMeter = new GroupBox();
             tbOldMeter = new TextBox();
             btnSetOldMeter = new Button();
+
             gbMetersPath = new GroupBox();
             tbMetersPath = new TextBox();
             btnSetMetersPath = new Button();
+
             btnResetDB = new Button();
             tbDB = new TextBox();
             btnSetDB = new Button();
@@ -92,6 +95,7 @@ namespace Meter.Forms
             tabPage1.Controls.Add(gbMeter);
             tabPage1.Controls.Add(gbDB);
             tabPage1.Controls.Add(gbOldMeter);
+            tabPage1.Controls.Add(gbMetersPath);
             tabPage1.Location = new Point(4, 24);
             tabPage1.Name = "tabPage1";
             tabPage1.Padding = new Padding(3);
@@ -246,14 +250,11 @@ namespace Meter.Forms
             // 
             gbOldMeter.Controls.Add(tbOldMeter);
             gbOldMeter.Controls.Add(btnSetOldMeter);
-            gbOldMeter.Enabled = false;
             gbOldMeter.Location = new Point(6, 213);
             gbOldMeter.Name = "gbOldMeter";
             gbOldMeter.Size = new Size(756, 56);
             gbOldMeter.TabStop = false;
             gbOldMeter.Text = "Старые счетчики";
-            // gbOldMeter.AutoSize = true;
-            // gbOldMeter.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             // 
             // tbOldMeter
             // 
@@ -271,19 +272,17 @@ namespace Meter.Forms
             btnSetOldMeter.Text = "...";
             btnSetOldMeter.UseVisualStyleBackColor = true;
             btnSetOldMeter.Click += btnSetOldMeter_Click;
+
             // 
             // gbMetersPath
             // 
-            gbMetersPath.Controls.Add(tbOldMeter);
-            gbMetersPath.Controls.Add(btnSetOldMeter);
-            gbMetersPath.Enabled = false;
+            gbMetersPath.Controls.Add(tbMetersPath);
+            gbMetersPath.Controls.Add(btnSetMetersPath);
             gbMetersPath.Location = new Point(6, 273);
             gbMetersPath.Name = "gbMetersPath";
             gbMetersPath.Size = new Size(756, 56);
             gbMetersPath.TabStop = false;
             gbMetersPath.Text = "Путь к старым счетчикам";
-            // gbMetersPath.AutoSize = true;
-            // gbMetersPath.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             // 
             // tbMetersPath
             // 
