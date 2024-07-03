@@ -1,4 +1,5 @@
 ﻿
+
 namespace Meter.Forms
 {
     partial class Settings
@@ -60,6 +61,7 @@ namespace Meter.Forms
             lEmcosUrl = new Label();
             lEmcosHost = new Label();
             tbEmcosUrl = new TextBox();
+            btnEmcosUrl = new Button();
             gbAuth = new GroupBox();
             tbEmcosPass = new TextBox();
             lEmcosLogin = new Label();
@@ -320,6 +322,7 @@ namespace Meter.Forms
             gbEmcosConnection.Controls.Add(lEmcosUrl);
             gbEmcosConnection.Controls.Add(lEmcosHost);
             gbEmcosConnection.Controls.Add(tbEmcosUrl);
+            gbEmcosConnection.Controls.Add(btnEmcosUrl);
             gbEmcosConnection.Location = new Point(310, 6);
             gbEmcosConnection.Name = "gbEmcosConnection";
             gbEmcosConnection.Size = new Size(452, 125);
@@ -344,6 +347,16 @@ namespace Meter.Forms
             lEmcosUrl.TabIndex = 5;
             lEmcosUrl.Text = "URL";
             // 
+            // btnEmcosUrl
+            // 
+            btnEmcosUrl.BackgroundImageLayout = ImageLayout.None;
+            btnEmcosUrl.Location = new Point(396, 37);
+            btnEmcosUrl.Name = "btnEmcosUrl";
+            btnEmcosUrl.Size = new Size(50, 23);
+            btnEmcosUrl.Text = "Сбросить";
+            btnEmcosUrl.UseVisualStyleBackColor = true;
+            btnEmcosUrl.Click += btnEmcosUrl_Click;
+            // 
             // lEmcosHost
             // 
             lEmcosHost.AutoSize = true;
@@ -357,7 +370,7 @@ namespace Meter.Forms
             // 
             tbEmcosUrl.Location = new Point(6, 37);
             tbEmcosUrl.Name = "tbEmcosUrl";
-            tbEmcosUrl.Size = new Size(440, 23);
+            tbEmcosUrl.Size = new Size(384, 23);
             tbEmcosUrl.TabIndex = 7;
             tbEmcosUrl.TextChanged += tbEmcosUrl_TextChanged;
             // 
@@ -458,7 +471,7 @@ namespace Meter.Forms
             gbAuth.PerformLayout();
             ResumeLayout(false);
         }
-        
+
         #endregion
 
         private TabControl tabControl1;
@@ -488,6 +501,7 @@ namespace Meter.Forms
         private GroupBox gbEmcosConnection;
         private TextBox tbEmcosHost;
         private Label lEmcosUrl;
+        private Button btnEmcosUrl;
         private Label lEmcosHost;
         private TextBox tbEmcosUrl;
 

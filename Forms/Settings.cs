@@ -5,6 +5,7 @@ using System.Data;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -72,6 +73,8 @@ namespace Meter.Forms
             MeterSettings.Instance.EmcosHost = EmcosHost;
             MeterSettings.Instance.OldMeterFile = OldMeter;
             MeterSettings.Instance.OtherMetersPath = OtherMetersPath;
+            MeterSettings.Instance.EmcosUrl = EmcosUrl;
+            MeterSettings.Instance.EmcosHost = EmcosHost;
             MeterSettings.Instance.Save();
             this.DialogResult = DialogResult.OK;
             Close();
@@ -157,6 +160,17 @@ namespace Meter.Forms
                 OldMeter = openFileDialog.FileName;
                 this.tbOldMeter.Text = OldMeter;
             }
+        }
+    
+        
+        private void btnEmcosUrl_Click(object sender, EventArgs e)
+        {
+            // this.tbEmcosUrl.Text = @"http://10.0.144.11:8080/ec3api/v1";//@"http://10.0.144.11:8080/emcos3/";
+            string url = @"http://10.0.144.11:8080/ec3api/v1";
+            Uri uri = new Uri(url);
+
+            this.tbEmcosUrl.Text = uri.AbsoluteUri;
+            this.tbEmcosHost.Text = uri.Host + ":" + uri.Port;
         }
     }
 }

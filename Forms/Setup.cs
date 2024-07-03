@@ -28,10 +28,7 @@ namespace Meter.Forms
             {
                 CreateNewMetersDB();
             }
-            else
-            {
 
-            }
             MeterSettings.Instance.Save();
             this.DialogResult = DialogResult.OK;
             Close();
